@@ -28,7 +28,7 @@ public class PointTest {
 
     @Test
     public void testGetY() throws Exception {
-        assertEquals(4, p.getY());
+        assertEquals(5, p.getY());
     }
 
     @Test
