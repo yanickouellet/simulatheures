@@ -6,3 +6,6 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+
+notifications:
+  slack: codingcobra:5oSn0b5haCG6quqeWsZePYCp
