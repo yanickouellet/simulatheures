@@ -29,6 +29,8 @@ public class MainForm {
     private JCheckBox checkBox1;
     private JCheckBox checkBox2;
     private JCheckBox checkBox3;
+    private JButton button7;
+    private JButton button8;
 
     public static void main(String[] args) {
         final JFrame frame = new JFrame("MainForm");
