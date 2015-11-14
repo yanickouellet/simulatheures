@@ -26,6 +26,9 @@ public class MainForm {
     private JButton b3Button;
     private JSpinner spinner1;
     private JTree tree1;
+    private JCheckBox checkBox1;
+    private JCheckBox checkBox2;
+    private JCheckBox checkBox3;
 
     public static void main(String[] args) {
         final JFrame frame = new JFrame("MainForm");
