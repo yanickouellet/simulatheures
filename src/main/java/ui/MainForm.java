@@ -13,9 +13,9 @@ public class MainForm {
     private JButton button4;
     private JButton button5;
     private JButton button6;
-    private JButton button7;
-    private JButton button8;
-    private JButton button9;
+    private JButton statistiquesButton;
+    private JButton itinérairesButton;
+    private JButton circuitsButton;
     private JButton button10;
     private JButton button11;
     private JButton button12;
@@ -25,6 +25,7 @@ public class MainForm {
     private JButton b2Button;
     private JButton b3Button;
     private JSpinner spinner1;
+    private JTree tree1;
 
     public static void main(String[] args) {
         final JFrame frame = new JFrame("MainForm");
