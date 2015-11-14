@@ -362,7 +362,11 @@
             <children>
               <component id="688a" class="javax.swing.JButton" binding="btnCircuits">
                 <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                    <minimum-size width="110" height="-1"/>
+                    <preferred-size width="110" height="-1"/>
+                    <maximum-size width="110" height="-1"/>
+                  </grid>
                 </constraints>
                 <properties>
                   <text value="Circuits"/>
@@ -375,7 +379,11 @@
               </vspacer>
               <component id="1d282" class="javax.swing.JButton" binding="btnRoutes">
                 <constraints>
-                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                    <minimum-size width="110" height="-1"/>
+                    <preferred-size width="110" height="-1"/>
+                    <maximum-size width="110" height="-1"/>
+                  </grid>
                 </constraints>
                 <properties>
                   <text value="Itinéraires"/>
@@ -383,7 +391,11 @@
               </component>
               <component id="66066" class="javax.swing.JButton" binding="btnStatistics">
                 <constraints>
-                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                    <minimum-size width="110" height="-1"/>
+                    <preferred-size width="110" height="-1"/>
+                    <maximum-size width="110" height="-1"/>
+                  </grid>
                 </constraints>
                 <properties>
                   <text value="Statistiques"/>
