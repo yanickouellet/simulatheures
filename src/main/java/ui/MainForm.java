@@ -20,6 +20,11 @@ public class MainForm {
     private JButton button11;
     private JButton button12;
     private JTextField textField1;
+    private JTextField textField2;
+    private JButton b1Button;
+    private JButton b2Button;
+    private JButton b3Button;
+    private JSpinner spinner1;
 
     public static void main(String[] args) {
         final JFrame frame = new JFrame("MainForm");
