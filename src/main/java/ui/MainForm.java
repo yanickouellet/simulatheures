@@ -5,7 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MainForm {
+    private JFrame mainFrame;
     private JPanel contentPane;
+    private JMenuBar menuBar;
     private JPanel mapPane;
     private JButton btnFile;
     private JButton btnOpen;
@@ -32,7 +34,6 @@ public class MainForm {
     private JButton btnZoomOut;
     private JButton btnZoomIn;
     private JLabel lblTools;
-    private JLabel lblMenu;
     private JButton btnCreateNode;
     private JButton btnCreateSegment;
     private JLabel lblProperties;
@@ -45,7 +46,34 @@ public class MainForm {
     private JPanel pnlDomainObjects;
     private JButton btnSelection;
 
+    public static void main(String[] args) {
+        new MainForm();
+    }
+
     public MainForm() {
+        prepareGUI();
+    }
+
+    private void $$$setupUI$$$() {
+        createUIComponents();
+    }
+
+    private void createUIComponents() {
+        mapPane = new MapPanel();
+        menuBar = getMenuBar();
+    }
+
+    private void prepareGUI() {
+        mainFrame = new JFrame("MainForm");
+        mainFrame.setContentPane(contentPane);
+        mainFrame.setJMenuBar(menuBar);
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.pack();
+        mainFrame.setVisible(true);
+
+        Timer t = new Timer(16, e -> mainFrame.repaint());
+        t.start();
+
         initComponents();
     }
 
@@ -164,24 +192,22 @@ public class MainForm {
 
     }
 
-    public static void main(String[] args) {
-        final JFrame frame = new JFrame("MainForm");
-        frame.setContentPane(new MainForm().contentPane);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
+    private JMenuBar getMenuBar() {
+        JMenuBar bar = new JMenuBar();
 
-        Timer t = new Timer(16, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.repaint();
-            }
-        });
-        t.start();
-    }
+        JMenu menu1 = new JMenu("Fichier");
+        JMenu menu2 = new JMenu("Edition");
+        JMenu menu3 = new JMenu("Affichage");
+        JMenu menu4 = new JMenu("Outils");
+        JMenu menu5 = new JMenu("?");
 
-    private void createUIComponents() {
-        mapPane = new MapPanel();
+        bar.add(menu1);
+        bar.add(menu2);
+        bar.add(menu3);
+        bar.add(menu4);
+        bar.add(menu5);
+
+        return bar;
     }
 }
 
