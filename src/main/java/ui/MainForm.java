@@ -57,7 +57,6 @@ public class MainForm {
     private void $$$setupUI$$$() {
         createUIComponents();
     }
-
     private void createUIComponents() {
         mapPane = new MapPanel();
         menuBar = getMenuBar();
@@ -65,14 +64,14 @@ public class MainForm {
 
     private void prepareGUI() {
         mainFrame = new JFrame("MainForm");
+        mainFrame.setTitle("SimulatHeures");
         mainFrame.setContentPane(contentPane);
         mainFrame.setJMenuBar(menuBar);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.pack();
         mainFrame.setVisible(true);
 
-        Timer t = new Timer(16, e -> mainFrame.repaint());
-        t.start();
+        new Timer(16, e -> mainFrame.repaint()).start();
 
         initComponents();
     }
