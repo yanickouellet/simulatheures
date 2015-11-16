@@ -25,43 +25,58 @@
           <component id="b62ae" class="javax.swing.JButton" binding="btnFile">
             <constraints/>
             <properties>
-              <text value="fichier"/>
+              <icon value="top_bar_icons/appbar.page.small-40x40.png"/>
+              <text value=""/>
+              <toolTipText value="Nouveau"/>
             </properties>
           </component>
           <component id="c7550" class="javax.swing.JButton" binding="btnOpen">
             <constraints/>
             <properties>
-              <text value="Ouvrir"/>
+              <icon value="top_bar_icons/appbar.folder.open-40x40.png"/>
+              <text value=""/>
+              <toolTipText value="Ouvrir"/>
             </properties>
           </component>
           <component id="ffd17" class="javax.swing.JButton" binding="btnSave">
             <constraints/>
             <properties>
-              <text value="Sauvegarder"/>
+              <icon value="top_bar_icons/appbar.save-40x40.png"/>
+              <text value=""/>
+              <toolTipText value="Sauvegarder"/>
             </properties>
           </component>
           <component id="51c64" class="javax.swing.JButton" binding="btnClose">
             <constraints/>
             <properties>
-              <text value="Fermer"/>
+              <icon value="top_bar_icons/appbar.close-40x40.png"/>
+              <text value=""/>
+              <toolTipText value="Fermer"/>
             </properties>
           </component>
           <component id="1021d" class="javax.swing.JButton" binding="btnConfiguation">
             <constraints/>
             <properties>
-              <text value="Configuration"/>
+              <icon value="top_bar_icons/appbar.cog-40x40.png"/>
+              <text value=""/>
+              <toolTipText value="Préférences"/>
+              <verifyInputWhenFocusTarget value="false"/>
             </properties>
           </component>
           <component id="8b04e" class="javax.swing.JButton" binding="btnUndo">
             <constraints/>
             <properties>
-              <text value="Annulation"/>
+              <icon value="top_bar_icons/appbar.undo-40x40.png"/>
+              <text value=""/>
+              <toolTipText value="Annuler"/>
             </properties>
           </component>
           <component id="521d1" class="javax.swing.JButton" binding="btnRedo">
             <constraints/>
             <properties>
-              <text value="Restauration"/>
+              <icon value="top_bar_icons/appbar.redo-40x40.png"/>
+              <text value=""/>
+              <toolTipText value="Restaurer"/>
             </properties>
           </component>
           <hspacer id="a1189">
@@ -140,7 +155,9 @@
                       <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="|&lt;"/>
+                      <icon value="bottom_bar_icons/appbar.control.rewind-25x25.png"/>
+                      <text value=""/>
+                      <toolTipText value="Retour au début"/>
                     </properties>
                   </component>
                   <component id="f4638" class="javax.swing.JButton" binding="btnPlay">
@@ -148,7 +165,9 @@
                       <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="&gt;"/>
+                      <icon value="bottom_bar_icons/appbar.control.play-25x25.png"/>
+                      <text value=""/>
+                      <toolTipText value="Jouer"/>
                     </properties>
                   </component>
                   <component id="842bc" class="javax.swing.JButton" binding="btnStop">
@@ -156,7 +175,9 @@
                       <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="|=|"/>
+                      <icon value="bottom_bar_icons/appbar.control.stop-25x25.png"/>
+                      <text value=""/>
+                      <toolTipText value="Arrêter"/>
                     </properties>
                   </component>
                   <grid id="41d8d" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -205,7 +226,8 @@
                       <grid row="0" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="&lt;&gt;"/>
+                      <icon value="bottom_bar_icons/clock-25x25.png"/>
+                      <text value=""/>
                     </properties>
                   </component>
                 </children>
@@ -310,18 +332,24 @@
           </component>
           <component id="d888" class="javax.swing.JButton" binding="btnZoomIn">
             <constraints>
-              <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <maximum-size width="30" height="30"/>
+              </grid>
             </constraints>
             <properties>
-              <text value="+"/>
+              <icon value="plus-20x20.png"/>
+              <text value=""/>
             </properties>
           </component>
           <component id="a86f0" class="javax.swing.JButton" binding="btnZoomOut">
             <constraints>
-              <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <maximum-size width="30" height="30"/>
+              </grid>
             </constraints>
             <properties>
-              <text value="-"/>
+              <icon value="minus-20x20.png"/>
+              <text value=""/>
             </properties>
           </component>
           <hspacer id="6bc1b">
