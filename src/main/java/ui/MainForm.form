@@ -25,7 +25,7 @@
           <component id="b62ae" class="javax.swing.JButton" binding="btnFile">
             <constraints/>
             <properties>
-              <icon value="appbar.page.small-40x40.png"/>
+              <icon value="top_bar_icons/appbar.page.small-40x40.png"/>
               <text value=""/>
               <toolTipText value="Nouveau"/>
             </properties>
@@ -33,7 +33,7 @@
           <component id="c7550" class="javax.swing.JButton" binding="btnOpen">
             <constraints/>
             <properties>
-              <icon value="appbar.folder.open-40x40.png"/>
+              <icon value="top_bar_icons/appbar.folder.open-40x40.png"/>
               <text value=""/>
               <toolTipText value="Ouvrir"/>
             </properties>
@@ -41,7 +41,7 @@
           <component id="ffd17" class="javax.swing.JButton" binding="btnSave">
             <constraints/>
             <properties>
-              <icon value="appbar.save-40x40.png"/>
+              <icon value="top_bar_icons/appbar.save-40x40.png"/>
               <text value=""/>
               <toolTipText value="Sauvegarder"/>
             </properties>
@@ -49,7 +49,7 @@
           <component id="51c64" class="javax.swing.JButton" binding="btnClose">
             <constraints/>
             <properties>
-              <icon value="appbar.close-40x40.png"/>
+              <icon value="top_bar_icons/appbar.close-40x40.png"/>
               <text value=""/>
               <toolTipText value="Fermer"/>
             </properties>
@@ -57,7 +57,7 @@
           <component id="1021d" class="javax.swing.JButton" binding="btnConfiguation">
             <constraints/>
             <properties>
-              <icon value="appbar.cog-40x40.png"/>
+              <icon value="top_bar_icons/appbar.cog-40x40.png"/>
               <text value=""/>
               <toolTipText value="Préférences"/>
               <verifyInputWhenFocusTarget value="false"/>
@@ -66,7 +66,7 @@
           <component id="8b04e" class="javax.swing.JButton" binding="btnUndo">
             <constraints/>
             <properties>
-              <icon value="appbar.undo-40x40.png"/>
+              <icon value="top_bar_icons/appbar.undo-40x40.png"/>
               <text value=""/>
               <toolTipText value="Annuler"/>
             </properties>
@@ -74,7 +74,7 @@
           <component id="521d1" class="javax.swing.JButton" binding="btnRedo">
             <constraints/>
             <properties>
-              <icon value="appbar.redo-40x40.png"/>
+              <icon value="top_bar_icons/appbar.redo-40x40.png"/>
               <text value=""/>
               <toolTipText value="Restaurer"/>
             </properties>
@@ -155,8 +155,9 @@
                       <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <icon value="appbar.control.rewind-25x25.png"/>
+                      <icon value="bottom_bar_icons/appbar.control.rewind-25x25.png"/>
                       <text value=""/>
+                      <toolTipText value="Retour au début"/>
                     </properties>
                   </component>
                   <component id="f4638" class="javax.swing.JButton" binding="btnPlay">
@@ -164,8 +165,9 @@
                       <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <icon value="appbar.control.play-25x25.png"/>
+                      <icon value="bottom_bar_icons/appbar.control.play-25x25.png"/>
                       <text value=""/>
+                      <toolTipText value="Jouer"/>
                     </properties>
                   </component>
                   <component id="842bc" class="javax.swing.JButton" binding="btnStop">
@@ -173,8 +175,9 @@
                       <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <icon value="appbar.control.stop-25x25.png"/>
+                      <icon value="bottom_bar_icons/appbar.control.stop-25x25.png"/>
                       <text value=""/>
+                      <toolTipText value="Arrêter"/>
                     </properties>
                   </component>
                   <grid id="41d8d" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -223,7 +226,7 @@
                       <grid row="0" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <icon value="clock-25x25.png"/>
+                      <icon value="bottom_bar_icons/clock-25x25.png"/>
                       <text value=""/>
                     </properties>
                   </component>
