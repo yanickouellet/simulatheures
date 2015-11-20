@@ -5,6 +5,7 @@ import domain.Controller;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -60,6 +61,18 @@ public class MainForm {
         form.setController(controller);
     }
 
+    public void update() {
+        ApplicationState state = controller.getState();
+        lblPosition.setText(state.getCurrentPosition().toString() + " Zoom: " + state.getZoomLevel());
+        mainFrame.repaint();
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
+        MapPanel pane = (MapPanel) mapPane;
+        pane.setDrawer(new MapDrawer(controller.getState()));
+    }
+
     public MainForm() {
         prepareGUI();
 
@@ -82,18 +95,18 @@ public class MainForm {
                 controller.mouseOver(e.getPoint(), mapPane.getWidth(), mapPane.getHeight());
             }
         });
-    }
-
-    public void update() {
-        ApplicationState state = controller.getState();
-        lblPosition.setText(state.getCurrentPosition().toString());
-        mainFrame.repaint();
-    }
-
-    public void setController(Controller controller) {
-        this.controller = controller;
-        MapPanel pane = (MapPanel) mapPane;
-        pane.setDrawer(new MapDrawer(controller.getState()));
+        btnZoomOut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.adjustZoom(false);
+            }
+        });
+        btnZoomIn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.adjustZoom(true);
+            }
+        });
     }
 
     private void $$$setupUI$$$() {

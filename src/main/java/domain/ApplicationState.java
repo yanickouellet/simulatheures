@@ -4,11 +4,13 @@ public class ApplicationState {
     private Coordinate currentPosition;
     private EditionMode currentMode;
     private Plane plane;
+    private int zoomLevel;
 
     public ApplicationState() {
         currentPosition = new Coordinate();
         currentMode  = EditionMode.None;
         plane = new Plane();
+        zoomLevel = 100;
     }
 
     public Coordinate getCurrentPosition() {
@@ -33,5 +35,17 @@ public class ApplicationState {
 
     public void setPlane(Plane plane) {
         this.plane = plane;
+    }
+
+    public float getZoomRatio() {
+        return zoomLevel / 100f;
+    }
+
+    public int getZoomLevel() {
+        return zoomLevel;
+    }
+
+    public void setZoomLevel(int zoomLevel) {
+        this.zoomLevel = zoomLevel;
     }
 }

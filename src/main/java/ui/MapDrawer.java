@@ -15,18 +15,23 @@ public class MapDrawer {
     }
 
     public void draw(Graphics2D g, int maxWidth, int maxHeight) {
-        Point p = CoordinateConverter.CoordinateToPoint(state.getCurrentPosition(), maxWidth, maxHeight, 1);
+        float zoom = state.getZoomRatio();
+        int baseStroke = Math.round(10 * zoom);
+        baseStroke = Math.max(2, baseStroke);
+        int halfStroke = baseStroke / 2;
+
+        Point p = CoordinateConverter.CoordinateToPoint(state.getCurrentPosition(), maxWidth, maxHeight, zoom);
         int x = (int) p.getX();
         int y = (int) p.getY();
-        g.fill(new Ellipse2D.Float(x-5, y-5, 10, 10));
+        g.fill(new Ellipse2D.Float(x - halfStroke, y - halfStroke, baseStroke, baseStroke));
 
         g.setColor(Color.black);
         for(Node n : state.getPlane().getNodes()) {
-            p = CoordinateConverter.CoordinateToPoint(n.getCoordinate(), maxWidth, maxHeight, 1);
+            p = CoordinateConverter.CoordinateToPoint(n.getCoordinate(), maxWidth, maxHeight, zoom);
             x = (int) p.getX();
             y = (int) p.getY();
 
-            g.fill(new Ellipse2D.Float(x-5, y-5, 10, 10));
+            g.fill(new Ellipse2D.Float(x - halfStroke, y - halfStroke,baseStroke, baseStroke));
         }
 
     }
