@@ -59,7 +59,7 @@ public class MainForm {
     public static void main(String[] args) {
         MainForm form = new MainForm();
         Controller controller = new Controller(form);
-        form.controller = controller;
+        form.setController(controller);
     }
 
     public MainForm() {
@@ -89,10 +89,13 @@ public class MainForm {
     public void update() {
         ApplicationState state = controller.getState();
         lblPosition.setText(state.getCurrentPosition().toString());
+        mainFrame.repaint();
     }
 
     public void setController(Controller controller) {
         this.controller = controller;
+        MapPanel pane = (MapPanel) mapPane;
+        pane.setDrawer(new MapDrawer(controller.getState()));
     }
 
     private void $$$setupUI$$$() {

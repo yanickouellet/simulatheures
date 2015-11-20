@@ -4,10 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MapPanel extends JPanel {
-    private int x;
+    private MapDrawer drawer;
 
     public MapPanel() {
-        x = 0;
     }
 
     @Override
@@ -28,5 +27,12 @@ public class MapPanel extends JPanel {
         g2.setStroke(new BasicStroke(1));
         g2.drawLine(w/2, 0, w/2, h);
         g2.drawLine(0, h/2, w, h/2);
+
+        if (drawer != null)
+            drawer.draw((Graphics2D)g, getWidth(), getHeight());
+    }
+
+    public void setDrawer(MapDrawer drawer) {
+        this.drawer = drawer;
     }
 }

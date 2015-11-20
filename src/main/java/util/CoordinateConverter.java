@@ -16,7 +16,13 @@ public class CoordinateConverter {
         return new Coordinate(x, y);
     }
 
-    public static Point CoordinateToPoint(Coordinate coords, float zoomLevel) {
-        throw new NotImplementedException();
+    public static Point CoordinateToPoint(Coordinate coords, int maxWidth, int maxHeight, float zoomLevel) {
+        float dx = maxWidth / 2;
+        float dy = maxHeight / 2;
+
+        int x = (int) (coords.getX() + dx);
+        int y = (int) (coords.getY() + dy);
+
+        return new Point(x, y);
     }
 }
