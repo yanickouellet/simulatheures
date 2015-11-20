@@ -3,12 +3,12 @@ package domain;
 public class ApplicationState {
     private Coordinate currentPosition;
     private EditionMode currentMode;
-    private Map map;
+    private Plane plane;
 
     public ApplicationState() {
         currentPosition = new Coordinate();
         currentMode  = EditionMode.None;
-        map = new Map();
+        plane = new Plane();
     }
 
     public Coordinate getCurrentPosition() {
@@ -27,11 +27,11 @@ public class ApplicationState {
         this.currentMode = currentMode;
     }
 
-    public Map getMap() {
-        return map;
+    public Plane getPlane() {
+        return plane;
     }
 
-    public void setMap(Map map) {
-        this.map = map;
+    public void setPlane(Plane plane) {
+        this.plane = plane;
     }
 }

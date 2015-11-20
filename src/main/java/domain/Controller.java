@@ -15,6 +15,8 @@ public class Controller {
     }
 
     public void click(Point p, int maxWidth, int maxHeight) {
+        state.getPlane().addNode(CoordinateConverter.PointToCoordinate(p, maxWidth, maxHeight, 1));
+        mainForm.update();
     }
 
     public void mouseOver(Point p, int maxWidth, int maxHeight) {
