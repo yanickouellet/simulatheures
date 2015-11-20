@@ -7,18 +7,22 @@ import java.awt.*;
 
 public class Controller {
     private MainForm mainForm;
-    private Map map;
+    private ApplicationState state;
 
     public Controller(MainForm mainForm) {
         this.mainForm = mainForm;
-        map = new Map();
+        state = new ApplicationState();
     }
 
     public void click(Point p, int maxWidth, int maxHeight) {
     }
 
     public void mouseOver(Point p, int maxWidth, int maxHeight) {
-        map.setCurrentPosition(CoordinateConverter.PointToCoordinate(p, maxWidth, maxHeight, 1));
-        mainForm.update(map);
+        state.setCurrentPosition(CoordinateConverter.PointToCoordinate(p, maxWidth, maxHeight, 1));
+        mainForm.update();
+    }
+
+    public ApplicationState getState() {
+        return state;
     }
 }

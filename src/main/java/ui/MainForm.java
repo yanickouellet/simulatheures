@@ -1,5 +1,6 @@
 package ui;
 
+import domain.ApplicationState;
 import domain.Controller;
 import domain.Map;
 
@@ -85,8 +86,9 @@ public class MainForm {
         });
     }
 
-    public void update(Map map) {
-        lblPosition.setText(map.getCurrentPosition().toString());
+    public void update() {
+        ApplicationState state = controller.getState();
+        lblPosition.setText(state.getCurrentPosition().toString());
     }
 
     public void setController(Controller controller) {
