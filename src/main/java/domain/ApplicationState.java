@@ -2,6 +2,7 @@ package domain;
 
 public class ApplicationState {
     private Coordinate currentPosition;
+    private Coordinate centerCoordinate;
     private EditionMode currentMode;
     private Plane plane;
     private int zoomLevel;
@@ -10,7 +11,8 @@ public class ApplicationState {
         currentPosition = new Coordinate();
         currentMode  = EditionMode.None;
         plane = new Plane();
-        zoomLevel = 100;
+        zoomLevel = 175;
+        centerCoordinate = new Coordinate();
     }
 
     public Coordinate getCurrentPosition() {
@@ -35,6 +37,14 @@ public class ApplicationState {
 
     public void setPlane(Plane plane) {
         this.plane = plane;
+    }
+
+    public Coordinate getCenterCoordinate() {
+        return centerCoordinate;
+    }
+
+    public void setCenterCoordinate(Coordinate centerCoordinate) {
+        this.centerCoordinate = centerCoordinate;
     }
 
     public float getZoomRatio() {

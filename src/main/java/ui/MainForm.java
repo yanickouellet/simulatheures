@@ -4,6 +4,7 @@ import domain.ApplicationState;
 import domain.Controller;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -55,6 +56,8 @@ public class MainForm {
 
     Controller controller;
 
+    Point dragOrigin;
+
     public static void main(String[] args) {
         MainForm form = new MainForm();
         Controller controller = new Controller(form);
@@ -86,8 +89,26 @@ public class MainForm {
 
                 controller.click(e.getPoint(), mapPane.getWidth(), mapPane.getHeight());
             }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+
+                dragOrigin = e.getPoint();
+            }
         });
         mapPane.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                super.mouseDragged(e);
+
+                Point p = e.getPoint();
+                int dx = (int) dragOrigin.getX() - e.getX();
+                int dy = (int) dragOrigin.getY() - e.getY();
+                controller.dragMap(dx, dy, mapPane.getWidth(), mapPane.getHeight());
+                dragOrigin = p;
+            }
+
             @Override
             public void mouseMoved(MouseEvent e) {
                 super.mouseMoved(e);

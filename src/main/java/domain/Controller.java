@@ -15,12 +15,46 @@ public class Controller {
     }
 
     public void click(Point p, int maxWidth, int maxHeight) {
-        state.getPlane().addNode(CoordinateConverter.PointToCoordinate(p, maxWidth, maxHeight, state.getZoomRatio()));
+        state.getPlane()
+                .addNode(CoordinateConverter.PointToCoordinate(
+                    p,
+                    maxWidth,
+                    maxHeight,
+                    state.getCenterCoordinate(),
+                    state.getZoomRatio())
+                );
         mainForm.update();
     }
 
     public void mouseOver(Point p, int maxWidth, int maxHeight) {
-        state.setCurrentPosition(CoordinateConverter.PointToCoordinate(p, maxWidth, maxHeight, state.getZoomRatio()));
+        state.setCurrentPosition(CoordinateConverter.PointToCoordinate(
+                p,
+                maxWidth,
+                maxHeight,
+                state.getCenterCoordinate(),
+                state.getZoomRatio())
+        );
+        mainForm.update();
+    }
+
+    public void dragMap(int dx, int dy, int maxWidth, int maxHeight) {
+        Point currentCenter = CoordinateConverter.CoordinateToPoint(
+                state.getCenterCoordinate(),
+                maxWidth,
+                maxHeight,
+                new Coordinate(),
+                state.getZoomRatio()
+        );
+        currentCenter.translate(dx, dy);
+
+        state.setCenterCoordinate(CoordinateConverter.PointToCoordinate(
+                currentCenter,
+                maxWidth,
+                maxHeight,
+                new Coordinate(),
+                state.getZoomRatio()
+        ));
+
         mainForm.update();
     }
 
