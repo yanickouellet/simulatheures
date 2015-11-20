@@ -1,8 +1,13 @@
 package ui;
 
+import domain.Controller;
+import domain.Map;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MainForm {
     private JFrame mainFrame;
@@ -45,13 +50,47 @@ public class MainForm {
     private JLabel lblTitleSection;
     private JPanel pnlDomainObjects;
     private JButton btnSelection;
+    private JToolBar tlbBottomBar;
+    private JPanel pnlBottomBar;
+
+    Controller controller;
 
     public static void main(String[] args) {
-        new MainForm();
+        MainForm form = new MainForm();
+        Controller controller = new Controller(form);
+        form.controller = controller;
     }
 
     public MainForm() {
         prepareGUI();
+
+        pnlDomainObjects.setVisible(false);
+        tlbBottomBar.setVisible(false);
+
+        mapPane.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                controller.click(e.getPoint(), mapPane.getWidth(), mapPane.getHeight());
+            }
+        });
+        mapPane.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                super.mouseMoved(e);
+
+                controller.mouseOver(e.getPoint(), mapPane.getWidth(), mapPane.getHeight());
+            }
+        });
+    }
+
+    public void update(Map map) {
+        lblPosition.setText(map.getCurrentPosition().toString());
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
     private void $$$setupUI$$$() {

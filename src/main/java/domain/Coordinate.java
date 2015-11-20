@@ -1,10 +1,12 @@
 package domain;
 
+import java.text.DecimalFormat;
+
 public class Coordinate {
     private float x;
-    private int y;
+    private float y;
 
-    public Coordinate(int x, int y) {
+    public Coordinate(float x, float y) {
         this.x = x;
         this.y = y;
     }
@@ -13,15 +15,21 @@ public class Coordinate {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(float x) {
         this.x = x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(float y) {
         this.y = y;
+    }
+
+    @Override
+    public String toString() {
+        DecimalFormat format = new DecimalFormat("#.####");
+        return String.format("(%s, %s)", format.format(x), format.format(y));
     }
 }
