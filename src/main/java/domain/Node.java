@@ -1,6 +1,6 @@
 package domain;
 
-public class Node {
+public class Node extends NetworkElement {
     private Coordinate coordinate;
 
     public Node(Coordinate coordinate) {
@@ -13,5 +13,14 @@ public class Node {
 
     public void setCoordinate(Coordinate coordinate) {
         this.coordinate = coordinate;
+    }
+
+    @Override
+    public boolean isOnCoordinate(Coordinate coords) {
+        float maxDelta = 5;
+        float deltaX = Math.abs(coords.getX() - coordinate.getX());
+        float deltaY = Math.abs(coords.getY() - coordinate.getY());
+
+        return deltaX  < maxDelta && deltaY < maxDelta;
     }
 }
