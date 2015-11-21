@@ -102,10 +102,13 @@ public class Controller {
         Node node = plane.getHoveredNode(coord);
         Node previousNode = state.getSelectedNode();
 
+        if (node == null)
+            return;
+
         if (previousNode != null && node != previousNode) {
             plane.addSegment(previousNode, node);
             state.setSelectedNode(null);
-        } else if (node != null) {
+        } else  {
             state.setSelectedNode(node);
         }
     }
