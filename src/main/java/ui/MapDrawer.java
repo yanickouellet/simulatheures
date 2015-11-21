@@ -1,6 +1,7 @@
 package ui;
 
 import domain.ApplicationState;
+import domain.EditionMode;
 import domain.Node;
 import util.CoordinateConverter;
 
@@ -20,15 +21,20 @@ public class MapDrawer {
         baseStroke = Math.max(2, baseStroke);
         int halfStroke = baseStroke / 2;
 
-        Point p = CoordinateConverter.CoordinateToPoint(
-                state.getCurrentPosition(),
-                maxWidth,
-                maxHeight,
-                state.getCenterCoordinate(),
-                zoom);
-        int x = (int) p.getX();
-        int y = (int) p.getY();
-        g.fill(new Ellipse2D.Float(x - halfStroke, y - halfStroke, baseStroke, baseStroke));
+        Point p;
+        int x, y;
+
+        if (state.getCurrentMode() == EditionMode.AddNode) {
+            p = CoordinateConverter.CoordinateToPoint(
+                    state.getCurrentPosition(),
+                    maxWidth,
+                    maxHeight,
+                    state.getCenterCoordinate(),
+                    zoom);
+            x = (int) p.getX();
+            y = (int) p.getY();
+            g.fill(new Ellipse2D.Float(x - halfStroke, y - halfStroke, baseStroke, baseStroke));
+        }
 
         g.setColor(Color.black);
         for (Node n : state.getPlane().getNodes()) {
