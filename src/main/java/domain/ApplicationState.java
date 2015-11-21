@@ -5,6 +5,7 @@ public class ApplicationState {
     private Coordinate centerCoordinate;
     private EditionMode currentMode;
     private Plane plane;
+    private Node selectedNode;
     private int zoomLevel;
 
     public ApplicationState() {
@@ -57,5 +58,13 @@ public class ApplicationState {
 
     public void setZoomLevel(int zoomLevel) {
         this.zoomLevel = zoomLevel;
+    }
+
+    public Node getSelectedNode() {
+        return selectedNode;
+    }
+
+    public void setSelectedNode(Node selectedNode) {
+        this.selectedNode = selectedNode;
     }
 }

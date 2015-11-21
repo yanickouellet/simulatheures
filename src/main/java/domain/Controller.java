@@ -15,14 +15,23 @@ public class Controller {
     }
 
     public void click(Point p, int maxWidth, int maxHeight) {
-        state.getPlane()
-                .addNode(CoordinateConverter.PointToCoordinate(
-                    p,
-                    maxWidth,
-                    maxHeight,
-                    state.getCenterCoordinate(),
-                    state.getZoomRatio())
-                );
+        Coordinate coord = CoordinateConverter.PointToCoordinate(
+                p,
+                maxWidth,
+                maxHeight,
+                state.getCenterCoordinate(),
+                state.getZoomRatio()
+        );
+
+        switch (state.getCurrentMode()) {
+            case AddNode:
+                addNodeClick(coord);
+                break;
+            case AddSegment:
+                addSegmentClick(coord);
+                break;
+        }
+
         mainForm.update();
     }
 
@@ -72,7 +81,32 @@ public class Controller {
         mainForm.update();
     }
 
+    public void setMode(EditionMode mode) {
+        state.setCurrentMode(mode);
+
+        if (mode != EditionMode.AddSegment) {
+            state.setSelectedNode(null);
+        }
+    }
+
     public ApplicationState getState() {
         return state;
+    }
+
+    private void addNodeClick(Coordinate coord) {
+        state.getPlane().addNode(coord);
+    }
+
+    private void addSegmentClick(Coordinate coord) {
+        Plane plane = state.getPlane();
+        Node node = plane.getHoveredNode(coord);
+        Node previousNode = state.getSelectedNode();
+
+        if (previousNode != null && node != previousNode) {
+            plane.addSegment(previousNode, node);
+            state.setSelectedNode(null);
+        } else if (node != null) {
+            state.setSelectedNode(node);
+        }
     }
 }

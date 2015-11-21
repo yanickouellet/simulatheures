@@ -2,6 +2,7 @@ package ui;
 
 import domain.ApplicationState;
 import domain.Controller;
+import domain.EditionMode;
 
 import javax.swing.*;
 import java.awt.*;
@@ -126,6 +127,24 @@ public class MainForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.adjustZoom(true);
+            }
+        });
+        btnSelection.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.setMode(EditionMode.None);
+            }
+        });
+        btnCreateNode.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.setMode(EditionMode.AddNode);
+            }
+        });
+        btnCreateSegment.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.setMode(EditionMode.AddSegment);
             }
         });
     }

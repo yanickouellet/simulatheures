@@ -1,9 +1,6 @@
 package ui;
 
-import domain.ApplicationState;
-import domain.Coordinate;
-import domain.EditionMode;
-import domain.Node;
+import domain.*;
 import util.CoordinateConverter;
 
 import java.awt.*;
@@ -11,49 +8,91 @@ import java.awt.geom.Ellipse2D;
 
 public class MapDrawer {
     private ApplicationState state;
+    private float zoom;
+    private int baseStroke;
+    private int halfStroke;
+    private int maxWidth;
+    private int maxHeight;
+
+    private Color defaultColor;
+    private Color hoverColor;
+    private Color selectedColor;
 
     public MapDrawer(ApplicationState state) {
         this.state = state;
+
+        defaultColor = Color.black;
+        hoverColor = Color.red;
+        selectedColor = Color.orange;
     }
 
     public void draw(Graphics2D g, int maxWidth, int maxHeight) {
-        float zoom = state.getZoomRatio();
-        int baseStroke = Math.round(10 * zoom);
+        this.maxWidth = maxWidth;
+        this.maxHeight = maxHeight;
+
+        zoom = state.getZoomRatio();
+        baseStroke = Math.round(10 * zoom);
         baseStroke = Math.max(2, baseStroke);
-        int halfStroke = baseStroke / 2;
+        halfStroke = baseStroke / 2;
 
-        Coordinate currentCoordinate = state.getCurrentPosition();
-        Point p;
-        int x, y;
+        if (state.getCurrentMode() == EditionMode.AddNode)
+            drawCurrentNode(g);
+        drawSegments(g);
+        drawNodes(g);
+    }
 
-        if (state.getCurrentMode() == EditionMode.AddNode) {
-            p = CoordinateConverter.CoordinateToPoint(
-                    currentCoordinate,
+    private void drawCurrentNode(Graphics2D g) {
+        Point p = CoordinateConverter.CoordinateToPoint(
+                state.getCurrentPosition(),
+                maxWidth,
+                maxHeight,
+                state.getCenterCoordinate(),
+                zoom);
+        g.fill(new Ellipse2D.Float(p.x - halfStroke, p.y - halfStroke, baseStroke, baseStroke));
+    }
+
+    private void drawSegments(Graphics2D g) {
+        g.setStroke(new BasicStroke(halfStroke));
+        for (Segment s :state.getPlane().getSegments()) {
+            g.setColor(defaultColor);
+
+            Point source = CoordinateConverter.CoordinateToPoint(
+                    s.getSource().getCoordinate(),
                     maxWidth,
                     maxHeight,
                     state.getCenterCoordinate(),
-                    zoom);
-            x = (int) p.getX();
-            y = (int) p.getY();
-            g.fill(new Ellipse2D.Float(x - halfStroke, y - halfStroke, baseStroke, baseStroke));
+                    zoom
+            );
+            Point destination = CoordinateConverter.CoordinateToPoint(
+                    s.getDestination().getCoordinate(),
+                    maxWidth,
+                    maxHeight,
+                    state.getCenterCoordinate(),
+                    zoom
+            );
+
+            g.drawLine(source.x, source.y, destination.x, destination.y);
         }
 
-        g.setColor(Color.black);
+    }
+
+    private void drawNodes(Graphics2D g) {
         for (Node n : state.getPlane().getNodes()) {
-            p = CoordinateConverter.CoordinateToPoint(
+            g.setColor(defaultColor);
+
+            Point p = CoordinateConverter.CoordinateToPoint(
                     n.getCoordinate(),
                     maxWidth,
                     maxHeight,
                     state.getCenterCoordinate(),
                     zoom);
-            x = (int) p.getX();
-            y = (int) p.getY();
 
-            if (n.isOnCoordinate(currentCoordinate))
-                g.setColor(Color.RED);
+            if (n == state.getSelectedNode())
+                g.setColor(selectedColor);
+            else if (n.isOnCoordinate(state.getCurrentPosition()))
+                g.setColor(hoverColor);
 
-            g.fill(new Ellipse2D.Float(x - halfStroke, y - halfStroke, baseStroke, baseStroke));
+            g.fill(new Ellipse2D.Float(p.x - halfStroke, p.y - halfStroke, baseStroke, baseStroke));
         }
-
     }
 }
