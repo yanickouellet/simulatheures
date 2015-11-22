@@ -8,4 +8,5 @@ public class Strings {
     public static final String SelectConsecutiveSegments = "Sélectionnez des segments consécutifs.";
     public static final String RouteAdded = "Le circuit a bien été ajouté.";
     public static final String SelectStations = "Sélectionnez les arrêts du trajets.";
+    public static final String RouteMustContainsSegment = "Le circuit doit comprendre au moins un segment.";
 }

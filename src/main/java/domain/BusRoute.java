@@ -66,4 +66,16 @@ public class BusRoute {
     public boolean isSegmentOnRoute(Segment segment) {
         return segments.contains(segment);
     }
+
+    public Node getSource() {
+        return source;
+    }
+
+    public ArrayList<Segment> getSegments() {
+        return segments;
+    }
+
+    public ArrayList<Node> getStations() {
+        return stations;
+    }
 }

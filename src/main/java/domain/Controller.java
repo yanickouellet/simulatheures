@@ -123,12 +123,23 @@ public class Controller {
                     controllerMode = ControllerMode.AddingBusRouteStation;
                     state.setMessage(Strings.SelectStations);
                 } else if (controllerMode == ControllerMode.AddingBusRouteStation) {
-                    state.getPlane().addRoute(state.getCurrentBusRoute());
-                    state.setCurrentBusRoute(null);
-                    startBusRouteCreation();
+                    BusRoute route = state.getCurrentBusRoute();
+                    if (route.getSegments().size() > 1) {
+                        Node finalNode = route.getSegments().get(route.getSegments().size()-1).getDestination();
+                        if (!route.isNodeStation(finalNode))
+                            route.toggleStation(finalNode);
+
+                        state.getPlane().addRoute(state.getCurrentBusRoute());
+                        startBusRouteCreation();
+                    } else {
+                        state.setMessage(Strings.RouteMustContainsSegment);
+                    }
+
                 }
                 break;
         }
+        
+        mainForm.update();
     }
 
     public ApplicationState getState() {
@@ -137,6 +148,7 @@ public class Controller {
 
     private void startBusRouteCreation() {
         controllerMode = ControllerMode.AddingBusRoute;
+        state.setCurrentBusRoute(null);
         state.setMessage(Strings.SelectRouteSource);
     }
 
