@@ -6,6 +6,7 @@ public class ApplicationState {
     private EditionMode currentMode;
     private Plane plane;
     private NetworkElement selectedElement;
+    private BusRoute currentBusRoute;
     private int zoomLevel;
     private String message;
 
@@ -76,5 +77,21 @@ public class ApplicationState {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public BusRoute getCurrentBusRoute() {
+        return currentBusRoute;
+    }
+
+    public void setCurrentBusRoute(BusRoute currentBusRoute) {
+        this.currentBusRoute = currentBusRoute;
+    }
+
+    public boolean isNodeStationOnCurrentRoute(Node node) {
+        return currentBusRoute != null && currentBusRoute.isNodeStation(node);
+    }
+
+    public boolean isSegmentOnCurrentRoute(Segment segment) {
+        return currentBusRoute != null && currentBusRoute.isSegmentOnRoute(segment);
     }
 }

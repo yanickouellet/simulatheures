@@ -9,10 +9,12 @@ import java.awt.*;
 public class Controller {
     private MainForm mainForm;
     private ApplicationState state;
+    private ControllerMode controllerMode;
 
     public Controller(MainForm mainForm) {
         this.mainForm = mainForm;
         state = new ApplicationState();
+        controllerMode = ControllerMode.Normal;
     }
 
     public void click(Point p, int maxWidth, int maxHeight) {
@@ -35,6 +37,9 @@ public class Controller {
                 break;
             case AddSegment:
                 addSegmentClick(coord);
+                break;
+            case AddBusRoute:
+                addBusRouteClick(coord);
                 break;
         }
 
@@ -87,11 +92,20 @@ public class Controller {
         mainForm.update();
     }
 
-    public void setMode(EditionMode mode) {
+    public void setControllerMode(EditionMode mode) {
         state.setMessage("");
         state.setCurrentMode(mode);
 
         state.setSelectedElement(null);
+
+        if (mode == EditionMode.AddBusRoute) {
+            startBusRouteCreation();
+        } else {
+            controllerMode = ControllerMode.Normal;
+            state.setCurrentBusRoute(null);
+        }
+
+        mainForm.update();
     }
 
     public void deleteSelectedElement() {
@@ -102,8 +116,28 @@ public class Controller {
             state.getPlane().deleteElement(elem);
     }
 
+    public void validate() {
+        switch (state.getCurrentMode()) {
+            case AddBusRoute:
+                if (controllerMode == ControllerMode.AddingBusRoute) {
+                    controllerMode = ControllerMode.AddingBusRouteStation;
+                    state.setMessage(Strings.SelectStations);
+                } else if (controllerMode == ControllerMode.AddingBusRouteStation) {
+                    state.getPlane().addRoute(state.getCurrentBusRoute());
+                    state.setCurrentBusRoute(null);
+                    startBusRouteCreation();
+                }
+                break;
+        }
+    }
+
     public ApplicationState getState() {
         return state;
+    }
+
+    private void startBusRouteCreation() {
+        controllerMode = ControllerMode.AddingBusRoute;
+        state.setMessage(Strings.SelectRouteSource);
     }
 
     private void selectionModeClick(Coordinate coord) {
@@ -133,6 +167,29 @@ public class Controller {
             state.setSelectedElement(null);
         } else  {
             state.setSelectedElement(node);
+        }
+    }
+
+    private void addBusRouteClick(Coordinate coord) {
+        Plane plane = state.getPlane();
+        BusRoute route = state.getCurrentBusRoute();
+
+        if (route == null) {
+            Node node = plane.getNodeOnCoords(coord);
+            if (node != null) {
+                state.setCurrentBusRoute(new BusRoute(node));
+                state.setMessage(Strings.SelectConsecutiveSegments);
+            }
+        } else if (controllerMode == ControllerMode.AddingBusRoute) {
+            Segment segment = plane.getSegmentOnCoords(coord);
+            if (segment != null && route.isConsecutive(segment)) {
+                route.addSegment(segment);
+            }
+        } else if (controllerMode == ControllerMode.AddingBusRouteStation) {
+            Node node = plane.getNodeOnCoords(coord);
+            if (node != null) {
+                route.toggleStation(node);
+            }
         }
     }
 }

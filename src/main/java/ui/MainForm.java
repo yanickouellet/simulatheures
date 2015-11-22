@@ -56,6 +56,7 @@ public class MainForm {
     private JLabel lblError;
     private JLabel lblMessage;
     private JButton btnDeleteSelected;
+    private JButton btnValidate;
     private JPanel pnlBottomBar;
 
     Controller controller;
@@ -140,25 +141,43 @@ public class MainForm {
         btnSelection.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.setMode(EditionMode.None);
+                controller.setControllerMode(EditionMode.None);
             }
         });
         btnCreateNode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.setMode(EditionMode.AddNode);
+                controller.setControllerMode(EditionMode.AddNode);
             }
         });
         btnCreateSegment.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.setMode(EditionMode.AddSegment);
+                controller.setControllerMode(EditionMode.AddSegment);
             }
         });
         btnDeleteSelected.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.deleteSelectedElement();
+            }
+        });
+        btnCreateCircuit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.setControllerMode(EditionMode.AddBusRoute);
+            }
+        });
+        btnValidate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        btnValidate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.validate();
             }
         });
     }

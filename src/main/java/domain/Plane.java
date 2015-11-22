@@ -7,11 +7,13 @@ import java.util.Map;
 
 public class Plane {
     private ArrayList<Node> nodes;
+    private ArrayList<BusRoute> routes;
     private HashMap<NodeVector, Segment> segments;
 
     public Plane() {
         nodes = new ArrayList<>();
         segments = new HashMap<>();
+        routes = new ArrayList<>();
     }
 
     public boolean addNode(Coordinate coords) {
@@ -32,6 +34,11 @@ public class Plane {
         return true;
     }
 
+    public boolean addRoute(BusRoute route) {
+        routes.add(route);
+        return true;
+    }
+
     public ArrayList<Node> getNodes() {
         return nodes;
     }
@@ -49,16 +56,24 @@ public class Plane {
         return null;
     }
 
+    public Segment getSegmentOnCoords(Coordinate coords) {
+        for (Segment s : segments.values()) {
+            if (s.isOnCoordinate(coords))
+                return s;
+        }
+
+        return null;
+    }
+
     public NetworkElement getElementOnCoords(Coordinate coords) {
         NetworkElement elem = getNodeOnCoords(coords);
 
         if (elem != null)
             return elem;
 
-        for (Segment s : segments.values()) {
-            if (s.isOnCoordinate(coords))
-                return s;
-        }
+        elem = getSegmentOnCoords(coords);
+        if (elem != null)
+            return elem;
 
         return null;
     }

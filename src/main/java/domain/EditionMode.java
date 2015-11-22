@@ -4,4 +4,5 @@ public enum EditionMode {
     None,
     AddNode,
     AddSegment,
+    AddBusRoute,
 }
