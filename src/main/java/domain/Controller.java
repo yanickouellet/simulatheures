@@ -2,6 +2,7 @@ package domain;
 
 import ui.MainForm;
 import util.CoordinateConverter;
+import util.Strings;
 
 import java.awt.*;
 
@@ -15,6 +16,8 @@ public class Controller {
     }
 
     public void click(Point p, int maxWidth, int maxHeight) {
+        state.setMessage("");
+
         Coordinate coord = CoordinateConverter.PointToCoordinate(
                 p,
                 maxWidth,
@@ -82,6 +85,7 @@ public class Controller {
     }
 
     public void setMode(EditionMode mode) {
+        state.setMessage("");
         state.setCurrentMode(mode);
 
         if (mode != EditionMode.AddSegment) {
@@ -106,7 +110,10 @@ public class Controller {
             return;
 
         if (previousNode != null && node != previousNode) {
-            plane.addSegment(previousNode, node);
+           if (!plane.addSegment(previousNode, node)) {
+               state.setMessage(Strings.SegmentAlreadyExisting);
+           }
+
             state.setSelectedNode(null);
         } else  {
             state.setSelectedNode(node);

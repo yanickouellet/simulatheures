@@ -79,6 +79,19 @@
               <toolTipText value="Restaurer"/>
             </properties>
           </component>
+          <component id="4269f" class="javax.swing.JLabel" binding="lblError">
+            <constraints/>
+            <properties>
+              <foreground color="-4516835"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="f0585" class="javax.swing.JLabel" binding="lblMessage">
+            <constraints/>
+            <properties>
+              <text value=""/>
+            </properties>
+          </component>
           <hspacer id="a1189">
             <constraints/>
           </hspacer>

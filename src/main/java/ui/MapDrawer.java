@@ -53,7 +53,7 @@ public class MapDrawer {
 
     private void drawSegments(Graphics2D g) {
         g.setStroke(new BasicStroke(halfStroke));
-        for (Segment s :state.getPlane().getSegments()) {
+        for (Segment s :state.getPlane().getSegments().values()) {
             g.setColor(defaultColor);
 
             Point source = CoordinateConverter.CoordinateToPoint(

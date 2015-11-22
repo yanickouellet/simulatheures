@@ -53,6 +53,8 @@ public class MainForm {
     private JPanel pnlDomainObjects;
     private JButton btnSelection;
     private JToolBar tlbBottomBar;
+    private JLabel lblError;
+    private JLabel lblMessage;
     private JPanel pnlBottomBar;
 
     Controller controller;
@@ -67,7 +69,10 @@ public class MainForm {
 
     public void update() {
         ApplicationState state = controller.getState();
+
         lblPosition.setText(state.getCurrentPosition().toString() + " Zoom: " + state.getZoomLevel());
+        lblMessage.setText(state.getMessage());
+
         mainFrame.repaint();
     }
 

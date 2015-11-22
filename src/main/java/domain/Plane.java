@@ -1,29 +1,36 @@
 package domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Plane {
     private ArrayList<Node> nodes;
-    private ArrayList<Segment> segments;
+    private HashMap<NodeVector, Segment> segments;
 
     public Plane() {
         nodes = new ArrayList<>();
-        segments = new ArrayList<>();
+        segments = new HashMap<>();
     }
 
     public void addNode(Coordinate coords) {
         nodes.add(new Node(coords));
     }
 
-    public void addSegment(Node source, Node destination) {
-        segments.add(new Segment(source, destination));
+    public boolean addSegment(Node source, Node destination) {
+        NodeVector vector = new NodeVector(source, destination);
+
+        if (segments.containsKey(vector))
+            return false;
+
+        segments.put(vector, new Segment(vector));
+        return true;
     }
 
     public ArrayList<Node> getNodes() {
         return nodes;
     }
 
-    public ArrayList<Segment> getSegments() {
+    public HashMap<NodeVector, Segment> getSegments() {
         return segments;
     }
 

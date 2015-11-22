@@ -7,6 +7,7 @@ public class ApplicationState {
     private Plane plane;
     private Node selectedNode;
     private int zoomLevel;
+    private String message;
 
     public ApplicationState() {
         currentPosition = new Coordinate();
@@ -14,6 +15,7 @@ public class ApplicationState {
         plane = new Plane();
         zoomLevel = 175;
         centerCoordinate = new Coordinate();
+        message = "";
     }
 
     public Coordinate getCurrentPosition() {
@@ -66,5 +68,13 @@ public class ApplicationState {
 
     public void setSelectedNode(Node selectedNode) {
         this.selectedNode = selectedNode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

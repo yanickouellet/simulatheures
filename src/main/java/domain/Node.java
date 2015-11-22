@@ -23,4 +23,19 @@ public class Node extends NetworkElement {
 
         return deltaX  < maxDelta && deltaY < maxDelta;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Node node = (Node) o;
+
+        return !(coordinate != null ? !coordinate.equals(node.coordinate) : node.coordinate != null);
+    }
+
+    @Override
+    public int hashCode() {
+        return coordinate != null ? coordinate.hashCode() : 0;
+    }
 }
