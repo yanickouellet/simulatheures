@@ -1,6 +1,8 @@
 package ui;
 
 import domain.*;
+import domain.network.Node;
+import domain.network.Segment;
 import util.CoordinateConverter;
 
 import java.awt.*;

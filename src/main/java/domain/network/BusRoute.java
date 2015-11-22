@@ -1,4 +1,6 @@
-package domain;
+package domain.network;
+
+import domain.TriangularDistribution;
 
 import java.util.ArrayList;
 

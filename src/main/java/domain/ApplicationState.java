@@ -1,5 +1,7 @@
 package domain;
 
+import domain.network.*;
+
 public class ApplicationState {
     private Coordinate currentPosition;
     private Coordinate centerCoordinate;

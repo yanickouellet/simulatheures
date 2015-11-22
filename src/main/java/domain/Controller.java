@@ -1,5 +1,6 @@
 package domain;
 
+import domain.network.*;
 import ui.MainForm;
 import util.CoordinateConverter;
 import util.Strings;
@@ -124,7 +125,7 @@ public class Controller {
                     state.setMessage(Strings.SelectStations);
                 } else if (controllerMode == ControllerMode.AddingBusRouteStation) {
                     BusRoute route = state.getCurrentBusRoute();
-                    if (route.getSegments().size() > 1) {
+                    if (route.getSegments().size() > 0) {
                         Node finalNode = route.getSegments().get(route.getSegments().size()-1).getDestination();
                         if (!route.isNodeStation(finalNode))
                             route.toggleStation(finalNode);

@@ -1,5 +1,7 @@
 package domain;
 
+import domain.network.Node;
+
 public class NodeVector {
     private Node source;
     private Node destination;

@@ -1,4 +1,7 @@
-package domain;
+package domain.network;
+
+import domain.Coordinate;
+import domain.NodeVector;
 
 import java.util.ArrayList;
 import java.util.HashMap;

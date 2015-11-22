@@ -1,4 +1,8 @@
-package domain;
+package domain.network;
+
+import domain.Coordinate;
+import domain.NodeVector;
+import domain.TriangularDistribution;
 
 public class Segment extends NetworkElement {
     private NodeVector vector;

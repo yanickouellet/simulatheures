@@ -1,4 +1,6 @@
-package domain;
+package domain.network;
+
+import domain.Coordinate;
 
 public class Node extends NetworkElement {
     private Coordinate coordinate;
