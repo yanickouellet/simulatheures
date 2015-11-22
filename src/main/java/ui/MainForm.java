@@ -55,6 +55,7 @@ public class MainForm {
     private JToolBar tlbBottomBar;
     private JLabel lblError;
     private JLabel lblMessage;
+    private JButton btnDeleteSelected;
     private JPanel pnlBottomBar;
 
     Controller controller;
@@ -72,6 +73,8 @@ public class MainForm {
 
         lblPosition.setText(state.getCurrentPosition().toString() + " Zoom: " + state.getZoomLevel());
         lblMessage.setText(state.getMessage());
+
+        btnDeleteSelected.setVisible(state.getSelectedElement() != null);
 
         mainFrame.repaint();
     }
@@ -150,6 +153,12 @@ public class MainForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.setMode(EditionMode.AddSegment);
+            }
+        });
+        btnDeleteSelected.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.deleteSelectedElement();
             }
         });
     }

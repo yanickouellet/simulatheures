@@ -2,6 +2,8 @@ package domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class Plane {
     private ArrayList<Node> nodes;
@@ -59,5 +61,27 @@ public class Plane {
         }
 
         return null;
+    }
+
+    public void deleteElement(NetworkElement elem) {
+        if (elem instanceof Segment) {
+            Segment segment = (Segment) elem;
+            segments.remove(segment.getVector());
+        } else if (elem instanceof Node) {
+            Node node = (Node) elem;
+            deleteSegmentsForNode(node);
+            nodes.remove(node);
+        }
+    }
+
+    private void deleteSegmentsForNode(Node node) {
+        Iterator i = segments.entrySet().iterator();
+
+        while (i.hasNext()) {
+            Segment s = (Segment) ((Map.Entry)i.next()).getValue();
+            if (s.getSource() == node || s.getDestination() == node) {
+                i.remove();
+            }
+        }
     }
 }

@@ -94,6 +94,14 @@ public class Controller {
         state.setSelectedElement(null);
     }
 
+    public void deleteSelectedElement() {
+        NetworkElement elem = state.getSelectedElement();
+        if (elem == null)
+            state.setMessage(Strings.NoElementSelected);
+        else
+            state.getPlane().deleteElement(elem);
+    }
+
     public ApplicationState getState() {
         return state;
     }
