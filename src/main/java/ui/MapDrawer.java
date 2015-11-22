@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class MapDrawer {
     private ApplicationState state;
@@ -56,7 +57,8 @@ public class MapDrawer {
     }
 
     private void drawSegments(Graphics2D g) {
-        ArrayList<int[]> segments = new ArrayList<>();
+        Segment[] segments = state.getPlane().getSegments().values().toArray(new Segment[0]);
+        ArrayList<int[]> segmentPoints = new ArrayList<>();
 
         g.setStroke(new BasicStroke(halfStroke));
         for (Segment s :state.getPlane().getSegments().values()) {
@@ -77,15 +79,21 @@ public class MapDrawer {
                     zoom
             );
 
-            segments.add(new int[]{source.x, source.y, destination.x, destination.y});
+            segmentPoints.add(new int[]{source.x, source.y, destination.x, destination.y});
         }
 
         // We must draw arrow after segments
-        for (int[] s : segments) {
+        for (int i = 0; i < segmentPoints.size(); i++) {
+            if (segments[i].isOnCoordinate(state.getCurrentPosition()))
+                g.setColor(hoverColor);
+            else
+                g.setColor(defaultColor);
+
+            int[] s = segmentPoints.get(i);
             g.drawLine(s[0], s[1], s[2], s[3]);
         }
 
-        for (int [] s : segments) {
+        for (int [] s : segmentPoints) {
             drawArrow(g, s[0], s[1], s[2], s[3], baseStroke);
         }
 
@@ -125,7 +133,7 @@ public class MapDrawer {
 
         g.fillPolygon(new int[] {len, len-width, len-width, len},
                       new int[] {0, -width, width, 0}, 4);
-        
+
         g.setStroke(new BasicStroke(1));
         g.setColor(defaultColor);
         g.drawPolygon(new int[] {len, len-width, len-width, len},

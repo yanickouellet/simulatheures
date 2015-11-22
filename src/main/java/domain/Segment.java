@@ -21,7 +21,21 @@ public class Segment extends NetworkElement {
 
     @Override
     public boolean isOnCoordinate(Coordinate coords) {
-        return false;
+        Coordinate source = vector.getSource().getCoordinate();
+        Coordinate destination = vector.getDestination().getCoordinate();
+
+        float maxDelta = 5;
+
+        float dx = source.getX() - destination.getX();
+        float dy = source.getY() - destination.getY();
+
+        float a = dy / dx;
+        float b = destination.getY() - destination.getX() * a;
+
+        float y = coords.getX() * a + b;
+        float delta = Math.abs(y - coords.getY());
+
+        return delta < 1;
     }
 
     @Override
