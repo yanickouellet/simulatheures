@@ -4,7 +4,9 @@ import domain.*;
 import util.CoordinateConverter;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
 
 public class MapDrawer {
     private ApplicationState state;
@@ -17,11 +19,13 @@ public class MapDrawer {
     private Color defaultColor;
     private Color hoverColor;
     private Color selectedColor;
+    private Color arrowColor;
 
     public MapDrawer(ApplicationState state) {
         this.state = state;
 
         defaultColor = Color.black;
+        arrowColor = Color.gray;
         hoverColor = Color.red;
         selectedColor = Color.orange;
     }
@@ -52,6 +56,8 @@ public class MapDrawer {
     }
 
     private void drawSegments(Graphics2D g) {
+        ArrayList<int[]> segments = new ArrayList<>();
+
         g.setStroke(new BasicStroke(halfStroke));
         for (Segment s :state.getPlane().getSegments().values()) {
             g.setColor(defaultColor);
@@ -71,7 +77,16 @@ public class MapDrawer {
                     zoom
             );
 
-            g.drawLine(source.x, source.y, destination.x, destination.y);
+            segments.add(new int[]{source.x, source.y, destination.x, destination.y});
+        }
+
+        // We must draw arrow after segments
+        for (int[] s : segments) {
+            g.drawLine(s[0], s[1], s[2], s[3]);
+        }
+
+        for (int [] s : segments) {
+            drawArrow(g, s[0], s[1], s[2], s[3], baseStroke);
         }
 
     }
@@ -94,5 +109,28 @@ public class MapDrawer {
 
             g.fill(new Ellipse2D.Float(p.x - halfStroke, p.y - halfStroke, baseStroke, baseStroke));
         }
+    }
+
+    // Inspired by http://stackoverflow.com/a/4112875/3757513
+    private void drawArrow(Graphics2D g1, int x1, int y1, int x2, int y2, int width) {
+        Graphics2D g = (Graphics2D) g1.create();
+        g.setColor(arrowColor);
+
+        double dx = x2 - x1, dy = y2 - y1;
+        double angle = Math.atan2(dy, dx);
+        int len = (int) Math.sqrt(dx*dx + dy*dy);
+        AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
+        at.concatenate(AffineTransform.getRotateInstance(angle));
+        g.transform(at);
+
+        g.fillPolygon(new int[] {len, len-width, len-width, len},
+                      new int[] {0, -width, width, 0}, 4);
+        
+        g.setStroke(new BasicStroke(1));
+        g.setColor(defaultColor);
+        g.drawPolygon(new int[] {len, len-width, len-width, len},
+                new int[] {0, -width, width, 0}, 4);
+
+        g.dispose();
     }
 }
