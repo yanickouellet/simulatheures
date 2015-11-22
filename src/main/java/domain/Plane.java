@@ -12,8 +12,12 @@ public class Plane {
         segments = new HashMap<>();
     }
 
-    public void addNode(Coordinate coords) {
+    public boolean addNode(Coordinate coords) {
+        if (getNodeOnCoords(coords) != null)
+            return false;
+
         nodes.add(new Node(coords));
+        return true;
     }
 
     public boolean addSegment(Node source, Node destination) {
@@ -34,7 +38,7 @@ public class Plane {
         return segments;
     }
 
-    public Node getHoveredNode(Coordinate coords) {
+    public Node getNodeOnCoords(Coordinate coords) {
         for (Node n : nodes) {
             if (n.isOnCoordinate(coords)) {
                 return n;

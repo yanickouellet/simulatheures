@@ -98,12 +98,14 @@ public class Controller {
     }
 
     private void addNodeClick(Coordinate coord) {
-        state.getPlane().addNode(coord);
+        if (!state.getPlane().addNode(coord)) {
+            state.setMessage(Strings.NodeAlreadyExisting);
+        }
     }
 
     private void addSegmentClick(Coordinate coord) {
         Plane plane = state.getPlane();
-        Node node = plane.getHoveredNode(coord);
+        Node node = plane.getNodeOnCoords(coord);
         Node previousNode = state.getSelectedNode();
 
         if (node == null)
