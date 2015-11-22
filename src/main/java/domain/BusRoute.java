@@ -3,12 +3,17 @@ package domain;
 import java.util.ArrayList;
 
 public class BusRoute {
+    private String name;
     private Node source;
     private ArrayList<Segment> segments;
     private ArrayList<Node> stations;
     private TriangularDistribution distribution;
 
+    //TODO Remove me!
+    private static int i = 0;
+
     public BusRoute(Node source) {
+        name = Integer.toString(i++);
         this.source = source;
         segments = new ArrayList<>();
         stations = new ArrayList<>();
@@ -77,5 +82,13 @@ public class BusRoute {
 
     public ArrayList<Node> getStations() {
         return stations;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
