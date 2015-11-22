@@ -2,9 +2,12 @@ package domain;
 
 public class Segment extends NetworkElement {
     private NodeVector vector;
+    private TriangularDistribution distribution;
 
     public Segment(NodeVector vector) {
         this.vector = vector;
+        //TODO Change that to use user input
+        distribution = new TriangularDistribution(5, 10, 15);
     }
 
     public Node getSource() {
@@ -38,6 +41,14 @@ public class Segment extends NetworkElement {
         float y = coords.getY();
 
         return y >= yMin && y <= yMax;
+    }
+
+    public TriangularDistribution getDistribution() {
+        return distribution;
+    }
+
+    public void setDistribution(TriangularDistribution distribution) {
+        this.distribution = distribution;
     }
 
     @Override
