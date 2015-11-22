@@ -24,7 +24,7 @@ public class Segment extends NetworkElement {
         Coordinate source = vector.getSource().getCoordinate();
         Coordinate destination = vector.getDestination().getCoordinate();
 
-        float maxDelta = 5;
+        float arrond = 10;
 
         float dx = source.getX() - destination.getX();
         float dy = source.getY() - destination.getY();
@@ -32,10 +32,12 @@ public class Segment extends NetworkElement {
         float a = dy / dx;
         float b = destination.getY() - destination.getX() * a;
 
-        float y = coords.getX() * a + b;
-        float delta = Math.abs(y - coords.getY());
+        float yMin = (coords.getX() - arrond) * a + b;
+        float yMax = (coords.getX() + arrond) * a + b;
 
-        return delta < 1;
+        float y = coords.getY();
+
+        return y >= yMin && y <= yMax;
     }
 
     @Override
