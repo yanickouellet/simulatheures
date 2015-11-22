@@ -58,11 +58,11 @@ public class MapDrawer {
     }
 
     private void drawSegments(Graphics2D g) {
-        Segment[] segments = state.getPlane().getSegments().values().toArray(new Segment[0]);
+        Segment[] segments = state.getNetwork().getSegments().values().toArray(new Segment[0]);
         ArrayList<int[]> segmentPoints = new ArrayList<>();
 
         g.setStroke(new BasicStroke(halfStroke));
-        for (Segment s :state.getPlane().getSegments().values()) {
+        for (Segment s :state.getNetwork().getSegments().values()) {
             g.setColor(defaultColor);
 
             Point source = CoordinateConverter.CoordinateToPoint(
@@ -103,7 +103,7 @@ public class MapDrawer {
     }
 
     private void drawNodes(Graphics2D g) {
-        for (Node n : state.getPlane().getNodes()) {
+        for (Node n : state.getNetwork().getNodes()) {
             g.setColor(defaultColor);
 
             Point p = CoordinateConverter.CoordinateToPoint(

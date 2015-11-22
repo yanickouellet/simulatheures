@@ -1,10 +1,11 @@
 package domain.network;
 
 import domain.Coordinate;
+import domain.IDistributableElement;
 import domain.NodeVector;
 import domain.TriangularDistribution;
 
-public class Segment extends NetworkElement {
+public class Segment extends NetworkElement implements IDistributableElement {
     private NodeVector vector;
     private TriangularDistribution distribution;
 
@@ -69,5 +70,10 @@ public class Segment extends NetworkElement {
     @Override
     public int hashCode() {
         return vector != null ? vector.hashCode() : 0;
+    }
+
+    @Override
+    public float generate() {
+        return distribution.generate();
     }
 }

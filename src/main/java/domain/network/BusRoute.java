@@ -1,10 +1,11 @@
 package domain.network;
 
+import domain.IDistributableElement;
 import domain.TriangularDistribution;
 
 import java.util.ArrayList;
 
-public class BusRoute {
+public class BusRoute implements IDistributableElement {
     private String name;
     private Node source;
     private ArrayList<Segment> segments;
@@ -92,5 +93,10 @@ public class BusRoute {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public float generate() {
+        return distribution.generate();
     }
 }

@@ -6,7 +6,7 @@ public class ApplicationState {
     private Coordinate currentPosition;
     private Coordinate centerCoordinate;
     private EditionMode currentMode;
-    private Plane plane;
+    private Network network;
     private NetworkElement selectedElement;
     private BusRoute currentBusRoute;
     private int zoomLevel;
@@ -15,7 +15,7 @@ public class ApplicationState {
     public ApplicationState() {
         currentPosition = new Coordinate();
         currentMode  = EditionMode.None;
-        plane = new Plane();
+        network = new Network();
         zoomLevel = 175;
         centerCoordinate = new Coordinate();
         message = "";
@@ -37,12 +37,12 @@ public class ApplicationState {
         this.currentMode = currentMode;
     }
 
-    public Plane getPlane() {
-        return plane;
+    public Network getNetwork() {
+        return network;
     }
 
-    public void setPlane(Plane plane) {
-        this.plane = plane;
+    public void setNetwork(Network network) {
+        this.network = network;
     }
 
     public Coordinate getCenterCoordinate() {

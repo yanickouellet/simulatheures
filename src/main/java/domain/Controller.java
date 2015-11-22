@@ -114,7 +114,7 @@ public class Controller {
         if (elem == null)
             state.setMessage(Strings.NoElementSelected);
         else
-            state.getPlane().deleteElement(elem);
+            state.getNetwork().deleteElement(elem);
     }
 
     public void validate() {
@@ -130,7 +130,7 @@ public class Controller {
                         if (!route.isNodeStation(finalNode))
                             route.toggleStation(finalNode);
 
-                        state.getPlane().addRoute(state.getCurrentBusRoute());
+                        state.getNetwork().addRoute(state.getCurrentBusRoute());
                         startBusRouteCreation();
                     } else {
                         state.setMessage(Strings.RouteMustContainsSegment);
@@ -154,18 +154,18 @@ public class Controller {
     }
 
     private void selectionModeClick(Coordinate coord) {
-        state.setSelectedElement(state.getPlane().getElementOnCoords(coord));
+        state.setSelectedElement(state.getNetwork().getElementOnCoords(coord));
     }
 
     private void addNodeClick(Coordinate coord) {
-        if (!state.getPlane().addNode(coord)) {
+        if (!state.getNetwork().addNode(coord)) {
             state.setMessage(Strings.NodeAlreadyExisting);
         }
     }
 
     private void addSegmentClick(Coordinate coord) {
-        Plane plane = state.getPlane();
-        Node node = plane.getNodeOnCoords(coord);
+        Network network = state.getNetwork();
+        Node node = network.getNodeOnCoords(coord);
         NetworkElement selectedElem = state.getSelectedElement();
         Node previousNode = selectedElem instanceof Node ? (Node) selectedElem : null;
 
@@ -173,7 +173,7 @@ public class Controller {
             return;
 
         if (previousNode != null && node != previousNode) {
-           if (!plane.addSegment(previousNode, node)) {
+           if (!network.addSegment(previousNode, node)) {
                state.setMessage(Strings.SegmentAlreadyExisting);
            }
 
@@ -184,22 +184,22 @@ public class Controller {
     }
 
     private void addBusRouteClick(Coordinate coord) {
-        Plane plane = state.getPlane();
+        Network network = state.getNetwork();
         BusRoute route = state.getCurrentBusRoute();
 
         if (route == null) {
-            Node node = plane.getNodeOnCoords(coord);
+            Node node = network.getNodeOnCoords(coord);
             if (node != null) {
                 state.setCurrentBusRoute(new BusRoute(node));
                 state.setMessage(Strings.SelectConsecutiveSegments);
             }
         } else if (controllerMode == ControllerMode.AddingBusRoute) {
-            Segment segment = plane.getSegmentOnCoords(coord);
+            Segment segment = network.getSegmentOnCoords(coord);
             if (segment != null && route.isConsecutive(segment)) {
                 route.addSegment(segment);
             }
         } else if (controllerMode == ControllerMode.AddingBusRouteStation) {
-            Node node = plane.getNodeOnCoords(coord);
+            Node node = network.getNodeOnCoords(coord);
             if (node != null) {
                 route.toggleStation(node);
             }

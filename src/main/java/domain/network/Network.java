@@ -8,12 +8,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Plane {
+public class Network {
     private ArrayList<Node> nodes;
     private ArrayList<BusRoute> routes;
     private HashMap<NodeVector, Segment> segments;
 
-    public Plane() {
+    public Network() {
         nodes = new ArrayList<>();
         segments = new HashMap<>();
         routes = new ArrayList<>();
@@ -101,5 +101,9 @@ public class Plane {
                 i.remove();
             }
         }
+    }
+
+    public ArrayList<BusRoute> getRoutes() {
+        return routes;
     }
 }
