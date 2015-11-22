@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class MapDrawer {
     private ApplicationState state;
@@ -84,7 +83,9 @@ public class MapDrawer {
 
         // We must draw arrow after segments
         for (int i = 0; i < segmentPoints.size(); i++) {
-            if (segments[i].isOnCoordinate(state.getCurrentPosition()))
+            if (segments[i] == state.getSelectedElement())
+                g.setColor(selectedColor);
+            else if (segments[i].isOnCoordinate(state.getCurrentPosition()))
                 g.setColor(hoverColor);
             else
                 g.setColor(defaultColor);
@@ -110,7 +111,7 @@ public class MapDrawer {
                     state.getCenterCoordinate(),
                     zoom);
 
-            if (n == state.getSelectedNode())
+            if (n == state.getSelectedElement())
                 g.setColor(selectedColor);
             else if (n.isOnCoordinate(state.getCurrentPosition()))
                 g.setColor(hoverColor);

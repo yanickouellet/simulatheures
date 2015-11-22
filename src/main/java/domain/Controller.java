@@ -27,6 +27,9 @@ public class Controller {
         );
 
         switch (state.getCurrentMode()) {
+            case None:
+                selectionModeClick(coord);
+                break;
             case AddNode:
                 addNodeClick(coord);
                 break;
@@ -88,13 +91,15 @@ public class Controller {
         state.setMessage("");
         state.setCurrentMode(mode);
 
-        if (mode != EditionMode.AddSegment) {
-            state.setSelectedNode(null);
-        }
+        state.setSelectedElement(null);
     }
 
     public ApplicationState getState() {
         return state;
+    }
+
+    private void selectionModeClick(Coordinate coord) {
+        state.setSelectedElement(state.getPlane().getElementOnCoords(coord));
     }
 
     private void addNodeClick(Coordinate coord) {
@@ -106,7 +111,8 @@ public class Controller {
     private void addSegmentClick(Coordinate coord) {
         Plane plane = state.getPlane();
         Node node = plane.getNodeOnCoords(coord);
-        Node previousNode = state.getSelectedNode();
+        NetworkElement selectedElem = state.getSelectedElement();
+        Node previousNode = selectedElem instanceof Node ? (Node) selectedElem : null;
 
         if (node == null)
             return;
@@ -116,9 +122,9 @@ public class Controller {
                state.setMessage(Strings.SegmentAlreadyExisting);
            }
 
-            state.setSelectedNode(null);
+            state.setSelectedElement(null);
         } else  {
-            state.setSelectedNode(node);
+            state.setSelectedElement(node);
         }
     }
 }

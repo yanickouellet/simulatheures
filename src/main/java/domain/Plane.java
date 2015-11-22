@@ -46,4 +46,18 @@ public class Plane {
         }
         return null;
     }
+
+    public NetworkElement getElementOnCoords(Coordinate coords) {
+        NetworkElement elem = getNodeOnCoords(coords);
+
+        if (elem != null)
+            return elem;
+
+        for (Segment s : segments.values()) {
+            if (s.isOnCoordinate(coords))
+                return s;
+        }
+
+        return null;
+    }
 }

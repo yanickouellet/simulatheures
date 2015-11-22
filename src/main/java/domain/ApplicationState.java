@@ -5,7 +5,7 @@ public class ApplicationState {
     private Coordinate centerCoordinate;
     private EditionMode currentMode;
     private Plane plane;
-    private Node selectedNode;
+    private NetworkElement selectedElement;
     private int zoomLevel;
     private String message;
 
@@ -62,12 +62,12 @@ public class ApplicationState {
         this.zoomLevel = zoomLevel;
     }
 
-    public Node getSelectedNode() {
-        return selectedNode;
+    public NetworkElement getSelectedElement() {
+        return selectedElement;
     }
 
-    public void setSelectedNode(Node selectedNode) {
-        this.selectedNode = selectedNode;
+    public void setSelectedElement(NetworkElement selectedElement) {
+        this.selectedElement = selectedElement;
     }
 
     public String getMessage() {
