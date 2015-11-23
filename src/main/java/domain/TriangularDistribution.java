@@ -1,9 +1,12 @@
 package domain;
 
+import java.util.Random;
+
 public class TriangularDistribution {
     private double minValue;
     private double averageValue;
     private double maxValue;
+    private static Random r = new Random();
 
     public TriangularDistribution(double minValue, double averageValue, double maxValue) {
         this.minValue = minValue;
@@ -11,9 +14,22 @@ public class TriangularDistribution {
         this.maxValue = maxValue;
     }
 
-    //TODO Code that!
+    //http://www.wikiwand.com/en/Triangular_distribution
     public double generate() {
-        return averageValue;
+        if (minValue == averageValue && averageValue == maxValue)
+            return averageValue;
+
+        double u = r.nextDouble();
+        double fc = computeRepartition(maxValue);
+
+        double value;
+        if (u < fc) {
+            value = minValue + Math.sqrt(u * (averageValue - minValue) * (maxValue - minValue));
+        } else {
+            value = maxValue - Math.sqrt((1 - u) * (averageValue - minValue) * (maxValue - minValue));
+        }
+
+        return value;
     }
 
     public double getMinValue() {
@@ -38,5 +54,9 @@ public class TriangularDistribution {
 
     public void setMaxValue(double maxValue) {
         this.maxValue = maxValue;
+    }
+
+    private double computeRepartition(double x) {
+        return (x - minValue) / (averageValue - minValue);
     }
 }
