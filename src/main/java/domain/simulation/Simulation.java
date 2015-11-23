@@ -16,8 +16,8 @@ public class Simulation {
     private LocalTime endsAt;
     private Network network;
 
-    private HashMap<Segment, Integer> segments;
-    private HashMap<BusRoute, Integer> routes;
+    private HashMap<Segment, Double> segments;
+    private HashMap<BusRoute, Double> routes;
     private ArrayList<Vehicle> vehicles;
 
     public Simulation(LocalTime startAt, LocalTime endsAt, Network network) {
@@ -30,11 +30,11 @@ public class Simulation {
         vehicles = new ArrayList<>();
 
         for (Segment s : network.getSegments().values()) {
-            segments.put(s, (int) Math.round(s.generate()));
+            segments.put(s, s.generate());
         }
 
         for (BusRoute r : network.getRoutes()) {
-            int value = (int) Math.round(r.generate());
+            double value = r.generate();
             routes.put(r, value);
 
             long busStartAt =  r.getStartAt();
