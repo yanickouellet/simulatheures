@@ -119,7 +119,7 @@
             </constraints>
             <properties>
               <floatable value="false"/>
-              <visible value="false"/>
+              <visible value="true"/>
             </properties>
             <border type="none"/>
             <children>
@@ -127,7 +127,7 @@
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints/>
                 <properties>
-                  <visible value="false"/>
+                  <visible value="true"/>
                 </properties>
                 <border type="none"/>
                 <children>

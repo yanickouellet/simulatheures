@@ -90,7 +90,6 @@ public class MainForm {
         prepareGUI();
 
         pnlDomainObjects.setVisible(false);
-        tlbBottomBar.setVisible(false);
 
         mapPane.addMouseListener(new MouseAdapter() {
             @Override
