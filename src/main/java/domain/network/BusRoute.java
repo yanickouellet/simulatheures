@@ -8,8 +8,9 @@ import java.util.ArrayList;
 
 public class BusRoute implements IDistributableElement {
     private String name;
+    private boolean isLoop;
     private int startAt;
-    private Node source;
+    private Source source;
     private ArrayList<Segment> segments;
     private ArrayList<Node> stations;
     private TriangularDistribution distribution;
@@ -20,8 +21,9 @@ public class BusRoute implements IDistributableElement {
     public BusRoute(Node source, Color color) {
         startAt = 0;
         name = "Circuit " + Integer.toString(i++);
+        isLoop = false;
 
-        this.source = source;
+        this.source = new Source(source);
         this.color = color;
         segments = new ArrayList<>();
         stations = new ArrayList<>();
@@ -42,7 +44,7 @@ public class BusRoute implements IDistributableElement {
             throw new IllegalArgumentException();
 
         if (stations.contains(node)) {
-            if (node != source)
+            if (node != source.getNode())
                 stations.remove(node);
         } else {
             stations.add(node);
@@ -54,7 +56,7 @@ public class BusRoute implements IDistributableElement {
             return false;
 
         if (segments.size() == 0)
-            return segment.getSource() == source;
+            return segment.getSource() == source.getNode();
 
         return segments.get(segments.size() - 1).getDestination() == segment.getSource();
     }
@@ -64,7 +66,7 @@ public class BusRoute implements IDistributableElement {
     }
 
     public boolean isNodeOnRoute(Node node) {
-        if (node == source)
+        if (node == source.getNode())
             return true;
 
         for (Segment s : segments) {
@@ -80,7 +82,7 @@ public class BusRoute implements IDistributableElement {
         return segments.contains(segment);
     }
 
-    public Node getSource() {
+    public Source getSource() {
         return source;
     }
 
@@ -100,6 +102,14 @@ public class BusRoute implements IDistributableElement {
         this.name = name;
     }
 
+    public boolean getIsLoop() {
+        return isLoop;
+    }
+
+    public void setIsLoop(boolean isLoop) {
+        this.isLoop = isLoop;
+    }
+
     public int getStartAt() {
         return startAt;
     }
@@ -110,7 +120,7 @@ public class BusRoute implements IDistributableElement {
 
     @Override
     public double generate() {
-        return distribution.generate();
+        return source.getDistribution().generate();
     }
 
     @Override
