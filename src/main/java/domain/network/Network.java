@@ -59,13 +59,15 @@ public class Network {
         return null;
     }
 
-    public Segment getSegmentOnCoords(Coordinate coords) {
+    public ArrayList<Segment> getSegmentOnCoords(Coordinate coords) {
+        ArrayList<Segment> list = new ArrayList<>();
+
         for (Segment s : segments.values()) {
             if (s.isOnCoordinate(coords))
-                return s;
+                list.add(s);
         }
 
-        return null;
+        return list;
     }
 
     public NetworkElement getElementOnCoords(Coordinate coords) {
@@ -74,9 +76,9 @@ public class Network {
         if (elem != null)
             return elem;
 
-        elem = getSegmentOnCoords(coords);
-        if (elem != null)
-            return elem;
+        ArrayList<Segment> list = getSegmentOnCoords(coords);
+        if (list.size() > 0)
+            return list.get(0);
 
         return null;
     }

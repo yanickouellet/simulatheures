@@ -9,6 +9,7 @@ import util.Strings;
 import java.awt.*;
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 public class Controller {
     private MainForm mainForm;
@@ -234,9 +235,13 @@ public class Controller {
                 state.setMessage(Strings.SelectConsecutiveSegments);
             }
         } else if (controllerMode == ControllerMode.AddingBusRoute) {
-            Segment segment = network.getSegmentOnCoords(coord);
-            if (segment != null && route.isConsecutive(segment)) {
-                route.addSegment(segment);
+            ArrayList<Segment> segments = network.getSegmentOnCoords(coord);
+
+            for (Segment s : segments) {
+                if (route.isConsecutive(s)) {
+                    route.addSegment(s);
+                    break;
+                }
             }
         } else if (controllerMode == ControllerMode.AddingBusRouteStation) {
             Node node = network.getNodeOnCoords(coord);
