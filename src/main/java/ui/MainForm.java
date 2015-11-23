@@ -4,10 +4,7 @@ import domain.ApplicationState;
 import domain.Controller;
 import domain.EditionMode;
 import domain.TriangularDistribution;
-import domain.network.NetworkElement;
-import domain.network.Node;
-import domain.network.Segment;
-import domain.network.BusRoute;
+import domain.network.*;
 import ui.tree.ColoredMutableTreeNode;
 import ui.tree.ColoredTreeCellRenderer;
 
@@ -73,7 +70,7 @@ public class MainForm {
     private JSpinner spnSourceMinDuration;
     private JSpinner spnSourceAvgDuration;
     private JSpinner spnSourceMaxDuration;
-    private JSpinner spnSourceFirstVehicule;
+    private JSpinner spnTimeBeforeFirstVehicule;
     private JSpinner spnCircuitNumber;
     private JTextField txtCircuitName;
     private JCheckBox ckbCircuitIsLoop;
@@ -81,6 +78,7 @@ public class MainForm {
     private JPanel pnlEditSegment;
     private JPanel pnlEditCircuit;
     private JPanel pnlEditSource;
+    private JSpinner spnSourceNumberMaxVehicule;
     private JPanel pnlBottomBar;
     private Timer timer;
 
@@ -127,15 +125,20 @@ public class MainForm {
     }
 
     public void editElement(NetworkElement elem) {
+        hideEditPanels();
+        btnDeleteSelected.setVisible(elem != null);
+
         if (elem instanceof Segment) {
             Segment segment = (Segment) elem;
             TriangularDistribution distribution = segment.getDistribution();
             spnSegmentMinDuration.setValue(Math.round(distribution.getMinValue()));
             spnSegmentAvgDuration.setValue(Math.round(distribution.getAverageValue()));
             spnSegmentMaxDuration.setValue(Math.round(distribution.getMaxValue()));
+            pnlEditSegment.setVisible(true);
         } else if (elem instanceof Node) {
             Node node = (Node) elem;
             txtNodeName.setText(node.getName());
+            pnlEditNode.setVisible(true);
         }
     }
 
@@ -150,15 +153,28 @@ public class MainForm {
         }
     }
 
-    public void setEditPanelsVisibility(NetworkElement elem) {
-        hideEditPanels();
-        btnDeleteSelected.setVisible(elem != null);
+    public void editBusRoute(BusRoute route) {
+        txtCircuitName.setText(route.getName());
+        ckbCircuitIsLoop.setSelected(route.getIsLoop());
+        pnlEditCircuit.setVisible(true);
+        pnlEditSource.setVisible(true);
+        TriangularDistribution distribution = route.getSource().getDistribution();
+        spnSourceMinDuration.setValue(Math.round(distribution.getMinValue()));
+        spnSourceAvgDuration.setValue(Math.round(distribution.getAverageValue()));
+        spnSourceMaxDuration.setValue(Math.round(distribution.getMaxValue()));
+    }
 
-        if (elem instanceof Segment) {
-            pnlEditSegment.setVisible(true);
-        } else if (elem instanceof Node) {
-            pnlEditNode.setVisible(true);
-        }
+    public void saveBusRoute(BusRoute route) {
+        route.setName(txtCircuitName.getText());
+        route.setIsLoop(ckbCircuitIsLoop.isSelected());
+
+        Source source = route.getSource();
+        source.setNumberMaxVehicule((Integer) spnSourceNumberMaxVehicule.getValue());
+        source.setTimeBeforeFirstVehicule((Integer) spnTimeBeforeFirstVehicule.getValue());
+        TriangularDistribution distribution = source.getDistribution();
+        distribution.setMinValue((Integer) spnSourceMinDuration.getValue());
+        distribution.setAverageValue((Integer) spnSourceAvgDuration.getValue());
+        distribution.setMaxValue((Integer) spnSourceMaxDuration.getValue());
     }
 
     public void hideEditPanels() {
@@ -192,7 +208,6 @@ public class MainForm {
                 ApplicationState state = controller.getState();
                 if (state.getCurrentMode() == EditionMode.None) {
                     editElement(state.getSelectedElement());
-                    setEditPanelsVisibility(state.getSelectedElement());
                 } else {
                     hideEditPanels();
                 }
@@ -279,6 +294,7 @@ public class MainForm {
                 ApplicationState state = controller.getState();
                 if (state.getCurrentMode() == EditionMode.None) {
                     saveElement(state.getSelectedElement());
+                    saveBusRoute(state.getCurrentBusRoute());
                 } else {
                     controller.validate();
                 }
@@ -313,12 +329,16 @@ public class MainForm {
         displayTree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
-                ColoredMutableTreeNode node = (ColoredMutableTreeNode) displayTree.getLastSelectedPathComponent();
-                if (node == null)
-                    return;
+                DefaultTreeModel model = (DefaultTreeModel) displayTree.getModel();
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) displayTree.getLastSelectedPathComponent();
+                if (node == null || model.getRoot() == node) return;
 
                 BusRoute route = (BusRoute) node.getUserObject();
                 controller.setCurrentBusRoute(route);
+
+                if (controller.getState().getCurrentMode() == EditionMode.None) {
+                    editBusRoute(route);
+                }
             }
         });
     }
@@ -421,7 +441,8 @@ public class MainForm {
     // Display menu
 
     private void btnCircuitsActionPerformed(ActionEvent evt) {
-
+        pnlDomainObjects.setVisible(!pnlDomainObjects.isVisible());
+        lblTitleSection.setText("Circuits");
     }
     private void btnRoutesActionPerformed(ActionEvent evt) {
 
