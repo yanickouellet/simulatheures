@@ -79,7 +79,7 @@ public class Controller {
                 new Coordinate(),
                 state.getZoomRatio()
         );
-        currentCenter.translate(dx, dy);
+        currentCenter.translate(dx, -dy);
 
         state.setCenterCoordinate(CoordinateConverter.PointToCoordinate(
                 currentCenter,
