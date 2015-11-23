@@ -19,6 +19,20 @@ public class NodeVector {
         return destination;
     }
 
+    public float getComponentX() {
+        return destination.getCoordinate().getX() - source.getCoordinate().getX();
+    }
+
+    public float getComponentY() {
+        return destination.getCoordinate().getY() - source.getCoordinate().getY();
+    }
+
+    public Coordinate computeNewCoordinate(float ratio) {
+        float x = getSource().getCoordinate().getX() + getComponentX() * ratio;
+        float y = getSource().getCoordinate().getY() + getComponentY() * ratio;
+        return new Coordinate(x, y);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

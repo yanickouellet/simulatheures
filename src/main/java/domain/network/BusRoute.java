@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class BusRoute implements IDistributableElement {
     private String name;
+    private int startAt;
     private Node source;
     private ArrayList<Segment> segments;
     private ArrayList<Node> stations;
@@ -16,6 +17,8 @@ public class BusRoute implements IDistributableElement {
     private static int i = 0;
 
     public BusRoute(Node source) {
+        //TODO This must be editable
+        startAt = 0;
         name = Integer.toString(i++);
         this.source = source;
         segments = new ArrayList<>();
@@ -95,8 +98,39 @@ public class BusRoute implements IDistributableElement {
         this.name = name;
     }
 
+    public int getStartAt() {
+        return startAt;
+    }
+
     @Override
     public float generate() {
         return distribution.generate();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BusRoute busRoute = (BusRoute) o;
+
+        if (startAt != busRoute.startAt) return false;
+        if (name != null ? !name.equals(busRoute.name) : busRoute.name != null) return false;
+        if (source != null ? !source.equals(busRoute.source) : busRoute.source != null) return false;
+        if (segments != null ? !segments.equals(busRoute.segments) : busRoute.segments != null) return false;
+        if (stations != null ? !stations.equals(busRoute.stations) : busRoute.stations != null) return false;
+        return !(distribution != null ? !distribution.equals(busRoute.distribution) : busRoute.distribution != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + startAt;
+        result = 31 * result + (source != null ? source.hashCode() : 0);
+        result = 31 * result + (segments != null ? segments.hashCode() : 0);
+        result = 31 * result + (stations != null ? stations.hashCode() : 0);
+        result = 31 * result + (distribution != null ? distribution.hashCode() : 0);
+        return result;
     }
 }
