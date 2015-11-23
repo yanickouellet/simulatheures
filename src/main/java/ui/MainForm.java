@@ -82,7 +82,11 @@ public class MainForm {
 
         if (state.getCurrentMode() == EditionMode.Simulation) {
             if (timer == null) {
-                timer = new Timer(500, e -> controller.increaseSimulationTime(1));
+                timer = new Timer(500, e -> {
+                    int value = (int) spnSpeed.getValue();
+                    value = value < 1 ? 1 : value;
+                    controller.increaseSimulationTime(value / 100d);
+                });
                 timer.start();
             }
         }
@@ -97,6 +101,7 @@ public class MainForm {
     public MainForm() {
         prepareGUI();
 
+        spnSpeed.setValue(100);
         pnlDomainObjects.setVisible(false);
 
         mapPane.addMouseListener(new MouseAdapter() {
