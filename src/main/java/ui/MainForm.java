@@ -4,8 +4,12 @@ import domain.ApplicationState;
 import domain.Controller;
 import domain.EditionMode;
 import domain.network.BusRoute;
+import ui.tree.ColoredMutableTreeNode;
+import ui.tree.ColoredTreeCellRenderer;
 
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
@@ -83,7 +87,8 @@ public class MainForm {
 
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Circuits");
         for (BusRoute r : state.getNetwork().getRoutes()) {
-            root.add(new DefaultMutableTreeNode(r.getName()));
+            ColoredMutableTreeNode node = new ColoredMutableTreeNode(r, r.getColor());
+            root.add(node);
         }
         DefaultTreeModel model = (DefaultTreeModel) displayTree.getModel();
         model.setRoot(root);
@@ -111,6 +116,7 @@ public class MainForm {
     public MainForm() {
         prepareGUI();
 
+        displayTree.setCellRenderer(new ColoredTreeCellRenderer());
         spnSpeed.setValue(100);
         //pnlDomainObjects.setVisible(false);
 
@@ -226,6 +232,17 @@ public class MainForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.restartSimulation();
+            }
+        });
+        displayTree.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                ColoredMutableTreeNode node = (ColoredMutableTreeNode) displayTree.getLastSelectedPathComponent();
+                if (node == null)
+                    return;
+
+                BusRoute route = (BusRoute) node.getUserObject();
+                controller.setCurrentBusRoute(route);
             }
         });
     }

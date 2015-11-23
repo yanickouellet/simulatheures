@@ -143,7 +143,8 @@ public class MapDrawer {
                     state.getCenterCoordinate(),
                     zoom);
 
-            g.draw(new Ellipse2D.Double(p.x - halfStroke, p.y - halfStroke, baseStroke, baseStroke));
+            g.setColor(v.getRoute().getColor());
+            g.fill(new Ellipse2D.Double(p.x - halfStroke, p.y - halfStroke, baseStroke, baseStroke));
         }
     }
 

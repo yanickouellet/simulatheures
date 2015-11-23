@@ -14,6 +14,15 @@ public class Controller {
     private MainForm mainForm;
     private ApplicationState state;
     private ControllerMode controllerMode;
+    private static final Color[] DefaultColors = new Color[] {
+            Color.blue,
+            Color.cyan,
+            Color.darkGray,
+            Color.green,
+            Color.magenta,
+            Color.pink,
+            Color.yellow
+    };
 
     public Controller(MainForm mainForm) {
         this.mainForm = mainForm;
@@ -165,6 +174,12 @@ public class Controller {
         state.setCurrentMinute(0);
     }
 
+    public void setCurrentBusRoute(BusRoute route) {
+        if (state.getCurrentMode() == EditionMode.None) {
+            state.setCurrentBusRoute(route);
+        }
+    }
+
     public ApplicationState getState() {
         return state;
     }
@@ -214,7 +229,8 @@ public class Controller {
         if (route == null) {
             Node node = network.getNodeOnCoords(coord);
             if (node != null) {
-                state.setCurrentBusRoute(new BusRoute(node));
+                Color color = DefaultColors[network.getRoutes().size() % DefaultColors.length];
+                state.setCurrentBusRoute(new BusRoute(node, color));
                 state.setMessage(Strings.SelectConsecutiveSegments);
             }
         } else if (controllerMode == ControllerMode.AddingBusRoute) {
