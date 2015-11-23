@@ -156,6 +156,15 @@ public class Controller {
         state.setCurrentMinute(state.getCurrentMinute() + 0.5 * speed);
     }
 
+    public void stopSimulation() {
+        state.setSimulation(null);
+        state.setCurrentMode(EditionMode.None);
+    }
+
+    public void restartSimulation() {
+        state.setCurrentMinute(0);
+    }
+
     public ApplicationState getState() {
         return state;
     }

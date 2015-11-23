@@ -3,8 +3,11 @@ package ui;
 import domain.ApplicationState;
 import domain.Controller;
 import domain.EditionMode;
+import domain.network.BusRoute;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -78,6 +81,13 @@ public class MainForm {
 
         btnDeleteSelected.setVisible(state.getSelectedElement() != null);
 
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Circuits");
+        for (BusRoute r : state.getNetwork().getRoutes()) {
+            root.add(new DefaultMutableTreeNode(r.getName()));
+        }
+        DefaultTreeModel model = (DefaultTreeModel) displayTree.getModel();
+        model.setRoot(root);
+
         mainFrame.repaint();
 
         if (state.getCurrentMode() == EditionMode.Simulation) {
@@ -102,7 +112,7 @@ public class MainForm {
         prepareGUI();
 
         spnSpeed.setValue(100);
-        pnlDomainObjects.setVisible(false);
+        //pnlDomainObjects.setVisible(false);
 
         mapPane.addMouseListener(new MouseAdapter() {
             @Override
@@ -195,7 +205,27 @@ public class MainForm {
         btnPlay.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.startSimulation();
+                if (controller.getState().getSimulation() != null) {
+                    if (timer.isRunning()) {
+                        timer.stop();
+                    } else {
+                        timer.start();
+                    }
+                } else {
+                    controller.startSimulation();
+                }
+            }
+        });
+        btnStop.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.stopSimulation();
+            }
+        });
+        btnStart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.restartSimulation();
             }
         });
     }
