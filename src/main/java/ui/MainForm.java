@@ -100,8 +100,6 @@ public class MainForm {
         lblPosition.setText(state.getCurrentPosition().toString() + " Zoom: " + state.getZoomLevel());
         lblMessage.setText(state.getMessage());
 
-        btnDeleteSelected.setVisible(state.getSelectedElement() != null);
-
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Circuits");
         for (BusRoute r : state.getNetwork().getRoutes()) {
             ColoredMutableTreeNode node = new ColoredMutableTreeNode(r, r.getColor());
@@ -109,6 +107,10 @@ public class MainForm {
         }
         DefaultTreeModel model = (DefaultTreeModel) displayTree.getModel();
         model.setRoot(root);
+
+        if (state.getCurrentMode() != EditionMode.None) {
+            hideEditPanels();
+        }
 
         mainFrame.repaint();
 
@@ -178,7 +180,6 @@ public class MainForm {
 
         displayTree.setCellRenderer(new ColoredTreeCellRenderer());
         spnSpeed.setValue(100);
-        //pnlDomainObjects.setVisible(false);
         pnlDomainObjects.setVisible(false);
         hideEditPanels();
 
@@ -192,6 +193,8 @@ public class MainForm {
                 if (state.getCurrentMode() == EditionMode.None) {
                     editElement(state.getSelectedElement());
                     setEditPanelsVisibility(state.getSelectedElement());
+                } else {
+                    hideEditPanels();
                 }
             }
 
