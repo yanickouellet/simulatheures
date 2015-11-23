@@ -13,7 +13,7 @@ public class CoordinateConverter {
         float y = ((float) point.getY()) - dy + center.getY();
 
         x /= zoomRatio;
-        y /= zoomRatio;
+        y /= -zoomRatio;
 
         return new Coordinate(x, y);
     }
@@ -23,7 +23,7 @@ public class CoordinateConverter {
         float dy = maxHeight / 2;
 
         float x = zoomRatio * coords.getX() + dx - center.getX();
-        float y = zoomRatio * coords.getY() + dy - center.getY();
+        float y = -zoomRatio * coords.getY() + dy - center.getY();
 
         return new Point((int)x, (int)y);
     }
