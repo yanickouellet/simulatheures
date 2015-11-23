@@ -15,13 +15,11 @@ public class BusRoute implements IDistributableElement {
     private TriangularDistribution distribution;
     private Color color;
 
-    //TODO Remove me!
-    private static int i = 0;
+    private static int i = 1;
 
     public BusRoute(Node source, Color color) {
-        //TODO This must be editable
         startAt = 0;
-        name = Integer.toString(i++);
+        name = "Circuit " + Integer.toString(i++);
 
         this.source = source;
         this.color = color;
