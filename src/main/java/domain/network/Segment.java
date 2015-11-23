@@ -31,8 +31,8 @@ public class Segment extends NetworkElement implements IDistributableElement {
     public boolean isOnCoordinate(Coordinate coords) {
         NodeVector sourceCoord = new NodeVector(vector.getSource(), new Node(coords));
 
-        float deltaNorm = vector.computeNorm() - sourceCoord.computeNorm();
-        float deltaAngle = vector.computeAngle() - sourceCoord.computeAngle();
+        double deltaNorm = vector.computeNorm() - sourceCoord.computeNorm();
+        double deltaAngle = vector.computeAngle() - sourceCoord.computeAngle();
 
         boolean sameSignX = Math.signum(vector.getComponentX()) == Math.signum(sourceCoord.getComponentX());
         boolean sameSignY = Math.signum(vector.getComponentY()) == Math.signum(sourceCoord.getComponentY());
@@ -65,7 +65,7 @@ public class Segment extends NetworkElement implements IDistributableElement {
     }
 
     @Override
-    public float generate() {
+    public double generate() {
         return distribution.generate();
     }
 }

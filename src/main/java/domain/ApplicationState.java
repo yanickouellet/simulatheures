@@ -1,6 +1,7 @@
 package domain;
 
 import domain.network.*;
+import domain.simulation.Simulation;
 
 public class ApplicationState {
     private Coordinate currentPosition;
@@ -11,6 +12,8 @@ public class ApplicationState {
     private BusRoute currentBusRoute;
     private int zoomLevel;
     private String message;
+    private Simulation simulation;
+    private double currentMinute;
 
     public ApplicationState() {
         currentPosition = new Coordinate();
@@ -19,6 +22,15 @@ public class ApplicationState {
         zoomLevel = 175;
         centerCoordinate = new Coordinate();
         message = "";
+        currentMinute = 0;
+    }
+
+    public void startSimulation(Simulation simulation) {
+        this.simulation = simulation;
+        currentMinute = 0;
+        currentMode = EditionMode.Simulation;
+        currentBusRoute = null;
+        selectedElement = null;
     }
 
     public Coordinate getCurrentPosition() {
@@ -53,7 +65,7 @@ public class ApplicationState {
         this.centerCoordinate = centerCoordinate;
     }
 
-    public float getZoomRatio() {
+    public double getZoomRatio() {
         return zoomLevel / 100f;
     }
 
@@ -95,5 +107,21 @@ public class ApplicationState {
 
     public boolean isSegmentOnCurrentRoute(Segment segment) {
         return currentBusRoute != null && currentBusRoute.isSegmentOnRoute(segment);
+    }
+
+    public Simulation getSimulation() {
+        return simulation;
+    }
+
+    public void setSimulation(Simulation simulation) {
+        this.simulation = simulation;
+    }
+
+    public double getCurrentMinute() {
+        return currentMinute;
+    }
+
+    public void setCurrentMinute(double currentMinute) {
+        this.currentMinute = currentMinute;
     }
 }

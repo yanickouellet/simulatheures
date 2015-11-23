@@ -58,6 +58,7 @@ public class MainForm {
     private JButton btnDeleteSelected;
     private JButton btnValidate;
     private JPanel pnlBottomBar;
+    private Timer timer;
 
     Controller controller;
 
@@ -78,6 +79,13 @@ public class MainForm {
         btnDeleteSelected.setVisible(state.getSelectedElement() != null);
 
         mainFrame.repaint();
+
+        if (state.getCurrentMode() == EditionMode.Simulation) {
+            if (timer == null) {
+                timer = new Timer(500, e -> controller.increaseSimulationTime(1));
+                timer.start();
+            }
+        }
     }
 
     public void setController(Controller controller) {

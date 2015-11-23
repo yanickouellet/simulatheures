@@ -19,28 +19,28 @@ public class NodeVector {
         return destination;
     }
 
-    public float getComponentX() {
+    public double getComponentX() {
         return destination.getCoordinate().getX() - source.getCoordinate().getX();
     }
 
-    public float getComponentY() {
+    public double getComponentY() {
         return destination.getCoordinate().getY() - source.getCoordinate().getY();
     }
 
-    public float computeAngle() {
-        return (float) Math.atan(getComponentY() / getComponentX());
+    public double computeAngle() {
+        return Math.atan(getComponentY() / getComponentX());
     }
 
-    public float computeNorm() {
-        float x = getComponentX();
-        float y = getComponentY();
+    public double computeNorm() {
+        double x = getComponentX();
+        double y = getComponentY();
 
-        return (float) Math.sqrt(x * x + y * y);
+        return Math.sqrt(x * x + y * y);
     }
 
-    public Coordinate computeNewCoordinate(float ratio) {
-        float x = getSource().getCoordinate().getX() + getComponentX() * ratio;
-        float y = getSource().getCoordinate().getY() + getComponentY() * ratio;
+    public Coordinate computeNewCoordinate(double ratio) {
+        double x = getSource().getCoordinate().getX() + getComponentX() * ratio;
+        double y = getSource().getCoordinate().getY() + getComponentY() * ratio;
         return new Coordinate(x, y);
     }
 

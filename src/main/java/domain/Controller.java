@@ -1,11 +1,14 @@
 package domain;
 
 import domain.network.*;
+import domain.simulation.Simulation;
 import ui.MainForm;
 import util.CoordinateConverter;
 import util.Strings;
 
 import java.awt.*;
+import java.sql.Time;
+import java.time.LocalTime;
 
 public class Controller {
     private MainForm mainForm;
@@ -144,7 +147,13 @@ public class Controller {
     }
 
     public void startSimulation() {
-        setEditionMode(EditionMode.Simulation);
+        Network network = state.getNetwork();
+        Simulation simulation = new Simulation(LocalTime.of(5,0), LocalTime.of(14, 0), network);
+        state.startSimulation(simulation);
+    }
+
+    public void increaseSimulationTime(double speed) {
+        state.setCurrentMinute(state.getCurrentMinute() + 0.5 * speed);
     }
 
     public ApplicationState getState() {

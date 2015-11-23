@@ -30,11 +30,11 @@ public class Simulation {
         vehicles = new ArrayList<>();
 
         for (Segment s : network.getSegments().values()) {
-            segments.put(s, Math.round(s.generate()));
+            segments.put(s, (int) Math.round(s.generate()));
         }
 
         for (BusRoute r : network.getRoutes()) {
-            int value = Math.round(r.generate());
+            int value = (int) Math.round(r.generate());
             routes.put(r, value);
 
             long busStartAt =  r.getStartAt();
@@ -45,29 +45,38 @@ public class Simulation {
         }
     }
 
-    public Coordinate computePosition(Vehicle vehicle, long minutesSinceStart) {
-        ArrayList<Segment> path = vehicle.getRoute().getSegments();
-        int i = 0;
-        long time = 0;
-        Segment lastSegment = path.get(0);
-        long timeToTravel = segments.get(lastSegment);
+    public Coordinate computePosition(Vehicle vehicle, double minutesSinceStart) {
+        double minutesOnCircuit = minutesSinceStart - vehicle.getArrivalTime();
+        if (minutesOnCircuit < 0)
+            return null;
 
-        while (time + timeToTravel < minutesSinceStart && i < path.size()) {
+        ArrayList<Segment> path = vehicle.getRoute().getSegments();
+        double time = 0;
+        Segment lastSegment = path.get(0);
+        double timeToTravel = segments.get(lastSegment);
+
+        int i = 1;
+        while (time + timeToTravel < minutesOnCircuit && i < path.size()) {
             time += timeToTravel;
             lastSegment = path.get(i);
             timeToTravel = segments.get(lastSegment);
+            i++;
         }
 
-        if (time + timeToTravel < minutesSinceStart)
+        if (time + timeToTravel < minutesOnCircuit)
             return null;
 
-        long timeOnSegment = minutesSinceStart - time;
-        float rate = timeOnSegment / (float) timeToTravel;
+        double timeOnSegment = minutesOnCircuit - time;
+        double rate = timeOnSegment / timeToTravel;
 
         return lastSegment.getVector().computeNewCoordinate(rate);
     }
 
     public long endsAtMinute() {
         return ChronoUnit.MINUTES.between(startAt, endsAt);
+    }
+
+    public ArrayList<Vehicle> getVehicles() {
+        return vehicles;
     }
 }

@@ -19,9 +19,9 @@ public class Node extends NetworkElement {
 
     @Override
     public boolean isOnCoordinate(Coordinate coords) {
-        float maxDelta = 5;
-        float deltaX = Math.abs(coords.getX() - coordinate.getX());
-        float deltaY = Math.abs(coords.getY() - coordinate.getY());
+        double maxDelta = 5;
+        double deltaX = Math.abs(coords.getX() - coordinate.getX());
+        double deltaY = Math.abs(coords.getY() - coordinate.getY());
 
         return deltaX  < maxDelta && deltaY < maxDelta;
     }

@@ -1,42 +1,42 @@
 package domain;
 
 public class TriangularDistribution {
-    private float minValue;
-    private float averageValue;
-    private float maxValue;
+    private double minValue;
+    private double averageValue;
+    private double maxValue;
 
-    public TriangularDistribution(float minValue, float averageValue, float maxValue) {
+    public TriangularDistribution(double minValue, double averageValue, double maxValue) {
         this.minValue = minValue;
         this.averageValue = averageValue;
         this.maxValue = maxValue;
     }
 
     //TODO Code that!
-    public float generate() {
+    public double generate() {
         return averageValue;
     }
 
-    public float getMinValue() {
+    public double getMinValue() {
         return minValue;
     }
 
-    public void setMinValue(float minValue) {
+    public void setMinValue(double minValue) {
         this.minValue = minValue;
     }
 
-    public float getAverageValue() {
+    public double getAverageValue() {
         return averageValue;
     }
 
-    public void setAverageValue(float averageValue) {
+    public void setAverageValue(double averageValue) {
         this.averageValue = averageValue;
     }
 
-    public float getMaxValue() {
+    public double getMaxValue() {
         return maxValue;
     }
 
-    public void setMaxValue(float maxValue) {
+    public void setMaxValue(double maxValue) {
         this.maxValue = maxValue;
     }
 }

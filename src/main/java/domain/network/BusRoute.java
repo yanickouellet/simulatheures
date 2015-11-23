@@ -103,7 +103,7 @@ public class BusRoute implements IDistributableElement {
     }
 
     @Override
-    public float generate() {
+    public double generate() {
         return distribution.generate();
     }
 
