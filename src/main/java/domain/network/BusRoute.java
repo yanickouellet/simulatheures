@@ -3,6 +3,7 @@ package domain.network;
 import domain.IDistributableElement;
 import domain.TriangularDistribution;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class BusRoute implements IDistributableElement {
@@ -12,15 +13,18 @@ public class BusRoute implements IDistributableElement {
     private ArrayList<Segment> segments;
     private ArrayList<Node> stations;
     private TriangularDistribution distribution;
+    private Color color;
 
     //TODO Remove me!
     private static int i = 0;
 
-    public BusRoute(Node source) {
+    public BusRoute(Node source, Color color) {
         //TODO This must be editable
         startAt = 0;
         name = Integer.toString(i++);
+
         this.source = source;
+        this.color = color;
         segments = new ArrayList<>();
         stations = new ArrayList<>();
         stations.add(source);
@@ -102,9 +106,18 @@ public class BusRoute implements IDistributableElement {
         return startAt;
     }
 
+    public Color getColor() {
+        return color;
+    }
+
     @Override
-    public float generate() {
+    public double generate() {
         return distribution.generate();
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
     @Override

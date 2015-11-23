@@ -3,32 +3,32 @@ package domain;
 import java.text.DecimalFormat;
 
 public class Coordinate {
-    private float x;
-    private float y;
+    private double x;
+    private double y;
 
     public Coordinate() {
         x = 0;
         y = 0;
     }
 
-    public Coordinate(float x, float y) {
+    public Coordinate(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    public float getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(float x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public float getY() {
+    public double getY() {
         return y;
     }
 
-    public void setY(float y) {
+    public void setY(double y) {
         this.y = y;
     }
 
@@ -45,14 +45,18 @@ public class Coordinate {
 
         Coordinate that = (Coordinate) o;
 
-        if (Float.compare(that.x, x) != 0) return false;
-        return Float.compare(that.y, y) == 0;
+        if (Double.compare(that.x, x) != 0) return false;
+        return Double.compare(that.y, y) == 0;
     }
 
     @Override
     public int hashCode() {
-        int result = (x != +0.0f ? Float.floatToIntBits(x) : 0);
-        result = 31 * result + (y != +0.0f ? Float.floatToIntBits(y) : 0);
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(x);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(y);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 }

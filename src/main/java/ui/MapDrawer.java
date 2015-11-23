@@ -3,6 +3,8 @@ package ui;
 import domain.*;
 import domain.network.Node;
 import domain.network.Segment;
+import domain.simulation.Simulation;
+import domain.simulation.Vehicle;
 import util.CoordinateConverter;
 
 import java.awt.*;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 
 public class MapDrawer {
     private ApplicationState state;
-    private float zoom;
+    private double zoom;
     private int baseStroke;
     private int halfStroke;
     private int maxWidth;
@@ -37,7 +39,7 @@ public class MapDrawer {
         this.maxHeight = maxHeight;
 
         zoom = state.getZoomRatio();
-        baseStroke = Math.round(10 * zoom);
+        baseStroke = (int) Math.round(10 * zoom);
         baseStroke = Math.max(2, baseStroke);
         halfStroke = baseStroke / 2;
 
@@ -45,6 +47,9 @@ public class MapDrawer {
             drawCurrentNode(g);
         drawSegments(g);
         drawNodes(g);
+
+        if (state.getCurrentMode() == EditionMode.Simulation)
+            drawVehicles(g);
     }
 
     private void drawCurrentNode(Graphics2D g) {
@@ -54,7 +59,7 @@ public class MapDrawer {
                 maxHeight,
                 state.getCenterCoordinate(),
                 zoom);
-        g.fill(new Ellipse2D.Float(p.x - halfStroke, p.y - halfStroke, baseStroke, baseStroke));
+        g.fill(new Ellipse2D.Double(p.x - halfStroke, p.y - halfStroke, baseStroke, baseStroke));
     }
 
     private void drawSegments(Graphics2D g) {
@@ -118,7 +123,28 @@ public class MapDrawer {
             else if (n.isOnCoordinate(state.getCurrentPosition()))
                 g.setColor(hoverColor);
 
-            g.fill(new Ellipse2D.Float(p.x - halfStroke, p.y - halfStroke, baseStroke, baseStroke));
+            g.fill(new Ellipse2D.Double(p.x - halfStroke, p.y - halfStroke, baseStroke, baseStroke));
+        }
+    }
+
+    private void drawVehicles(Graphics2D g) {
+        Simulation sim = state.getSimulation();
+        double minute = state.getCurrentMinute();
+
+        for (Vehicle v : sim.getVehicles()) {
+            Coordinate c = sim.computePosition(v, minute);
+            if (c == null)
+                continue;
+
+            Point p = CoordinateConverter.CoordinateToPoint(
+                    sim.computePosition(v, minute),
+                    maxWidth,
+                    maxHeight,
+                    state.getCenterCoordinate(),
+                    zoom);
+
+            g.setColor(v.getRoute().getColor());
+            g.fill(new Ellipse2D.Double(p.x - halfStroke, p.y - halfStroke, baseStroke, baseStroke));
         }
     }
 

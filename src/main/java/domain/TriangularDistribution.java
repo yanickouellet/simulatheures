@@ -1,42 +1,62 @@
 package domain;
 
-public class TriangularDistribution {
-    private float minValue;
-    private float averageValue;
-    private float maxValue;
+import java.util.Random;
 
-    public TriangularDistribution(float minValue, float averageValue, float maxValue) {
+public class TriangularDistribution {
+    private double minValue;
+    private double averageValue;
+    private double maxValue;
+    private static Random r = new Random();
+
+    public TriangularDistribution(double minValue, double averageValue, double maxValue) {
         this.minValue = minValue;
         this.averageValue = averageValue;
         this.maxValue = maxValue;
     }
 
-    //TODO Code that!
-    public float generate() {
-        return averageValue;
+    //http://www.wikiwand.com/en/Triangular_distribution
+    public double generate() {
+        if (minValue == averageValue && averageValue == maxValue)
+            return averageValue;
+
+        double u = r.nextDouble();
+        double fc = computeRepartition(maxValue);
+
+        double value;
+        if (u < fc) {
+            value = minValue + Math.sqrt(u * (averageValue - minValue) * (maxValue - minValue));
+        } else {
+            value = maxValue - Math.sqrt((1 - u) * (averageValue - minValue) * (maxValue - minValue));
+        }
+
+        return value;
     }
 
-    public float getMinValue() {
+    public double getMinValue() {
         return minValue;
     }
 
-    public void setMinValue(float minValue) {
+    public void setMinValue(double minValue) {
         this.minValue = minValue;
     }
 
-    public float getAverageValue() {
+    public double getAverageValue() {
         return averageValue;
     }
 
-    public void setAverageValue(float averageValue) {
+    public void setAverageValue(double averageValue) {
         this.averageValue = averageValue;
     }
 
-    public float getMaxValue() {
+    public double getMaxValue() {
         return maxValue;
     }
 
-    public void setMaxValue(float maxValue) {
+    public void setMaxValue(double maxValue) {
         this.maxValue = maxValue;
+    }
+
+    private double computeRepartition(double x) {
+        return (x - minValue) / (averageValue - minValue);
     }
 }

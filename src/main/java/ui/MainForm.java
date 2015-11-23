@@ -7,8 +7,15 @@ import domain.TriangularDistribution;
 import domain.network.NetworkElement;
 import domain.network.Node;
 import domain.network.Segment;
+import domain.network.BusRoute;
+import ui.tree.ColoredMutableTreeNode;
+import ui.tree.ColoredTreeCellRenderer;
 
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -75,6 +82,7 @@ public class MainForm {
     private JPanel pnlEditCircuit;
     private JPanel pnlEditSource;
     private JPanel pnlBottomBar;
+    private Timer timer;
 
     Controller controller;
 
@@ -92,7 +100,28 @@ public class MainForm {
         lblPosition.setText(state.getCurrentPosition().toString() + " Zoom: " + state.getZoomLevel());
         lblMessage.setText(state.getMessage());
 
+        btnDeleteSelected.setVisible(state.getSelectedElement() != null);
+
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Circuits");
+        for (BusRoute r : state.getNetwork().getRoutes()) {
+            ColoredMutableTreeNode node = new ColoredMutableTreeNode(r, r.getColor());
+            root.add(node);
+        }
+        DefaultTreeModel model = (DefaultTreeModel) displayTree.getModel();
+        model.setRoot(root);
+
         mainFrame.repaint();
+
+        if (state.getCurrentMode() == EditionMode.Simulation) {
+            if (timer == null) {
+                timer = new Timer(500, e -> {
+                    int value = (int) spnSpeed.getValue();
+                    value = value < 1 ? 1 : value;
+                    controller.increaseSimulationTime(value / 100d);
+                });
+                timer.start();
+            }
+        }
     }
 
     public void editElement(NetworkElement elem) {
@@ -147,6 +176,9 @@ public class MainForm {
     public MainForm() {
         prepareGUI();
 
+        displayTree.setCellRenderer(new ColoredTreeCellRenderer());
+        spnSpeed.setValue(100);
+        //pnlDomainObjects.setVisible(false);
         pnlDomainObjects.setVisible(false);
         hideEditPanels();
 
@@ -204,19 +236,19 @@ public class MainForm {
         btnSelection.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.setControllerMode(EditionMode.None);
+                controller.setEditionMode(EditionMode.None);
             }
         });
         btnCreateNode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.setControllerMode(EditionMode.AddNode);
+                controller.setEditionMode(EditionMode.AddNode);
             }
         });
         btnCreateSegment.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.setControllerMode(EditionMode.AddSegment);
+                controller.setEditionMode(EditionMode.AddSegment);
             }
         });
         btnDeleteSelected.addActionListener(new ActionListener() {
@@ -229,7 +261,7 @@ public class MainForm {
         btnCreateCircuit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.setControllerMode(EditionMode.AddBusRoute);
+                controller.setEditionMode(EditionMode.AddBusRoute);
             }
         });
         btnValidate.addActionListener(new ActionListener() {
@@ -247,6 +279,43 @@ public class MainForm {
                 } else {
                     controller.validate();
                 }
+            }
+        });
+        btnPlay.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (controller.getState().getSimulation() != null) {
+                    if (timer.isRunning()) {
+                        timer.stop();
+                    } else {
+                        timer.start();
+                    }
+                } else {
+                    controller.startSimulation();
+                }
+            }
+        });
+        btnStop.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.stopSimulation();
+            }
+        });
+        btnStart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.restartSimulation();
+            }
+        });
+        displayTree.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                ColoredMutableTreeNode node = (ColoredMutableTreeNode) displayTree.getLastSelectedPathComponent();
+                if (node == null)
+                    return;
+
+                BusRoute route = (BusRoute) node.getUserObject();
+                controller.setCurrentBusRoute(route);
             }
         });
     }

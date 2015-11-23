@@ -1,16 +1,28 @@
 package domain;
 
 import domain.network.*;
+import domain.simulation.Simulation;
 import ui.MainForm;
 import util.CoordinateConverter;
 import util.Strings;
 
 import java.awt.*;
+import java.sql.Time;
+import java.time.LocalTime;
 
 public class Controller {
     private MainForm mainForm;
     private ApplicationState state;
     private ControllerMode controllerMode;
+    private static final Color[] DefaultColors = new Color[] {
+            Color.blue,
+            Color.cyan,
+            Color.darkGray,
+            Color.green,
+            Color.magenta,
+            Color.pink,
+            Color.yellow
+    };
 
     public Controller(MainForm mainForm) {
         this.mainForm = mainForm;
@@ -93,7 +105,7 @@ public class Controller {
         mainForm.update();
     }
 
-    public void setControllerMode(EditionMode mode) {
+    public void setEditionMode(EditionMode mode) {
         state.setMessage("");
         state.setCurrentMode(mode);
 
@@ -143,6 +155,31 @@ public class Controller {
         mainForm.update();
     }
 
+    public void startSimulation() {
+        Network network = state.getNetwork();
+        Simulation simulation = new Simulation(LocalTime.of(5,0), LocalTime.of(14, 0), network);
+        state.startSimulation(simulation);
+    }
+
+    public void increaseSimulationTime(double speed) {
+        state.setCurrentMinute(state.getCurrentMinute() + 0.5 * speed);
+    }
+
+    public void stopSimulation() {
+        state.setSimulation(null);
+        state.setCurrentMode(EditionMode.None);
+    }
+
+    public void restartSimulation() {
+        state.setCurrentMinute(0);
+    }
+
+    public void setCurrentBusRoute(BusRoute route) {
+        if (state.getCurrentMode() == EditionMode.None) {
+            state.setCurrentBusRoute(route);
+        }
+    }
+
     public ApplicationState getState() {
         return state;
     }
@@ -169,15 +206,17 @@ public class Controller {
         NetworkElement selectedElem = state.getSelectedElement();
         Node previousNode = selectedElem instanceof Node ? (Node) selectedElem : null;
 
-        if (node == null)
+        if (node == null) {
+            state.setSelectedElement(null);
             return;
+        }
 
         if (previousNode != null && node != previousNode) {
            if (!network.addSegment(previousNode, node)) {
                state.setMessage(Strings.SegmentAlreadyExisting);
+           } else {
+               state.setSelectedElement(node);
            }
-
-            state.setSelectedElement(null);
         } else  {
             state.setSelectedElement(node);
         }
@@ -190,7 +229,8 @@ public class Controller {
         if (route == null) {
             Node node = network.getNodeOnCoords(coord);
             if (node != null) {
-                state.setCurrentBusRoute(new BusRoute(node));
+                Color color = DefaultColors[network.getRoutes().size() % DefaultColors.length];
+                state.setCurrentBusRoute(new BusRoute(node, color));
                 state.setMessage(Strings.SelectConsecutiveSegments);
             }
         } else if (controllerMode == ControllerMode.AddingBusRoute) {

@@ -8,7 +8,7 @@ public class DistributedElement<T extends IDistributableElement> {
 
     public DistributedElement(T element) {
         this.element = element;
-        value = Math.round(element.generate());
+        value = (int) Math.round(element.generate());
     }
 
     public T getElement() {
