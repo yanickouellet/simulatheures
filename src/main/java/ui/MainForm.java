@@ -3,6 +3,10 @@ package ui;
 import domain.ApplicationState;
 import domain.Controller;
 import domain.EditionMode;
+import domain.TriangularDistribution;
+import domain.network.NetworkElement;
+import domain.network.Node;
+import domain.network.Segment;
 import domain.network.BusRoute;
 import ui.tree.ColoredMutableTreeNode;
 import ui.tree.ColoredTreeCellRenderer;
@@ -50,7 +54,6 @@ public class MainForm {
     private JLabel lblTools;
     private JButton btnCreateNode;
     private JButton btnCreateSegment;
-    private JLabel lblProperties;
     private JLabel lblPosition;
     private JLabel lblStart;
     private JLabel lblEnd;
@@ -59,11 +62,25 @@ public class MainForm {
     private JLabel lblTitleSection;
     private JPanel pnlDomainObjects;
     private JButton btnSelection;
-    private JToolBar tlbBottomBar;
     private JLabel lblError;
     private JLabel lblMessage;
     private JButton btnDeleteSelected;
     private JButton btnValidate;
+    private JTextField txtNodeName;
+    private JSpinner spnSegmentMinDuration;
+    private JSpinner spnSegmentAvgDuration;
+    private JSpinner spnSegmentMaxDuration;
+    private JSpinner spnSourceMinDuration;
+    private JSpinner spnSourceAvgDuration;
+    private JSpinner spnSourceMaxDuration;
+    private JSpinner spnSourceFirstVehicule;
+    private JSpinner spnCircuitNumber;
+    private JTextField txtCircuitName;
+    private JCheckBox ckbCircuitIsLoop;
+    private JPanel pnlEditNode;
+    private JPanel pnlEditSegment;
+    private JPanel pnlEditCircuit;
+    private JPanel pnlEditSource;
     private JPanel pnlBottomBar;
     private Timer timer;
 
@@ -107,6 +124,49 @@ public class MainForm {
         }
     }
 
+    public void editElement(NetworkElement elem) {
+        if (elem instanceof Segment) {
+            Segment segment = (Segment) elem;
+            TriangularDistribution distribution = segment.getDistribution();
+            spnSegmentMinDuration.setValue(Math.round(distribution.getMinValue()));
+            spnSegmentAvgDuration.setValue(Math.round(distribution.getAverageValue()));
+            spnSegmentMaxDuration.setValue(Math.round(distribution.getMaxValue()));
+        } else if (elem instanceof Node) {
+            Node node = (Node) elem;
+            txtNodeName.setText(node.getName());
+        }
+    }
+
+    public void saveElement(NetworkElement elem) {
+        if (elem instanceof Segment) {
+            TriangularDistribution distribution = ((Segment) elem).getDistribution();
+            distribution.setMinValue((Integer) spnSegmentMinDuration.getValue());
+            distribution.setAverageValue((Integer) spnSegmentAvgDuration.getValue());
+            distribution.setMaxValue((Integer) spnSegmentMaxDuration.getValue());
+        } else if (elem instanceof Node) {
+            ((Node) elem).setName(txtNodeName.getText());
+        }
+    }
+
+    public void setEditPanelsVisibility(NetworkElement elem) {
+        hideEditPanels();
+        btnDeleteSelected.setVisible(elem != null);
+
+        if (elem instanceof Segment) {
+            pnlEditSegment.setVisible(true);
+        } else if (elem instanceof Node) {
+            pnlEditNode.setVisible(true);
+        }
+    }
+
+    public void hideEditPanels() {
+        btnDeleteSelected.setVisible(false);
+        pnlEditNode.setVisible(false);
+        pnlEditSegment.setVisible(false);
+        pnlEditSource.setVisible(false);
+        pnlEditCircuit.setVisible(false);
+    }
+
     public void setController(Controller controller) {
         this.controller = controller;
         MapPanel pane = (MapPanel) mapPane;
@@ -119,13 +179,20 @@ public class MainForm {
         displayTree.setCellRenderer(new ColoredTreeCellRenderer());
         spnSpeed.setValue(100);
         //pnlDomainObjects.setVisible(false);
+        pnlDomainObjects.setVisible(false);
+        hideEditPanels();
 
         mapPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-
                 controller.click(e.getPoint(), mapPane.getWidth(), mapPane.getHeight());
+
+                ApplicationState state = controller.getState();
+                if (state.getCurrentMode() == EditionMode.None) {
+                    editElement(state.getSelectedElement());
+                    setEditPanelsVisibility(state.getSelectedElement());
+                }
             }
 
             @Override
@@ -188,6 +255,7 @@ public class MainForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.deleteSelectedElement();
+                hideEditPanels();
             }
         });
         btnCreateCircuit.addActionListener(new ActionListener() {
@@ -205,7 +273,12 @@ public class MainForm {
         btnValidate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.validate();
+                ApplicationState state = controller.getState();
+                if (state.getCurrentMode() == EditionMode.None) {
+                    saveElement(state.getSelectedElement());
+                } else {
+                    controller.validate();
+                }
             }
         });
         btnPlay.addActionListener(new ActionListener() {

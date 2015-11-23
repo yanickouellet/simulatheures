@@ -4,9 +4,11 @@ import domain.Coordinate;
 
 public class Node extends NetworkElement {
     private Coordinate coordinate;
+    private String name;
 
     public Node(Coordinate coordinate) {
         this.coordinate = coordinate;
+        this.name = "";
     }
 
     public Coordinate getCoordinate() {
@@ -15,6 +17,14 @@ public class Node extends NetworkElement {
 
     public void setCoordinate(Coordinate coordinate) {
         this.coordinate = coordinate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
