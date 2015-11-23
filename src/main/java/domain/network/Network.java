@@ -86,6 +86,7 @@ public class Network {
     public void deleteElement(NetworkElement elem) {
         if (elem instanceof Segment) {
             Segment segment = (Segment) elem;
+            deleteRoutesForSegments(segment);
             segments.remove(segment.getVector());
         } else if (elem instanceof Node) {
             Node node = (Node) elem;
@@ -100,8 +101,19 @@ public class Network {
         while (i.hasNext()) {
             Segment s = (Segment) ((Map.Entry)i.next()).getValue();
             if (s.getSource() == node || s.getDestination() == node) {
+                deleteRoutesForSegments(s);
                 i.remove();
             }
+        }
+    }
+
+    private void deleteRoutesForSegments(Segment segment) {
+        Iterator i = routes.iterator();
+
+        while (i.hasNext()) {
+            BusRoute r = (BusRoute)i.next();
+            if (r.getSegments().contains(segment))
+                i.remove();
         }
     }
 

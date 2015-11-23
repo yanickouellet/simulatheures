@@ -8,6 +8,7 @@ import domain.network.NetworkElement;
 import domain.network.Node;
 import domain.network.Segment;
 import domain.network.BusRoute;
+import domain.simulation.Simulation;
 import ui.tree.ColoredMutableTreeNode;
 import ui.tree.ColoredTreeCellRenderer;
 
@@ -112,11 +113,16 @@ public class MainForm {
             hideEditPanels();
         }
 
+        Simulation simulation = state.getSimulation();
+        if (simulation != null) {
+            lblTime.setText(simulation.getStartAt().plusMinutes(Math.round(state.getCurrentMinute())).toString());
+        }
+
         mainFrame.repaint();
 
         if (state.getCurrentMode() == EditionMode.Simulation) {
             if (timer == null) {
-                timer = new Timer(500, e -> {
+                timer = new Timer(17, e -> {
                     int value = (int) spnSpeed.getValue();
                     value = value < 1 ? 1 : value;
                     controller.increaseSimulationTime(value / 100d);

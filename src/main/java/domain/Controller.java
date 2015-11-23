@@ -163,7 +163,8 @@ public class Controller {
     }
 
     public void increaseSimulationTime(double speed) {
-        state.setCurrentMinute(state.getCurrentMinute() + 0.5 * speed);
+        state.setCurrentMinute(state.getCurrentMinute() + 0.05 * speed);
+        mainForm.update();
     }
 
     public void stopSimulation() {

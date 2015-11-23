@@ -79,4 +79,12 @@ public class Simulation {
     public ArrayList<Vehicle> getVehicles() {
         return vehicles;
     }
+
+    public LocalTime getStartAt() {
+        return startAt;
+    }
+
+    public LocalTime getEndsAt() {
+        return endsAt;
+    }
 }
