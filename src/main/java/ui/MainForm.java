@@ -140,19 +140,19 @@ public class MainForm {
         btnSelection.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.setControllerMode(EditionMode.None);
+                controller.setEditionMode(EditionMode.None);
             }
         });
         btnCreateNode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.setControllerMode(EditionMode.AddNode);
+                controller.setEditionMode(EditionMode.AddNode);
             }
         });
         btnCreateSegment.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.setControllerMode(EditionMode.AddSegment);
+                controller.setEditionMode(EditionMode.AddSegment);
             }
         });
         btnDeleteSelected.addActionListener(new ActionListener() {
@@ -164,7 +164,7 @@ public class MainForm {
         btnCreateCircuit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.setControllerMode(EditionMode.AddBusRoute);
+                controller.setEditionMode(EditionMode.AddBusRoute);
             }
         });
         btnValidate.addActionListener(new ActionListener() {
@@ -177,6 +177,12 @@ public class MainForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.validate();
+            }
+        });
+        btnPlay.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.startSimulation();
             }
         });
     }

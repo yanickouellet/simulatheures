@@ -93,7 +93,7 @@ public class Controller {
         mainForm.update();
     }
 
-    public void setControllerMode(EditionMode mode) {
+    public void setEditionMode(EditionMode mode) {
         state.setMessage("");
         state.setCurrentMode(mode);
 
@@ -143,6 +143,10 @@ public class Controller {
         mainForm.update();
     }
 
+    public void startSimulation() {
+        setEditionMode(EditionMode.Simulation);
+    }
+
     public ApplicationState getState() {
         return state;
     }
@@ -169,15 +173,17 @@ public class Controller {
         NetworkElement selectedElem = state.getSelectedElement();
         Node previousNode = selectedElem instanceof Node ? (Node) selectedElem : null;
 
-        if (node == null)
+        if (node == null) {
+            state.setSelectedElement(null);
             return;
+        }
 
         if (previousNode != null && node != previousNode) {
            if (!network.addSegment(previousNode, node)) {
                state.setMessage(Strings.SegmentAlreadyExisting);
+           } else {
+               state.setSelectedElement(node);
            }
-
-            state.setSelectedElement(null);
         } else  {
             state.setSelectedElement(node);
         }
