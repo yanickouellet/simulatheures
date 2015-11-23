@@ -18,7 +18,7 @@
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <doubleable value="false"/>
+          <floatable value="false"/>
         </properties>
         <border type="none"/>
         <children>
@@ -119,7 +119,6 @@
             </constraints>
             <properties>
               <visible value="false"/>
-              <doubleable value="false"/>
             </properties>
             <border type="none"/>
             <children>
@@ -256,7 +255,7 @@
           <gridbag weightx="0.0" weighty="1.0"/>
         </constraints>
         <properties>
-          <doubleable value="false"/>
+          <floatable value="false"/>
           <orientation value="1"/>
         </properties>
         <border type="none"/>
