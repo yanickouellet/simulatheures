@@ -29,23 +29,15 @@ public class Segment extends NetworkElement implements IDistributableElement {
 
     @Override
     public boolean isOnCoordinate(Coordinate coords) {
-        Coordinate source = vector.getSource().getCoordinate();
-        Coordinate destination = vector.getDestination().getCoordinate();
+        NodeVector sourceCoord = new NodeVector(vector.getSource(), new Node(coords));
 
-        float arrond = 10;
+        float deltaNorm = vector.computeNorm() - sourceCoord.computeNorm();
+        float deltaAngle = vector.computeAngle() - sourceCoord.computeAngle();
 
-        float dx = source.getX() - destination.getX();
-        float dy = source.getY() - destination.getY();
+        boolean sameSignX = Math.signum(vector.getComponentX()) == Math.signum(sourceCoord.getComponentX());
+        boolean sameSignY = Math.signum(vector.getComponentY()) == Math.signum(sourceCoord.getComponentY());
 
-        float a = dy / dx;
-        float b = destination.getY() - destination.getX() * a;
-
-        float yMin = (coords.getX() - arrond) * a + b;
-        float yMax = (coords.getX() + arrond) * a + b;
-
-        float y = coords.getY();
-
-        return y >= yMin && y <= yMax;
+        return Math.abs(deltaAngle) < 0.08 && deltaNorm > 0 && sameSignX && sameSignY;
     }
 
     public TriangularDistribution getDistribution() {

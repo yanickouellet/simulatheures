@@ -27,6 +27,17 @@ public class NodeVector {
         return destination.getCoordinate().getY() - source.getCoordinate().getY();
     }
 
+    public float computeAngle() {
+        return (float) Math.atan(getComponentY() / getComponentX());
+    }
+
+    public float computeNorm() {
+        float x = getComponentX();
+        float y = getComponentY();
+
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
     public Coordinate computeNewCoordinate(float ratio) {
         float x = getSource().getCoordinate().getX() + getComponentX() * ratio;
         float y = getSource().getCoordinate().getY() + getComponentY() * ratio;
