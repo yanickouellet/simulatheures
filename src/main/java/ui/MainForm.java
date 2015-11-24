@@ -189,6 +189,8 @@ public class MainForm {
         ckbCircuitIsLoop.setEnabled(route.isLoopable());
         pnlEditCircuit.setVisible(true);
         pnlEditSource.setVisible(true);
+        spnSourceNumberMaxVehicule.setValue(route.getBusSource().getNumberMaxVehicule());
+        spnTimeBeforeFirstVehicule.setValue(route.getBusSource().getTimeBeforeFirstVehicule());
         TriangularDistribution distribution = route.getBusSource().getDistribution();
         spnSourceMinDuration.setValue((int)Math.round(distribution.getMinValue()));
         spnSourceAvgDuration.setValue((int)Math.round(distribution.getAverageValue()));

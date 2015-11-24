@@ -62,7 +62,8 @@ public class Simulation {
 
         while (source.getNode() != path.get(i++).getSource());
 
-        Segment lastSegment = path.get(i);
+        Segment lastSegment = path.get(--i);
+        i++;
         double timeToTravel = segments.get(lastSegment);
 
         while (time + timeToTravel < minutesOnCircuit && i < path.size()) {
