@@ -7,10 +7,11 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class BusRoute implements IDistributableElement {
+    private Node routeSource;
     private String name;
     private boolean isLoop;
     private int startAt;
-    private Source source;
+    private Source busSource;
     private ArrayList<Segment> segments;
     private ArrayList<Node> stations;
     private TriangularDistribution distribution;
@@ -18,16 +19,15 @@ public class BusRoute implements IDistributableElement {
 
     private static int i = 1;
 
-    public BusRoute(Node source, Color color) {
+    public BusRoute(Node routeSource, Color color) {
         startAt = 0;
         name = "Circuit " + Integer.toString(i++);
         isLoop = false;
 
-        this.source = new Source(source);
+        this.routeSource = routeSource;
         this.color = color;
         segments = new ArrayList<>();
         stations = new ArrayList<>();
-        stations.add(source);
 
         distribution = new TriangularDistribution(5, 10, 15);
     }
@@ -44,7 +44,7 @@ public class BusRoute implements IDistributableElement {
             throw new IllegalArgumentException();
 
         if (stations.contains(node)) {
-            if (node != source.getNode())
+            if (node != busSource.getNode())
                 stations.remove(node);
         } else {
             stations.add(node);
@@ -56,7 +56,7 @@ public class BusRoute implements IDistributableElement {
             return false;
 
         if (segments.size() == 0)
-            return segment.getSource() == source.getNode();
+            return segment.getSource() == routeSource;
 
         return segments.get(segments.size() - 1).getDestination() == segment.getSource();
     }
@@ -66,7 +66,7 @@ public class BusRoute implements IDistributableElement {
     }
 
     public boolean isNodeOnRoute(Node node) {
-        if (node == source.getNode())
+        if (node == routeSource)
             return true;
 
         for (Segment s : segments) {
@@ -78,12 +78,16 @@ public class BusRoute implements IDistributableElement {
         return false;
     }
 
+    public boolean isLoopable() {
+        return segments.size() >= 2 && segments.get(0).getSource() == segments.get(segments.size()-1).getSource();
+    }
+
     public boolean isSegmentOnRoute(Segment segment) {
         return segments.contains(segment);
     }
 
-    public Source getSource() {
-        return source;
+    public Source getBusSource() {
+        return busSource;
     }
 
     public ArrayList<Segment> getSegments() {
@@ -118,9 +122,20 @@ public class BusRoute implements IDistributableElement {
         return color;
     }
 
+    public void setBusSource(Source busSource) {
+        if (this.busSource != null)
+            throw new IllegalArgumentException();
+        this.busSource = busSource;
+        this.stations.add(busSource.getNode());
+    }
+
+    public Node getRouteSource() {
+        return routeSource;
+    }
+
     @Override
     public double generate() {
-        return source.getDistribution().generate();
+        return busSource.getDistribution().generate();
     }
 
     @Override
@@ -137,7 +152,7 @@ public class BusRoute implements IDistributableElement {
 
         if (startAt != busRoute.startAt) return false;
         if (name != null ? !name.equals(busRoute.name) : busRoute.name != null) return false;
-        if (source != null ? !source.equals(busRoute.source) : busRoute.source != null) return false;
+        if (busSource != null ? !busSource.equals(busRoute.busSource) : busRoute.busSource != null) return false;
         if (segments != null ? !segments.equals(busRoute.segments) : busRoute.segments != null) return false;
         if (stations != null ? !stations.equals(busRoute.stations) : busRoute.stations != null) return false;
         return !(distribution != null ? !distribution.equals(busRoute.distribution) : busRoute.distribution != null);
@@ -148,7 +163,7 @@ public class BusRoute implements IDistributableElement {
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + startAt;
-        result = 31 * result + (source != null ? source.hashCode() : 0);
+        result = 31 * result + (busSource != null ? busSource.hashCode() : 0);
         result = 31 * result + (segments != null ? segments.hashCode() : 0);
         result = 31 * result + (stations != null ? stations.hashCode() : 0);
         result = 31 * result + (distribution != null ? distribution.hashCode() : 0);

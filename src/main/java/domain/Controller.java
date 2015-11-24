@@ -143,8 +143,8 @@ public class Controller {
                         if (!route.isNodeStation(finalNode))
                             route.toggleStation(finalNode);
 
-                        state.getNetwork().addRoute(state.getCurrentBusRoute());
-                        startBusRouteCreation();
+                        controllerMode = ControllerMode.AddingBusRouteSource;
+                        state.setMessage(Strings.SelectRouteBusSource);
                     } else {
                         state.setMessage(Strings.RouteMustContainsSegment);
                     }
@@ -247,6 +247,8 @@ public class Controller {
                 Color color = DefaultColors[network.getRoutes().size() % DefaultColors.length];
                 state.setCurrentBusRoute(new BusRoute(node, color));
                 state.setMessage(Strings.SelectConsecutiveSegments);
+            } else {
+                state.setMessage(Strings.SelectRouteSource);
             }
         } else if (controllerMode == ControllerMode.AddingBusRoute) {
             ArrayList<Segment> segments = network.getSegmentOnCoords(coord);
@@ -257,10 +259,22 @@ public class Controller {
                     break;
                 }
             }
+            state.setMessage(Strings.SelectConsecutiveSegments);
         } else if (controllerMode == ControllerMode.AddingBusRouteStation) {
             Node node = network.getNodeOnCoords(coord);
             if (node != null) {
                 route.toggleStation(node);
+            }
+            state.setMessage(Strings.SelectStations);
+        } else if (controllerMode == ControllerMode.AddingBusRouteSource) {
+            Node node = network.getNodeOnCoords(coord);
+            if (route.isNodeOnRoute(node) &&
+                    route.getSegments().get(route.getSegments().size()-1).getDestination() != node) {
+                route.setBusSource(new Source(node));
+                network.addRoute(route);
+                startBusRouteCreation();
+            } else {
+                state.setMessage(Strings.IncorrectRouteBusSource);
             }
         }
     }

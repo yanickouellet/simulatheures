@@ -9,7 +9,6 @@ import domain.network.NetworkElement;
 import domain.network.Node;
 import domain.network.Segment;
 import domain.network.BusRoute;
-import domain.simulation.Simulation;
 import ui.tree.ColoredMutableTreeNode;
 import ui.tree.ColoredTreeCellRenderer;
 
@@ -17,7 +16,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.plaf.IconUIResource;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
@@ -188,7 +186,7 @@ public class MainForm {
         ckbCircuitIsLoop.setSelected(route.getIsLoop());
         pnlEditCircuit.setVisible(true);
         pnlEditSource.setVisible(true);
-        TriangularDistribution distribution = route.getSource().getDistribution();
+        TriangularDistribution distribution = route.getBusSource().getDistribution();
         spnSourceMinDuration.setValue(Math.round(distribution.getMinValue()));
         spnSourceAvgDuration.setValue(Math.round(distribution.getAverageValue()));
         spnSourceMaxDuration.setValue(Math.round(distribution.getMaxValue()));
@@ -198,7 +196,7 @@ public class MainForm {
         route.setName(txtCircuitName.getText());
         route.setIsLoop(ckbCircuitIsLoop.isSelected());
 
-        Source source = route.getSource();
+        Source source = route.getBusSource();
         source.setNumberMaxVehicule((Integer) spnSourceNumberMaxVehicule.getValue());
         source.setTimeBeforeFirstVehicule((Integer) spnTimeBeforeFirstVehicule.getValue());
         TriangularDistribution distribution = source.getDistribution();
