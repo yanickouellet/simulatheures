@@ -4,6 +4,7 @@ import domain.Coordinate;
 import domain.network.BusRoute;
 import domain.network.Network;
 import domain.network.Segment;
+import domain.network.Source;
 
 import java.sql.Time;
 import java.time.LocalTime;
@@ -37,10 +38,13 @@ public class Simulation {
             double value = r.generate();
             routes.put(r, value);
 
-            long busStartAt =  r.getStartAt();
-            while(busStartAt < endsAtMinute()) {
+            int i = 0;
+            int maxVehicles = r.getBusSource().getNumberMaxVehicule();
+            long busStartAt =  r.getBusSource().getTimeBeforeFirstVehicule();
+            while(busStartAt < endsAtMinute() && (i < maxVehicles || maxVehicles <= 0)) {
                 vehicles.add(new Vehicle(r, busStartAt));
                 busStartAt += value;
+                i++;
             }
         }
     }
@@ -51,16 +55,24 @@ public class Simulation {
             return null;
 
         ArrayList<Segment> path = vehicle.getRoute().getSegments();
+        Source source = vehicle.getRoute().getBusSource();
+        boolean isLoop = vehicle.getRoute().getIsLoop();
         double time = 0;
-        Segment lastSegment = path.get(0);
+        int i = 0;
+
+        while (source.getNode() != path.get(i++).getSource());
+
+        Segment lastSegment = path.get(i);
         double timeToTravel = segments.get(lastSegment);
 
-        int i = 1;
         while (time + timeToTravel < minutesOnCircuit && i < path.size()) {
             time += timeToTravel;
             lastSegment = path.get(i);
             timeToTravel = segments.get(lastSegment);
             i++;
+
+            if (isLoop && i == path.size())
+                i = 0;
         }
 
         if (time + timeToTravel < minutesOnCircuit)

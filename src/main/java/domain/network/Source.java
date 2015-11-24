@@ -5,8 +5,8 @@ import domain.TriangularDistribution;
 public class Source {
     private Node node;
     private TriangularDistribution distribution;
-    private Integer timeBeforeFirstVehicule;
-    private Integer numberMaxVehicule;
+    private int timeBeforeFirstVehicule;
+    private int numberMaxVehicule;
 
     public Source(Node node) {
         this.node = node;
@@ -28,15 +28,15 @@ public class Source {
         this.distribution = distribution;
     }
 
-    public Integer getNumberMaxVehicule() { return numberMaxVehicule; }
+    public int getNumberMaxVehicule() { return numberMaxVehicule; }
 
-    public void setNumberMaxVehicule(Integer numberMaxVehicule) {
+    public void setNumberMaxVehicule(int numberMaxVehicule) {
         this.numberMaxVehicule = numberMaxVehicule;
     }
 
-    public Integer getTimeBeforeFirstVehicule() { return timeBeforeFirstVehicule; }
+    public int getTimeBeforeFirstVehicule() { return timeBeforeFirstVehicule; }
 
-    public void setTimeBeforeFirstVehicule(Integer timeBeforeFirstVehicule) {
+    public void setTimeBeforeFirstVehicule(int timeBeforeFirstVehicule) {
         this.timeBeforeFirstVehicule = timeBeforeFirstVehicule;
     }
 }

@@ -10,7 +10,6 @@ public class BusRoute implements IDistributableElement {
     private Node routeSource;
     private String name;
     private boolean isLoop;
-    private int startAt;
     private Source busSource;
     private ArrayList<Segment> segments;
     private ArrayList<Node> stations;
@@ -20,7 +19,6 @@ public class BusRoute implements IDistributableElement {
     private static int i = 1;
 
     public BusRoute(Node routeSource, Color color) {
-        startAt = 0;
         name = "Circuit " + Integer.toString(i++);
         isLoop = false;
 
@@ -114,10 +112,6 @@ public class BusRoute implements IDistributableElement {
         this.isLoop = isLoop;
     }
 
-    public int getStartAt() {
-        return startAt;
-    }
-
     public Color getColor() {
         return color;
     }
@@ -150,7 +144,6 @@ public class BusRoute implements IDistributableElement {
 
         BusRoute busRoute = (BusRoute) o;
 
-        if (startAt != busRoute.startAt) return false;
         if (name != null ? !name.equals(busRoute.name) : busRoute.name != null) return false;
         if (busSource != null ? !busSource.equals(busRoute.busSource) : busRoute.busSource != null) return false;
         if (segments != null ? !segments.equals(busRoute.segments) : busRoute.segments != null) return false;
@@ -162,7 +155,6 @@ public class BusRoute implements IDistributableElement {
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + startAt;
         result = 31 * result + (busSource != null ? busSource.hashCode() : 0);
         result = 31 * result + (segments != null ? segments.hashCode() : 0);
         result = 31 * result + (stations != null ? stations.hashCode() : 0);
