@@ -160,20 +160,32 @@ public class Controller {
         Network network = state.getNetwork();
         Simulation simulation = new Simulation(LocalTime.of(5,0), LocalTime.of(14, 0), network);
         state.startSimulation(simulation);
+        mainForm.update();
     }
 
     public void increaseSimulationTime(double speed) {
-        state.setCurrentMinute(state.getCurrentMinute() + 0.05 * speed);
+        double nextMinute = state.getCurrentMinute() + 0.05 * speed;
+
+        if (state.getSimulation() != null && nextMinute > state.getSimulation().endsAtMinute()) {
+            mainForm.pauseSimulation();
+            state.setCurrentMinute(state.getSimulation().endsAtMinute());
+        }
+        else
+            state.setCurrentMinute(nextMinute);
+
         mainForm.update();
     }
 
     public void stopSimulation() {
         state.setSimulation(null);
         state.setCurrentMode(EditionMode.None);
+        mainForm.pauseSimulation();
+        mainForm.update();
     }
 
     public void restartSimulation() {
         state.setCurrentMinute(0);
+        mainForm.update();
     }
 
     public void setCurrentBusRoute(BusRoute route) {
@@ -193,6 +205,7 @@ public class Controller {
     }
 
     private void selectionModeClick(Coordinate coord) {
+        state.setCurrentBusRoute(null);
         state.setSelectedElement(state.getNetwork().getElementOnCoords(coord));
     }
 

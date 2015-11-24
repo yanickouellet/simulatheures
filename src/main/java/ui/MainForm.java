@@ -13,9 +13,11 @@ import domain.simulation.Simulation;
 import ui.tree.ColoredMutableTreeNode;
 import ui.tree.ColoredTreeCellRenderer;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.plaf.IconUIResource;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
@@ -23,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 public class MainForm {
     private JFrame mainFrame;
@@ -87,6 +90,9 @@ public class MainForm {
     private JPanel pnlBottomBar;
     private Timer timer;
 
+    private ImageIcon imgPause;
+    private ImageIcon imgStart;
+
     Controller controller;
 
     Point dragOrigin;
@@ -103,6 +109,9 @@ public class MainForm {
         lblPosition.setText(state.getCurrentPosition().toString() + " Zoom: " + state.getZoomLevel());
         lblMessage.setText(state.getMessage());
 
+        ImageIcon img = timer != null && timer.isRunning() ? imgPause : imgStart;
+        btnPlay.setIcon(img);
+
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Circuits");
         for (BusRoute r : state.getNetwork().getRoutes()) {
             ColoredMutableTreeNode node = new ColoredMutableTreeNode(r, r.getColor());
@@ -113,6 +122,17 @@ public class MainForm {
 
         if (state.getCurrentMode() != EditionMode.None) {
             hideEditPanels();
+        }
+
+        if (state.getCurrentMode() == EditionMode.Simulation) {
+            if (state.getSimulation() != null) {
+                long minute = Math.round(state.getCurrentMinute());
+                lblTime.setText(state.getSimulation().getStartAt().plusMinutes(minute).toString());
+            }
+        } else {
+            if (timer != null)
+                timer.stop();
+            timer = null;
         }
 
         mainFrame.repaint();
@@ -127,6 +147,11 @@ public class MainForm {
                 timer.start();
             }
         }
+    }
+
+    public void pauseSimulation() {
+        if (timer != null)
+            timer.stop();
     }
 
     public void editElement(NetworkElement elem) {
@@ -198,6 +223,13 @@ public class MainForm {
 
     public MainForm() {
         prepareGUI();
+
+        try {
+            imgPause = new ImageIcon(ImageIO.read(getClass().getResource("/bottom_bar_icons/appbar.control.pause-25x25.png")));
+            imgStart= new ImageIcon(ImageIO.read(getClass().getResource("/bottom_bar_icons/appbar.control.play-25x25.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         displayTree.setCellRenderer(new ColoredTreeCellRenderer());
         spnSpeed.setValue(100);
