@@ -354,8 +354,10 @@ public class MainForm {
                 if (controller.getState().getSimulation() != null) {
                     if (timer.isRunning()) {
                         timer.stop();
+                        update();
                     } else {
                         timer.start();
+                        update();
                     }
                 } else {
                     LocalTime startAt = LocalTime.parse(txtStart.getText());
