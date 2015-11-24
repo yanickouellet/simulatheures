@@ -36,7 +36,7 @@ public class Segment extends NetworkElement implements IDistributableElement {
         boolean sameSignX = Math.signum(vector.getComponentX()) == Math.signum(sourceCoord.getComponentX());
         boolean sameSignY = Math.signum(vector.getComponentY()) == Math.signum(sourceCoord.getComponentY());
 
-        return Math.abs(deltaAngle) < 0.08 && deltaNorm > 0 && sameSignX && sameSignY;
+        return deltaAngle < 0.08 && deltaNorm > 0 && sameSignX && sameSignY;
     }
 
     public TriangularDistribution getDistribution() {

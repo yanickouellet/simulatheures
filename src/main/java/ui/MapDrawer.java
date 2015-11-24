@@ -66,7 +66,7 @@ public class MapDrawer {
         Segment[] segments = state.getNetwork().getSegments().values().toArray(new Segment[0]);
         ArrayList<int[]> segmentPoints = new ArrayList<>();
 
-        g.setStroke(new BasicStroke(halfStroke));
+        g.setStroke(new BasicStroke(halfStroke / 2));
         for (Segment s :state.getNetwork().getSegments().values()) {
             g.setColor(defaultColor);
 
@@ -85,11 +85,43 @@ public class MapDrawer {
                     zoom
             );
 
-            segmentPoints.add(new int[]{source.x, source.y, destination.x, destination.y});
+            double delta = halfStroke;
+            double x1 = source.x;
+            double x2 = destination.x;
+            double y1 = source.y;
+            double y2 = destination.y;
+            double dirX = Math.signum(x2-x1);
+            double dirY = Math.signum(y2-y1);
+            double angle = s.getVector().computeAngle();
+
+            double sin, cos, sin2, cos2;
+            double pi4 = Math.PI / 4;
+            if (dirX > 0) {
+                cos = Math.cos(pi4);
+            } else {
+                cos = Math.cos(pi4 * 3);
+            }
+
+            if (dirY > 0) {
+                sin = Math.sin(pi4);
+            } else {
+                sin= Math.sin(5 * pi4);
+            }
+
+
+
+            x1 += cos * delta;
+            y1 += sin * delta;
+            x2 += cos * delta;
+            y2 += sin * delta;
+
+            segmentPoints.add(new int[]{(int)x1, (int)y1, (int)x2, (int)y2, (int) dirX, (int)dirY});
         }
 
         // We must draw arrow after segments
         for (int i = 0; i < segmentPoints.size(); i++) {
+            int[] s = segmentPoints.get(i);
+
             if (segments[i] == state.getSelectedElement() || state.isSegmentOnCurrentRoute(segments[i]))
                 g.setColor(selectedColor);
             else if (segments[i].isOnCoordinate(state.getCurrentPosition()))
@@ -97,12 +129,16 @@ public class MapDrawer {
             else
                 g.setColor(defaultColor);
 
-            int[] s = segmentPoints.get(i);
             g.drawLine(s[0], s[1], s[2], s[3]);
         }
 
-        for (int [] s : segmentPoints) {
-            drawArrow(g, s[0], s[1], s[2], s[3], baseStroke);
+        for (int i = 0; i < segmentPoints.size(); i++) {
+            int[] s = segmentPoints.get(i);
+            double ratio = s[3] - s[1] < 5 || s[2] - s[0] < 5 ? 0.90 : 0.95;
+            Coordinate c = segments[i].getVector().computeNewCoordinate(ratio);
+            Point p = CoordinateConverter.CoordinateToPoint(c, maxWidth, maxHeight, state.getCenterCoordinate(), zoom);
+
+            drawArrow(g, s[0], s[1], p.x, p.y, halfStroke);
         }
 
     }
