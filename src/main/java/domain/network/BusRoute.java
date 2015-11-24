@@ -79,7 +79,7 @@ public class BusRoute implements IDistributableElement {
     }
 
     public boolean isLoopable() {
-        return segments.size() >= 2 && segments.get(0).getSource() == segments.get(segments.size()-1).getSource();
+        return segments.size() >= 2 && segments.get(0).getSource() == segments.get(segments.size()-1).getDestination();
     }
 
     public boolean isSegmentOnRoute(Segment segment) {

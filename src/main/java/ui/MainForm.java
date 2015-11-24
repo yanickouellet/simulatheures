@@ -159,9 +159,9 @@ public class MainForm {
         if (elem instanceof Segment) {
             Segment segment = (Segment) elem;
             TriangularDistribution distribution = segment.getDistribution();
-            spnSegmentMinDuration.setValue(Math.round(distribution.getMinValue()));
-            spnSegmentAvgDuration.setValue(Math.round(distribution.getAverageValue()));
-            spnSegmentMaxDuration.setValue(Math.round(distribution.getMaxValue()));
+            spnSegmentMinDuration.setValue((int)Math.round(distribution.getMinValue()));
+            spnSegmentAvgDuration.setValue((int)Math.round(distribution.getAverageValue()));
+            spnSegmentMaxDuration.setValue((int)Math.round(distribution.getMaxValue()));
             pnlEditSegment.setVisible(true);
         } else if (elem instanceof Node) {
             Node node = (Node) elem;
@@ -173,23 +173,26 @@ public class MainForm {
     public void saveElement(NetworkElement elem) {
         if (elem instanceof Segment) {
             TriangularDistribution distribution = ((Segment) elem).getDistribution();
-            distribution.setMinValue((Integer) spnSegmentMinDuration.getValue());
-            distribution.setAverageValue((Integer) spnSegmentAvgDuration.getValue());
-            distribution.setMaxValue((Integer) spnSegmentMaxDuration.getValue());
+            distribution.setMinValue((int) spnSegmentMinDuration.getValue());
+            distribution.setAverageValue((int) spnSegmentAvgDuration.getValue());
+            distribution.setMaxValue((int) spnSegmentMaxDuration.getValue());
         } else if (elem instanceof Node) {
             ((Node) elem).setName(txtNodeName.getText());
         }
     }
 
     public void editBusRoute(BusRoute route) {
+        hideEditPanels();
+
         txtCircuitName.setText(route.getName());
         ckbCircuitIsLoop.setSelected(route.getIsLoop());
+        ckbCircuitIsLoop.setEnabled(route.isLoopable());
         pnlEditCircuit.setVisible(true);
         pnlEditSource.setVisible(true);
         TriangularDistribution distribution = route.getBusSource().getDistribution();
-        spnSourceMinDuration.setValue(Math.round(distribution.getMinValue()));
-        spnSourceAvgDuration.setValue(Math.round(distribution.getAverageValue()));
-        spnSourceMaxDuration.setValue(Math.round(distribution.getMaxValue()));
+        spnSourceMinDuration.setValue((int)Math.round(distribution.getMinValue()));
+        spnSourceAvgDuration.setValue((int)Math.round(distribution.getAverageValue()));
+        spnSourceMaxDuration.setValue((int)Math.round(distribution.getMaxValue()));
     }
 
     public void saveBusRoute(BusRoute route) {
@@ -197,12 +200,12 @@ public class MainForm {
         route.setIsLoop(ckbCircuitIsLoop.isSelected());
 
         Source source = route.getBusSource();
-        source.setNumberMaxVehicule((Integer) spnSourceNumberMaxVehicule.getValue());
-        source.setTimeBeforeFirstVehicule((Integer) spnTimeBeforeFirstVehicule.getValue());
+        source.setNumberMaxVehicule((int) spnSourceNumberMaxVehicule.getValue());
+        source.setTimeBeforeFirstVehicule((int) spnTimeBeforeFirstVehicule.getValue());
         TriangularDistribution distribution = source.getDistribution();
-        distribution.setMinValue((Integer) spnSourceMinDuration.getValue());
-        distribution.setAverageValue((Integer) spnSourceAvgDuration.getValue());
-        distribution.setMaxValue((Integer) spnSourceMaxDuration.getValue());
+        distribution.setMinValue((int) spnSourceMinDuration.getValue());
+        distribution.setAverageValue((int) spnSourceAvgDuration.getValue());
+        distribution.setMaxValue((int) spnSourceMaxDuration.getValue());
     }
 
     public void hideEditPanels() {
@@ -328,8 +331,10 @@ public class MainForm {
             public void actionPerformed(ActionEvent e) {
                 ApplicationState state = controller.getState();
                 if (state.getCurrentMode() == EditionMode.None) {
-                    saveElement(state.getSelectedElement());
-                    saveBusRoute(state.getCurrentBusRoute());
+                    if (state.getSelectedElement() != null)
+                        saveElement(state.getSelectedElement());
+                    else if (state.getCurrentBusRoute() != null)
+                        saveBusRoute(state.getCurrentBusRoute());
                 } else {
                     controller.validate();
                 }

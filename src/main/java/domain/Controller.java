@@ -112,6 +112,11 @@ public class Controller {
 
         state.setSelectedElement(null);
 
+        if (mode != EditionMode.Simulation) {
+            state.setSimulation(null);
+            mainForm.pauseSimulation();
+        }
+
         if (mode == EditionMode.AddBusRoute) {
             startBusRouteCreation();
         } else {
@@ -269,7 +274,7 @@ public class Controller {
         } else if (controllerMode == ControllerMode.AddingBusRouteSource) {
             Node node = network.getNodeOnCoords(coord);
             if (route.isNodeOnRoute(node) &&
-                    route.getSegments().get(route.getSegments().size()-1).getDestination() != node) {
+                    (route.getSegments().get(route.getSegments().size()-1).getDestination() != node || route.isLoopable())) {
                 route.setBusSource(new Source(node));
                 network.addRoute(route);
                 startBusRouteCreation();
