@@ -144,10 +144,6 @@ public class Controller {
                 } else if (controllerMode == ControllerMode.AddingBusRouteStation) {
                     BusRoute route = state.getCurrentBusRoute();
                     if (route.getSegments().size() > 0) {
-                        Node finalNode = route.getSegments().get(route.getSegments().size()-1).getDestination();
-                        if (!route.isNodeStation(finalNode))
-                            route.toggleStation(finalNode);
-
                         controllerMode = ControllerMode.AddingBusRouteSource;
                         state.setMessage(Strings.SelectRouteBusSource);
                     } else {
