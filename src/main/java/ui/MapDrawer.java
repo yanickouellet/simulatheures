@@ -87,7 +87,7 @@ public class MapDrawer {
                     zoom
             );
 
-            if (state.isSegmentOnCurrentRoute(s))
+            if (state.isSegmentOnCurrentRoute(s) || s == state.getSelectedElement())
                 end.add(j);
 
             segmentPoints.add(new int[]{source.x, source.y, destination.x, destination.y});
@@ -108,13 +108,14 @@ public class MapDrawer {
         }
 
         for (int [] s : segmentPoints) {
-            drawArrow(g, s[0], s[1], s[2], s[3], baseStroke);
+            drawArrow(g, s[0], s[1], s[2], s[3], baseStroke, false);
         }
 
         g.setColor(selectedColor);
         for (Integer i : end) {
             int[] s = segmentPoints.get(i);
             g.drawLine(s[0], s[1], s[2], s[3]);
+            drawArrow(g, s[0], s[1], s[2], s[3], baseStroke, true);
         }
 
     }
@@ -161,9 +162,9 @@ public class MapDrawer {
     }
 
     // Inspired by http://stackoverflow.com/a/4112875/3757513
-    private void drawArrow(Graphics2D g1, int x1, int y1, int x2, int y2, int width) {
+    private void drawArrow(Graphics2D g1, int x1, int y1, int x2, int y2, int width, boolean selected) {
         Graphics2D g = (Graphics2D) g1.create();
-        g.setColor(arrowColor);
+        g.setColor(selected ? selectedColor : arrowColor);
 
         double dx = x2 - x1, dy = y2 - y1;
         double angle = Math.atan2(dy, dx);

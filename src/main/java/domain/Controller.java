@@ -31,7 +31,7 @@ public class Controller {
         controllerMode = ControllerMode.Normal;
     }
 
-    public void click(Point p, int maxWidth, int maxHeight) {
+    public void click(Point p, int maxWidth, int maxHeight, boolean leftClick) {
         state.setMessage("");
 
         Coordinate coord = CoordinateConverter.PointToCoordinate(
@@ -44,7 +44,7 @@ public class Controller {
 
         switch (state.getCurrentMode()) {
             case None:
-                selectionModeClick(coord);
+                selectionModeClick(coord, leftClick);
                 break;
             case AddNode:
                 addNodeClick(coord);
@@ -205,9 +205,19 @@ public class Controller {
         state.setMessage(Strings.SelectRouteSource);
     }
 
-    private void selectionModeClick(Coordinate coord) {
+    private void selectionModeClick(Coordinate coord, boolean leftClick) {
         state.setCurrentBusRoute(null);
-        state.setSelectedElement(state.getNetwork().getElementOnCoords(coord));
+        NetworkElement elem = state.getNetwork().getElementOnCoords(coord);
+
+        if (elem instanceof Node) {
+            state.setSelectedElement(elem);
+        } else if (elem != null) {
+            ArrayList<Segment> segs = state.getNetwork().getSegmentOnCoords(coord);
+            if (segs.size() == 1 || leftClick)
+                state.setSelectedElement(segs.get(0));
+            else
+                state.setSelectedElement(segs.get(1));
+        }
     }
 
     private void addNodeClick(Coordinate coord) {

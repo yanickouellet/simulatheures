@@ -249,7 +249,7 @@ public class MainForm {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                controller.click(e.getPoint(), mapPane.getWidth(), mapPane.getHeight());
+                controller.click(e.getPoint(), mapPane.getWidth(), mapPane.getHeight(), e.getButton() == MouseEvent.BUTTON1);
 
                 ApplicationState state = controller.getState();
                 if (state.getCurrentMode() == EditionMode.None) {
