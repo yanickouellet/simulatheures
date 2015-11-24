@@ -50,13 +50,14 @@ public class BusRoute implements IDistributableElement {
     }
 
     public boolean isConsecutive(Segment segment) {
-        if (segment == null)
+        if (segment == null || segments.contains(segment))
             return false;
 
         if (segments.size() == 0)
             return segment.getSource() == routeSource;
 
-        return segments.get(segments.size() - 1).getDestination() == segment.getSource();
+        Segment s = segments.get(segments.size()-1);
+        return s.getDestination() == segment.getSource() && s.getSource() != segment.getDestination();
     }
 
     public boolean isNodeStation(Node node) {
