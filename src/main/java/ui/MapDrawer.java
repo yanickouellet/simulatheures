@@ -63,10 +63,12 @@ public class MapDrawer {
     }
 
     private void drawSegments(Graphics2D g) {
+        ArrayList<Integer> end = new ArrayList<>();
         Segment[] segments = state.getNetwork().getSegments().values().toArray(new Segment[0]);
         ArrayList<int[]> segmentPoints = new ArrayList<>();
 
         g.setStroke(new BasicStroke(halfStroke));
+        int j = 0;
         for (Segment s :state.getNetwork().getSegments().values()) {
             g.setColor(defaultColor);
 
@@ -85,7 +87,11 @@ public class MapDrawer {
                     zoom
             );
 
+            if (state.isSegmentOnCurrentRoute(s))
+                end.add(j);
+
             segmentPoints.add(new int[]{source.x, source.y, destination.x, destination.y});
+            j++;
         }
 
         // We must draw arrow after segments
@@ -103,6 +109,12 @@ public class MapDrawer {
 
         for (int [] s : segmentPoints) {
             drawArrow(g, s[0], s[1], s[2], s[3], baseStroke);
+        }
+
+        g.setColor(selectedColor);
+        for (Integer i : end) {
+            int[] s = segmentPoints.get(i);
+            g.drawLine(s[0], s[1], s[2], s[3]);
         }
 
     }
