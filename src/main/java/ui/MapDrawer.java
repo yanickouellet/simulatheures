@@ -90,22 +90,22 @@ public class MapDrawer {
             double x2 = destination.x;
             double y1 = source.y;
             double y2 = destination.y;
-            double dirX = Math.signum(x2-x1);
-            double dirY = Math.signum(y2-y1);
+            double dirX = Math.signum(s.getDestination().getCoordinate().getX() - s.getSource().getCoordinate().getX());
+            double dirY = Math.signum(s.getDestination().getCoordinate().getY() - s.getSource().getCoordinate().getY());
             double angle = s.getVector().computeAngle();
 
             double sin, cos, sin2, cos2;
-            double pi4 = Math.PI / 4;
+            double pi4 = Math.PI / 2;
             if (dirX > 0) {
-                cos = Math.cos(pi4);
+                cos = Math.cos(angle + pi4);
             } else {
-                cos = Math.cos(pi4 * 3);
+                cos = Math.cos(angle - pi4);
             }
 
             if (dirY > 0) {
-                sin = Math.sin(pi4);
+                sin = Math.sin(angle + pi4);
             } else {
-                sin= Math.sin(5 * pi4);
+                sin= Math.sin(angle - pi4);
             }
 
 
