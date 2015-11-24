@@ -575,8 +575,8 @@ public class MainForm {
         createUIComponents();
         contentPane = new JPanel();
         contentPane.setLayout(new GridBagLayout());
-        contentPane.setMinimumSize(new Dimension(900, 500));
-        contentPane.setPreferredSize(new Dimension(900, 500));
+        contentPane.setMinimumSize(new Dimension(800, 600));
+        contentPane.setPreferredSize(new Dimension(800, 600));
         final JToolBar toolBar1 = new JToolBar();
         toolBar1.setFloatable(false);
         GridBagConstraints gbc;
@@ -848,6 +848,7 @@ public class MainForm {
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 2;
+        gbc.gridwidth = 2;
         contentPane.add(panel6, gbc);
         lblStart = new JLabel();
         lblStart.setText("D :");
