@@ -24,6 +24,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class MainForm {
     private JFrame mainFrame;
@@ -352,7 +354,9 @@ public class MainForm {
                         timer.start();
                     }
                 } else {
-                    controller.startSimulation();
+                    LocalTime startAt = LocalTime.parse(txtStart.getText());
+                    LocalTime endsAt = LocalTime.parse(txtEnd.getText());
+                    controller.startSimulation(startAt, endsAt);
                 }
             }
         });

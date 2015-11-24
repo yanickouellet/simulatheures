@@ -157,9 +157,9 @@ public class Controller {
         mainForm.update();
     }
 
-    public void startSimulation() {
+    public void startSimulation(LocalTime startAt, LocalTime endsAt) {
         Network network = state.getNetwork();
-        Simulation simulation = new Simulation(LocalTime.of(5,0), LocalTime.of(14, 0), network);
+        Simulation simulation = new Simulation(startAt, endsAt, network);
         state.startSimulation(simulation);
         mainForm.update();
     }

@@ -86,7 +86,12 @@ public class Simulation {
     }
 
     public long endsAtMinute() {
-        return ChronoUnit.MINUTES.between(startAt, endsAt);
+        long min = ChronoUnit.MINUTES.between(startAt, endsAt);
+        if (min < 0) {
+            min = 1440 + min;
+        }
+
+        return min;
     }
 
     public ArrayList<Vehicle> getVehicles() {
