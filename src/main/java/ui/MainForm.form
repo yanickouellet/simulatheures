@@ -25,7 +25,7 @@
           <component id="b62ae" class="javax.swing.JButton" binding="btnFile">
             <constraints/>
             <properties>
-              <icon value="top_bar_icons/appbar.page.small-40x40.png"/>
+              <icon value="new/new-48x48.png"/>
               <text value=""/>
               <toolTipText value="Nouveau"/>
             </properties>
@@ -33,7 +33,7 @@
           <component id="c7550" class="javax.swing.JButton" binding="btnOpen">
             <constraints/>
             <properties>
-              <icon value="top_bar_icons/appbar.folder.open-40x40.png"/>
+              <icon value="new/open-48x48.png"/>
               <text value=""/>
               <toolTipText value="Ouvrir"/>
             </properties>
@@ -41,7 +41,7 @@
           <component id="ffd17" class="javax.swing.JButton" binding="btnSave">
             <constraints/>
             <properties>
-              <icon value="top_bar_icons/appbar.save-40x40.png"/>
+              <icon value="new/save-48x48.png"/>
               <text value=""/>
               <toolTipText value="Sauvegarder"/>
             </properties>
@@ -49,7 +49,7 @@
           <component id="51c64" class="javax.swing.JButton" binding="btnClose">
             <constraints/>
             <properties>
-              <icon value="top_bar_icons/appbar.close-40x40.png"/>
+              <icon value="new/close-48x48.png"/>
               <text value=""/>
               <toolTipText value="Fermer"/>
             </properties>
@@ -57,7 +57,7 @@
           <component id="1021d" class="javax.swing.JButton" binding="btnConfiguation">
             <constraints/>
             <properties>
-              <icon value="top_bar_icons/appbar.cog-40x40.png"/>
+              <icon value="new/settings-48x48.png"/>
               <text value=""/>
               <toolTipText value="Préférences"/>
               <verifyInputWhenFocusTarget value="false"/>
@@ -66,7 +66,7 @@
           <component id="8b04e" class="javax.swing.JButton" binding="btnUndo">
             <constraints/>
             <properties>
-              <icon value="top_bar_icons/appbar.undo-40x40.png"/>
+              <icon value="new/undo-48x48.png"/>
               <text value=""/>
               <toolTipText value="Annuler"/>
             </properties>
@@ -74,7 +74,7 @@
           <component id="521d1" class="javax.swing.JButton" binding="btnRedo">
             <constraints/>
             <properties>
-              <icon value="top_bar_icons/appbar.redo-40x40.png"/>
+              <icon value="new/redo-48x48.png"/>
               <text value=""/>
               <toolTipText value="Restaurer"/>
             </properties>
