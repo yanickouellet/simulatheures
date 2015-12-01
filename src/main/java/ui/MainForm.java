@@ -500,6 +500,7 @@ public class MainForm {
     private void btnCircuitsActionPerformed(ActionEvent evt) {
         pnlDomainObjects.setVisible(!pnlDomainObjects.isVisible());
         lblTitleSection.setText("Circuits");
+        controller.setEditionMode(EditionMode.None);
     }
 
     private void btnRoutesActionPerformed(ActionEvent evt) {
