@@ -19,7 +19,7 @@ public class ApplicationState {
         currentPosition = new Coordinate();
         currentMode  = EditionMode.None;
         network = new Network();
-        zoomLevel = 100;
+        zoomLevel = 150;
         centerCoordinate = new Coordinate();
         message = "";
         currentMinute = 0;
@@ -103,6 +103,10 @@ public class ApplicationState {
 
     public boolean isNodeStationOnCurrentRoute(Node node) {
         return currentBusRoute != null && currentBusRoute.isNodeStation(node);
+    }
+
+    public boolean isNodeSourceOnCurrentRoute(Node node) {
+        return currentBusRoute != null && currentBusRoute.isNodeSource(node);
     }
 
     public boolean isSegmentOnCurrentRoute(Segment segment) {

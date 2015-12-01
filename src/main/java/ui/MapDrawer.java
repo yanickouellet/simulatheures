@@ -24,6 +24,8 @@ public class MapDrawer {
     private Color hoverColor;
     private Color selectedColor;
     private Color arrowColor;
+    private Color sourceColor;
+    private Color stationColor;
 
     public MapDrawer(ApplicationState state) {
         this.state = state;
@@ -31,7 +33,9 @@ public class MapDrawer {
         defaultColor = Color.black;
         arrowColor = Color.gray;
         hoverColor = Color.red;
-        selectedColor = Color.orange;
+        selectedColor = new Color(255, 254, 21);
+        sourceColor = new Color(254, 255, 164);
+        stationColor = new Color(255, 255, 50);
     }
 
     public void draw(Graphics2D g, int maxWidth, int maxHeight) {
@@ -131,8 +135,12 @@ public class MapDrawer {
                     state.getCenterCoordinate(),
                     zoom);
 
-            if (n == state.getSelectedElement() || state.isNodeStationOnCurrentRoute(n))
+            if (n == state.getSelectedElement())
                 g.setColor(selectedColor);
+            else if (state.isNodeStationOnCurrentRoute(n))
+                g.setColor(stationColor);
+            else if (state.isNodeSourceOnCurrentRoute(n))
+                g.setColor(sourceColor);
             else if (n.isOnCoordinate(state.getCurrentPosition()))
                 g.setColor(hoverColor);
 

@@ -109,7 +109,7 @@ public class MainForm {
     public void update() {
         ApplicationState state = controller.getState();
 
-        lblPosition.setText(state.getCurrentPosition().toString() + " Zoom: " + state.getZoomLevel());
+        lblPosition.setText(state.getCurrentPosition().toString() + " Zoom: " + state.getZoomLevel() + " %");
         lblMessage.setText(state.getMessage());
 
         ImageIcon img = timer != null && timer.isRunning() ? imgPause : imgStart;
