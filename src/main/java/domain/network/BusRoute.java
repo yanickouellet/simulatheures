@@ -77,6 +77,10 @@ public class BusRoute implements IDistributableElement {
         return false;
     }
 
+    public boolean isNodeSource(Node node) {
+        return routeSource == node;
+    }
+
     public boolean isLoopable() {
         return segments.size() >= 2 && segments.get(0).getSource() == segments.get(segments.size()-1).getDestination();
     }
