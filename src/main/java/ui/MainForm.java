@@ -301,18 +301,21 @@ public class MainForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.setEditionMode(EditionMode.None);
+                updateSelectedButton(btnSelection);
             }
         });
         btnCreateNode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.setEditionMode(EditionMode.AddNode);
+                updateSelectedButton(btnCreateNode);
             }
         });
         btnCreateSegment.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.setEditionMode(EditionMode.AddSegment);
+                updateSelectedButton(btnCreateSegment);
             }
         });
         btnDeleteSelected.addActionListener(new ActionListener() {
@@ -326,6 +329,7 @@ public class MainForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.setEditionMode(EditionMode.AddBusRoute);
+                updateSelectedButton(btnCreateCircuit);
             }
         });
         btnValidate.addActionListener(new ActionListener() {
@@ -500,6 +504,8 @@ public class MainForm {
     private void btnCircuitsActionPerformed(ActionEvent evt) {
         pnlDomainObjects.setVisible(!pnlDomainObjects.isVisible());
         lblTitleSection.setText("Circuits");
+        controller.setEditionMode(EditionMode.None);
+        updateSelectedButton(btnSelection);
     }
 
     private void btnRoutesActionPerformed(ActionEvent evt) {
@@ -562,6 +568,17 @@ public class MainForm {
         bar.add(menu5);
 
         return bar;
+    }
+
+    private void updateSelectedButton(JButton button){
+        btnSelection.setSelected(false);
+        btnCreateNode.setSelected(false);
+        btnCreateSegment.setSelected(false);
+        btnCreateCircuit.setSelected(false);
+        btnCreateRoute.setSelected(false);
+
+
+        button.setSelected(true);
     }
 
     /**
