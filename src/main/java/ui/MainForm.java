@@ -17,8 +17,7 @@ import ui.tree.ColoredTreeCellRenderer;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
@@ -393,6 +392,75 @@ public class MainForm {
                 if (controller.getState().getCurrentMode() == EditionMode.None) {
                     editBusRoute(route);
                 }
+            }
+        });
+        spnSegmentMinDuration.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                TriangularDistribution distribution = ((Segment) controller.getState().getSelectedElement()).getDistribution();
+                distribution.setMinValue((int) spnSegmentMinDuration.getValue());
+            }
+        });
+        spnSegmentAvgDuration.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                TriangularDistribution distribution = ((Segment) controller.getState().getSelectedElement()).getDistribution();
+                distribution.setAverageValue((int) spnSegmentAvgDuration.getValue());
+            }
+        });
+        spnSegmentMaxDuration.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                TriangularDistribution distribution = ((Segment) controller.getState().getSelectedElement()).getDistribution();
+                distribution.setMaxValue((int) spnSegmentMaxDuration.getValue());
+            }
+        });
+        txtNodeName.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                ((Node) controller.getState().getSelectedElement()).setName(txtNodeName.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                ((Node) controller.getState().getSelectedElement()).setName(txtNodeName.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                ((Node) controller.getState().getSelectedElement()).setName(txtNodeName.getText());
+            }
+        });
+
+        txtCircuitName.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                controller.getState().getCurrentBusRoute().setName(txtCircuitName.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                controller.getState().getCurrentBusRoute().setName(txtCircuitName.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                controller.getState().getCurrentBusRoute().setName(txtCircuitName.getText());
+            }
+        });
+        spnSourceMinDuration.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                TriangularDistribution distribution = controller.getState().getCurrentBusRoute().getBusSource().getDistribution();
+                distribution.setMinValue((int) spnSourceMinDuration.getValue());
+            }
+        });
+        spnSourceAvgDuration.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                TriangularDistribution distribution = controller.getState().getCurrentBusRoute().getBusSource().getDistribution();
+                distribution.setAverageValue((int) spnSourceAvgDuration.getValue());
+            }
+        });
+        spnSourceMaxDuration.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                TriangularDistribution distribution = controller.getState().getCurrentBusRoute().getBusSource().getDistribution();
+                distribution.setMaxValue((int) spnSourceMaxDuration.getValue());
             }
         });
     }

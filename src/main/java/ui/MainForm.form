@@ -411,7 +411,9 @@
             <constraints>
               <splitpane position="right"/>
             </constraints>
-            <properties/>
+            <properties>
+              <verifyInputWhenFocusTarget value="true"/>
+            </properties>
             <border type="none"/>
             <children>
               <component id="55fe8" class="javax.swing.JButton" binding="btnValidate">
