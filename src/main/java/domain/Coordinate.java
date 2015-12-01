@@ -1,15 +1,15 @@
 package domain;
 
-public class Point {
-    private int x;
+public class Coordinate {
+    private float x;
     private int y;
 
-    public Point(int x, int y) {
+    public Coordinate(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public int getX() {
+    public float getX() {
         return x;
     }
 

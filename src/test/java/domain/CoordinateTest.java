@@ -1,18 +1,17 @@
 package domain;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 //This is a stupid and Trivial test, but it is here for CI testing
-public class PointTest {
-    private Point p;
+public class CoordinateTest {
+    private Coordinate p;
 
     @Before
     public void Setup() {
-         p = new Point(10, 5);
+         p = new Coordinate(10, 5);
     }
 
     @Test
