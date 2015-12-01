@@ -19,7 +19,7 @@ public class ApplicationState {
         currentPosition = new Coordinate();
         currentMode  = EditionMode.None;
         network = new Network();
-        zoomLevel = 175;
+        zoomLevel = 100;
         centerCoordinate = new Coordinate();
         message = "";
         currentMinute = 0;
