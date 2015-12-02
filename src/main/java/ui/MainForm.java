@@ -43,8 +43,8 @@ public class MainForm {
     private JButton btnStatistics;
     private JButton btnRoutes;
     private JButton btnCircuits;
-    private JButton btnCreateRoute;
-    private JButton btnCreateCircuit;
+    private JToggleButton btnCreateRoute;
+    private JToggleButton btnCreateCircuit;
     private JButton btnRedo;
     private JTextField txtStart;
     private JTextField txtEnd;
@@ -59,8 +59,8 @@ public class MainForm {
     private JButton btnZoomOut;
     private JButton btnZoomIn;
     private JLabel lblTools;
-    private JButton btnCreateNode;
-    private JButton btnCreateSegment;
+    private JToggleButton btnCreateNode;
+    private JToggleButton btnCreateSegment;
     private JLabel lblPosition;
     private JLabel lblStart;
     private JLabel lblEnd;
@@ -68,7 +68,7 @@ public class MainForm {
     private JLabel lblTime;
     private JLabel lblTitleSection;
     private JPanel pnlDomainObjects;
-    private JButton btnSelection;
+    private JToggleButton btnSelection;
     private JLabel lblError;
     private JLabel lblMessage;
     private JButton btnDeleteSelected;
@@ -103,6 +103,7 @@ public class MainForm {
         MainForm form = new MainForm();
         Controller controller = new Controller(form);
         form.setController(controller);
+
     }
 
     public void update() {
@@ -300,21 +301,19 @@ public class MainForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.setEditionMode(EditionMode.None);
-                updateSelectedButton(btnSelection);
+
             }
         });
         btnCreateNode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.setEditionMode(EditionMode.AddNode);
-                updateSelectedButton(btnCreateNode);
             }
         });
         btnCreateSegment.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.setEditionMode(EditionMode.AddSegment);
-                updateSelectedButton(btnCreateSegment);
             }
         });
         btnDeleteSelected.addActionListener(new ActionListener() {
@@ -328,7 +327,6 @@ public class MainForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.setEditionMode(EditionMode.AddBusRoute);
-                updateSelectedButton(btnCreateCircuit);
             }
         });
         btnValidate.addActionListener(new ActionListener() {
@@ -354,23 +352,29 @@ public class MainForm {
         btnPlay.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 if (controller.getState().getSimulation() != null) {
+
                     if (timer.isRunning()) {
                         timer.stop();
                     } else {
+                        disableAllTools();
                         timer.start();
                     }
                 } else {
                     LocalTime startAt = LocalTime.parse(txtStart.getText());
                     LocalTime endsAt = LocalTime.parse(txtEnd.getText());
                     controller.startSimulation(startAt, endsAt);
+                    disableAllTools();
                 }
             }
         });
         btnStop.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 controller.stopSimulation();
+                enableAllTools();
             }
         });
         btnStart.addActionListener(new ActionListener() {
@@ -573,7 +577,7 @@ public class MainForm {
         pnlDomainObjects.setVisible(!pnlDomainObjects.isVisible());
         lblTitleSection.setText("Circuits");
         controller.setEditionMode(EditionMode.None);
-        updateSelectedButton(btnSelection);
+        btnSelection.setSelected(true);
     }
 
     private void btnRoutesActionPerformed(ActionEvent evt) {
@@ -638,15 +642,32 @@ public class MainForm {
         return bar;
     }
 
-    private void updateSelectedButton(JButton button){
-        btnSelection.setSelected(false);
-        btnCreateNode.setSelected(false);
-        btnCreateSegment.setSelected(false);
-        btnCreateCircuit.setSelected(false);
-        btnCreateRoute.setSelected(false);
+    private void disableAllTools(){
+        btnSelection.setEnabled(false);
+        btnCreateNode.setEnabled(false);
+        btnCreateSegment.setEnabled(false);
+        btnCreateCircuit.setEnabled(false);
+        btnCreateRoute.setEnabled(false);
 
+        btnCircuits.setEnabled(false);
+        btnRoutes.setEnabled(false);
+        btnStatistics.setEnabled(false);
 
-        button.setSelected(true);
+        btnValidate.setEnabled(false);
+    }
+
+    private void enableAllTools(){
+        btnSelection.setEnabled(true);
+        btnCreateNode.setEnabled(true);
+        btnCreateSegment.setEnabled(true);
+        btnCreateCircuit.setEnabled(true);
+        btnCreateRoute.setEnabled(true);
+
+        btnCircuits.setEnabled(true);
+        btnRoutes.setEnabled(true);
+        btnStatistics.setEnabled(true);
+
+        btnValidate.setEnabled(true);
     }
 
     /**
@@ -906,25 +927,25 @@ public class MainForm {
         final JPanel panel5 = new JPanel();
         panel5.setLayout(new GridLayoutManager(7, 1, new Insets(0, 0, 0, 0), -1, -1));
         splitPane1.setLeftComponent(panel5);
-        btnCreateSegment = new JButton();
+        btnCreateSegment = new JToggleButton();
         btnCreateSegment.setText("Segment");
         panel5.add(btnCreateSegment, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(160, -1), new Dimension(105, -1), new Dimension(160, -1), 0, false));
         lblTools = new JLabel();
         lblTools.setOpaque(false);
         lblTools.setText("Outils");
         panel5.add(lblTools, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        btnCreateRoute = new JButton();
+        btnCreateRoute = new JToggleButton();
         btnCreateRoute.setText("Itinéraire");
         panel5.add(btnCreateRoute, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(160, -1), new Dimension(105, 31), new Dimension(160, -1), 0, false));
-        btnCreateCircuit = new JButton();
+        btnCreateCircuit = new JToggleButton();
         btnCreateCircuit.setText("Circuit");
         panel5.add(btnCreateCircuit, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(160, -1), new Dimension(105, -1), new Dimension(160, -1), 0, false));
-        btnCreateNode = new JButton();
+        btnCreateNode = new JToggleButton();
         btnCreateNode.setText("Noeud");
         panel5.add(btnCreateNode, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(160, -1), new Dimension(105, -1), new Dimension(160, -1), 0, false));
         final Spacer spacer8 = new Spacer();
         panel5.add(spacer8, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        btnSelection = new JButton();
+        btnSelection = new JToggleButton();
         btnSelection.setText("Sélection");
         panel5.add(btnSelection, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(160, -1), new Dimension(105, -1), new Dimension(160, -1), 0, false));
         final JPanel panel6 = new JPanel();
