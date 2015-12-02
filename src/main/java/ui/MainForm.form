@@ -749,7 +749,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="8ad61" class="javax.swing.JButton" binding="btnCreateSegment">
+          <component id="6b49a" class="javax.swing.JToggleButton" binding="btnCreateSegment">
             <constraints>
               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="100" height="-1"/>
@@ -770,7 +770,7 @@
               <text value="Outils"/>
             </properties>
           </component>
-          <component id="efa20" class="javax.swing.JButton" binding="btnCreateRoute">
+          <component id="167f2" class="javax.swing.JToggleButton" binding="btnCreateRoute">
             <constraints>
               <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <minimum-size width="100" height="-1"/>
@@ -782,7 +782,7 @@
               <text value="Itinéraire"/>
             </properties>
           </component>
-          <component id="514e0" class="javax.swing.JButton" binding="btnCreateCircuit">
+          <component id="50020" class="javax.swing.JToggleButton" binding="btnCreateCircuit">
             <constraints>
               <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <minimum-size width="100" height="-1"/>
@@ -794,7 +794,7 @@
               <text value="Circuit"/>
             </properties>
           </component>
-          <component id="59e54" class="javax.swing.JButton" binding="btnCreateNode">
+          <component id="9172a" class="javax.swing.JToggleButton" binding="btnCreateNode">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="100" height="-1"/>
@@ -806,7 +806,7 @@
               <text value="Noeud"/>
             </properties>
           </component>
-          <component id="c14ed" class="javax.swing.JButton" binding="btnSelection">
+          <component id="d2613" class="javax.swing.JToggleButton" binding="btnSelection">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <minimum-size width="100" height="-1"/>
@@ -815,6 +815,7 @@
               </grid>
             </constraints>
             <properties>
+              <selected value="false"/>
               <text value="Sélection"/>
             </properties>
           </component>
@@ -828,4 +829,13 @@
       </vspacer>
     </children>
   </grid>
+  <buttonGroups>
+    <group name="btnGroupTools">
+      <member id="6b49a"/>
+      <member id="167f2"/>
+      <member id="50020"/>
+      <member id="9172a"/>
+      <member id="d2613"/>
+    </group>
+  </buttonGroups>
 </form>
