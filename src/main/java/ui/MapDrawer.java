@@ -7,9 +7,13 @@ import domain.simulation.Simulation;
 import domain.simulation.Vehicle;
 import util.CoordinateConverter;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MapDrawer {
@@ -164,9 +168,30 @@ public class MapDrawer {
                     state.getCenterCoordinate(),
                     zoom);
 
-            g.setColor(v.getRoute().getColor());
-            g.fill(new Ellipse2D.Double(p.x - halfStroke, p.y - halfStroke, baseStroke, baseStroke));
+            g.drawImage(getImage(v.getRoute().getColor()), p.x - baseStroke, p.y - baseStroke, null);
         }
+    }
+
+    private BufferedImage getImage(Color routeColor){
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(new File("src/main/resources/bus-30x37-white.png"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+        for (int xx = 0; xx < width; xx++) {
+            for (int yy = 0; yy < height; yy++) {
+                Color originalColor = new Color(image.getRGB(xx, yy), true);
+
+                if (originalColor.equals(Color.BLACK) && originalColor.getAlpha() == 255) {
+                    image.setRGB(xx, yy, routeColor.getRGB());
+                }
+            }
+        }
+        return image;
     }
 
     // Inspired by http://stackoverflow.com/a/4112875/3757513
