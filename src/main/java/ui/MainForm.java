@@ -21,10 +21,7 @@ import javax.swing.event.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -465,6 +462,26 @@ public class MainForm {
             public void stateChanged(ChangeEvent e) {
                 TriangularDistribution distribution = controller.getState().getCurrentBusRoute().getBusSource().getDistribution();
                 distribution.setMaxValue((int) spnSourceMaxDuration.getValue());
+            }
+        });
+
+        ckbCircuitIsLoop.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                controller.getState().getCurrentBusRoute().setIsLoop(ckbCircuitIsLoop.isSelected());
+            }
+        });
+        btnClose.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String message = "Voulez-vous vraiment quitter l'application?";
+                String title = "Quitter";
+                // display the JOptionPane showConfirmDialog
+                int reply = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION)
+                {
+                    System.exit(0);
+                }
             }
         });
     }
