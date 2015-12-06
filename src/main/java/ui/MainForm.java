@@ -86,6 +86,12 @@ public class MainForm {
     private JPanel pnlEditCircuit;
     private JPanel pnlEditSource;
     private JSpinner spnSourceNumberMaxVehicule;
+    private JPanel pnlEditRoute;
+    private JSpinner spnTimeBeforeFirstPerson;
+    private JSpinner spnRouteNumberMaxPerson;
+    private JSpinner spnRouteMinDuration;
+    private JSpinner spnRouteAvgDuration;
+    private JSpinner spnRouteMaxDuration;
     private JPanel pnlBottomBar;
     private Timer timer;
 
@@ -218,6 +224,7 @@ public class MainForm {
         pnlEditSegment.setVisible(false);
         pnlEditSource.setVisible(false);
         pnlEditCircuit.setVisible(false);
+        pnlEditRoute.setVisible(false);
     }
 
     public void setController(Controller controller) {
