@@ -21,12 +21,10 @@ import javax.swing.event.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class MainForm {
     private JFrame mainFrame;
@@ -42,8 +40,8 @@ public class MainForm {
     private JButton btnStatistics;
     private JButton btnRoutes;
     private JButton btnCircuits;
-    private JButton btnCreateRoute;
-    private JButton btnCreateCircuit;
+    private JToggleButton btnCreateRoute;
+    private JToggleButton btnCreateCircuit;
     private JButton btnRedo;
     private JTextField txtStart;
     private JTextField txtEnd;
@@ -58,8 +56,8 @@ public class MainForm {
     private JButton btnZoomOut;
     private JButton btnZoomIn;
     private JLabel lblTools;
-    private JButton btnCreateNode;
-    private JButton btnCreateSegment;
+    private JToggleButton btnCreateNode;
+    private JToggleButton btnCreateSegment;
     private JLabel lblPosition;
     private JLabel lblStart;
     private JLabel lblEnd;
@@ -67,7 +65,7 @@ public class MainForm {
     private JLabel lblTime;
     private JLabel lblTitleSection;
     private JPanel pnlDomainObjects;
-    private JButton btnSelection;
+    private JToggleButton btnSelection;
     private JLabel lblError;
     private JLabel lblMessage;
     private JButton btnDeleteSelected;
@@ -88,6 +86,12 @@ public class MainForm {
     private JPanel pnlEditCircuit;
     private JPanel pnlEditSource;
     private JSpinner spnSourceNumberMaxVehicule;
+    private JPanel pnlEditRoute;
+    private JSpinner spnTimeBeforeFirstPerson;
+    private JSpinner spnRouteNumberMaxPerson;
+    private JSpinner spnRouteMinDuration;
+    private JSpinner spnRouteAvgDuration;
+    private JSpinner spnRouteMaxDuration;
     private JPanel pnlBottomBar;
     private Timer timer;
 
@@ -102,6 +106,7 @@ public class MainForm {
         MainForm form = new MainForm();
         Controller controller = new Controller(form);
         form.setController(controller);
+
     }
 
     public void update() {
@@ -219,6 +224,7 @@ public class MainForm {
         pnlEditSegment.setVisible(false);
         pnlEditSource.setVisible(false);
         pnlEditCircuit.setVisible(false);
+        pnlEditRoute.setVisible(false);
     }
 
     public void setController(Controller controller) {
@@ -299,21 +305,18 @@ public class MainForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.setEditionMode(EditionMode.None);
-                updateSelectedButton(btnSelection);
             }
         });
         btnCreateNode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.setEditionMode(EditionMode.AddNode);
-                updateSelectedButton(btnCreateNode);
             }
         });
         btnCreateSegment.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.setEditionMode(EditionMode.AddSegment);
-                updateSelectedButton(btnCreateSegment);
             }
         });
         btnDeleteSelected.addActionListener(new ActionListener() {
@@ -327,7 +330,6 @@ public class MainForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.setEditionMode(EditionMode.AddBusRoute);
-                updateSelectedButton(btnCreateCircuit);
             }
         });
         btnValidate.addActionListener(new ActionListener() {
@@ -353,23 +355,29 @@ public class MainForm {
         btnPlay.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 if (controller.getState().getSimulation() != null) {
+
                     if (timer.isRunning()) {
                         timer.stop();
                     } else {
+                        disableAllTools();
                         timer.start();
                     }
                 } else {
                     LocalTime startAt = LocalTime.parse(txtStart.getText());
                     LocalTime endsAt = LocalTime.parse(txtEnd.getText());
                     controller.startSimulation(startAt, endsAt);
+                    disableAllTools();
                 }
             }
         });
         btnStop.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 controller.stopSimulation();
+                enableAllTools();
             }
         });
         btnStart.addActionListener(new ActionListener() {
@@ -460,6 +468,26 @@ public class MainForm {
             public void stateChanged(ChangeEvent e) {
                 TriangularDistribution distribution = controller.getState().getCurrentBusRoute().getBusSource().getDistribution();
                 distribution.setMaxValue((int) spnSourceMaxDuration.getValue());
+            }
+        });
+
+        ckbCircuitIsLoop.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                controller.getState().getCurrentBusRoute().setIsLoop(ckbCircuitIsLoop.isSelected());
+            }
+        });
+        btnClose.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String message = "Voulez-vous vraiment quitter l'application?";
+                String title = "Quitter";
+                // display the JOptionPane showConfirmDialog
+                int reply = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION)
+                {
+                    System.exit(0);
+                }
             }
         });
     }
@@ -572,7 +600,7 @@ public class MainForm {
         pnlDomainObjects.setVisible(!pnlDomainObjects.isVisible());
         lblTitleSection.setText("Circuits");
         controller.setEditionMode(EditionMode.None);
-        updateSelectedButton(btnSelection);
+        btnSelection.setSelected(true);
     }
 
     private void btnRoutesActionPerformed(ActionEvent evt) {
@@ -637,15 +665,32 @@ public class MainForm {
         return bar;
     }
 
-    private void updateSelectedButton(JButton button) {
-        btnSelection.setSelected(false);
-        btnCreateNode.setSelected(false);
-        btnCreateSegment.setSelected(false);
-        btnCreateCircuit.setSelected(false);
-        btnCreateRoute.setSelected(false);
+    private void disableAllTools(){
+        btnSelection.setEnabled(false);
+        btnCreateNode.setEnabled(false);
+        btnCreateSegment.setEnabled(false);
+        btnCreateCircuit.setEnabled(false);
+        btnCreateRoute.setEnabled(false);
 
+        btnCircuits.setEnabled(false);
+        btnRoutes.setEnabled(false);
+        btnStatistics.setEnabled(false);
 
-        button.setSelected(true);
+        btnValidate.setEnabled(false);
+    }
+
+    private void enableAllTools(){
+        btnSelection.setEnabled(true);
+        btnCreateNode.setEnabled(true);
+        btnCreateSegment.setEnabled(true);
+        btnCreateCircuit.setEnabled(true);
+        btnCreateRoute.setEnabled(true);
+
+        btnCircuits.setEnabled(true);
+        btnRoutes.setEnabled(true);
+        btnStatistics.setEnabled(true);
+
+        btnValidate.setEnabled(true);
     }
 
     /**
@@ -966,23 +1011,23 @@ public class MainForm {
         gbc.gridx = 0;
         gbc.gridy = 1;
         contentPane.add(panel7, gbc);
-        btnCreateSegment = new JButton();
+        btnCreateSegment = new JToggleButton();
         btnCreateSegment.setText("Segment");
         panel7.add(btnCreateSegment, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(100, -1), new Dimension(105, -1), new Dimension(100, -1), 0, false));
         lblTools = new JLabel();
         lblTools.setOpaque(false);
         lblTools.setText("Outils");
         panel7.add(lblTools, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        btnCreateRoute = new JButton();
+        btnCreateRoute = new JToggleButton();
         btnCreateRoute.setText("Itinéraire");
         panel7.add(btnCreateRoute, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, -1), new Dimension(105, 31), new Dimension(100, -1), 0, false));
-        btnCreateCircuit = new JButton();
+        btnCreateCircuit = new JToggleButton();
         btnCreateCircuit.setText("Circuit");
         panel7.add(btnCreateCircuit, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, -1), new Dimension(105, -1), new Dimension(100, -1), 0, false));
-        btnCreateNode = new JButton();
+        btnCreateNode = new JToggleButton();
         btnCreateNode.setText("Noeud");
         panel7.add(btnCreateNode, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(100, -1), new Dimension(105, -1), new Dimension(100, -1), 0, false));
-        btnSelection = new JButton();
+        btnSelection = new JToggleButton();
         btnSelection.setText("Sélection");
         panel7.add(btnSelection, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, -1), new Dimension(105, -1), new Dimension(100, -1), 0, false));
         final JPanel spacer9 = new JPanel();
