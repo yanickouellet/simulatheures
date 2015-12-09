@@ -399,7 +399,9 @@ public class Controller {
         if (state.getSelectedElement() instanceof Node) {
             Node source = (Node) state.getSelectedElement();
             Pathfinder find = new Pathfinder(network, source, node);
-            int i = 0;
+            PassengerRoute r = find.find();
+            network.addPassengerRoute(r);
+            mainForm.update();
         } else {
             state.setSelectedElement(node);
         }
