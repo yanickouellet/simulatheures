@@ -20,7 +20,7 @@ public class Controller {
     private static final Color[] DefaultColors = new Color[] {
             Color.blue,
             Color.cyan,
-            Color.darkGray,
+            Color.white,
             Color.green,
             Color.magenta,
             Color.pink,

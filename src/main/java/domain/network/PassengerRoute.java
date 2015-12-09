@@ -45,11 +45,15 @@ public class PassengerRoute implements Serializable {
     }
 
     public boolean isSegmentOnRoute(Segment s) {
+        return getBusRouteForSegment(s) != null;
+    }
+
+    public BusRoute getBusRouteForSegment(Segment s) {
         for(PassengerRouteFragment f : fragments) {
             if (f.getBusRoute().getSegmentsBetweenNodes(f.getSource(), f.getDestination()).contains(s))
-                return true;
+                return f.getBusRoute();
         }
-        return false;
+        return null;
     }
 
     public Color getColor() {
