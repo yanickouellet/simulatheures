@@ -1,8 +1,9 @@
 package domain.network;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PassengerRouteFragment {
+public class PassengerRouteFragment implements Serializable {
     private Node source;
     private Node destination;
     private BusRoute busRoute;

@@ -2,7 +2,9 @@ package domain.network;
 
 import domain.TriangularDistribution;
 
-public class Source {
+import java.io.Serializable;
+
+public class Source implements Serializable {
     private Node node;
     private TriangularDistribution distribution;
     private int timeBeforeFirstVehicule;

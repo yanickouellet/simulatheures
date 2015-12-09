@@ -2,7 +2,9 @@ package domain;
 
 import domain.network.Node;
 
-public class NodeVector {
+import java.io.Serializable;
+
+public class NodeVector implements Serializable {
     private Node source;
     private Node destination;
 

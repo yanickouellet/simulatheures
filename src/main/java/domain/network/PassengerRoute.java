@@ -3,9 +3,10 @@ package domain.network;
 import domain.TriangularDistribution;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PassengerRoute {
+public class PassengerRoute implements Serializable {
     private int timeBeforeFirst;
     private ArrayList<PassengerRouteFragment> fragments;
     private TriangularDistribution distribution;

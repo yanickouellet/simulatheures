@@ -3,9 +3,10 @@ package domain;
 import domain.network.*;
 import domain.simulation.Simulation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ApplicationState {
+public class ApplicationState implements Serializable {
     private Coordinate currentPosition;
     private Coordinate centerCoordinate;
     private EditionMode currentMode;

@@ -3,12 +3,13 @@ package domain.network;
 import domain.Coordinate;
 import domain.NodeVector;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Network {
+public class Network implements Serializable {
     private ArrayList<Node> nodes;
     private ArrayList<BusRoute> busRoutes;
     private ArrayList<PassengerRoute> passengerRoutes;

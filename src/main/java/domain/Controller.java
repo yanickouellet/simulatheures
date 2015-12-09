@@ -7,6 +7,7 @@ import util.CoordinateConverter;
 import util.Strings;
 
 import java.awt.*;
+import java.io.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -223,6 +224,35 @@ public class Controller {
         if (state.getCurrentMode() == EditionMode.None) {
             state.setCurrentPassengerRoute(route);
         }
+    }
+
+    public boolean save(File file) {
+        try {
+            FileOutputStream stream = new FileOutputStream(file);
+            ObjectOutputStream oStream = new ObjectOutputStream(stream);
+            oStream.writeObject(state);
+            oStream.close();
+            stream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean load(File file) {
+        try {
+            FileInputStream stream = new FileInputStream(file);
+            ObjectInputStream oStream = new ObjectInputStream(stream);
+            state = (ApplicationState) oStream.readObject();
+            oStream.close();
+            stream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public ApplicationState getState() {

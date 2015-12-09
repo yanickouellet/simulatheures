@@ -1,8 +1,9 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class TriangularDistribution {
+public class TriangularDistribution implements Serializable {
     private double minValue;
     private double averageValue;
     private double maxValue;

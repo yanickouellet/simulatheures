@@ -578,11 +578,19 @@ public class MainForm {
     }
 
     private void btnOpenActionPerformed(ActionEvent evt) {
-
+        JFileChooser fc = new JFileChooser();
+        if (fc.showOpenDialog(this.mainFrame) == JFileChooser.APPROVE_OPTION) {
+            controller.load(fc.getSelectedFile());
+            ((MapPanel) mapPane).setDrawer(new MapDrawer(controller.getState()));
+            update();
+        }
     }
 
     private void btnSaveActionPerformed(ActionEvent evt) {
-
+        JFileChooser fc = new JFileChooser();
+        if (fc.showSaveDialog(this.mainFrame) == JFileChooser.APPROVE_OPTION) {
+            controller.save(fc.getSelectedFile());
+        }
     }
 
     private void btnCloseActionPerformed(ActionEvent evt) {

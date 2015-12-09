@@ -4,9 +4,10 @@ import domain.IDistributableElement;
 import domain.TriangularDistribution;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BusRoute implements IDistributableElement {
+public class BusRoute implements IDistributableElement, Serializable{
     private Node routeSource;
     private String name;
     private boolean isLoop;
