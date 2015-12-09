@@ -25,6 +25,7 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class MainForm {
     private JFrame mainFrame;
@@ -118,8 +119,9 @@ public class MainForm {
         ImageIcon img = timer != null && timer.isRunning() ? imgPause : imgStart;
         btnPlay.setIcon(img);
 
+        //Bus routes
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Circuits");
-        for (BusRoute r : state.getNetwork().getRoutes()) {
+        for (BusRoute r : state.getBusRoutesToShowInTree()) {
             ColoredMutableTreeNode node = new ColoredMutableTreeNode(r, r.getColor());
             root.add(node);
         }
@@ -591,7 +593,7 @@ public class MainForm {
     }
 
     private void btnCreateRouteActionPerformed(ActionEvent evt) {
-
+        controller.setEditionMode(EditionMode.AddPassengerRoute);
     }
 
     // Display menu

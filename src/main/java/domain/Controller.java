@@ -7,7 +7,6 @@ import util.CoordinateConverter;
 import util.Strings;
 
 import java.awt.*;
-import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -54,6 +53,9 @@ public class Controller {
                 break;
             case AddBusRoute:
                 addBusRouteClick(coord);
+                break;
+            case AddPassengerRoute:
+                addPassengerRouteClick(coord);
                 break;
         }
 
@@ -119,9 +121,13 @@ public class Controller {
 
         if (mode == EditionMode.AddBusRoute) {
             startBusRouteCreation();
+        } else if (mode == EditionMode.AddPassengerRoute) {
+            startPassengerRouteCreation();
         } else {
             controllerMode = ControllerMode.Normal;
             state.setCurrentBusRoute(null);
+            state.setAvailableBusRoutes(null);
+            state.setCurrentPassengerRoute(null);
         }
 
         mainForm.update();
@@ -192,6 +198,10 @@ public class Controller {
     public void setCurrentBusRoute(BusRoute route) {
         if (state.getCurrentMode() == EditionMode.None) {
             state.setCurrentBusRoute(route);
+        } else if (state.getCurrentMode() == EditionMode.AddPassengerRoute && controllerMode == ControllerMode.SelectPassengerFragmentBusRoute) {
+            state.setCurrentBusRoute(route);
+            state.setMessage(Strings.SelectPassengerStop);
+            controllerMode = ControllerMode.AddingPassengerFragmentDestination;
         }
     }
 
@@ -286,6 +296,40 @@ public class Controller {
                 startBusRouteCreation();
             } else {
                 state.setMessage(Strings.IncorrectRouteBusSource);
+            }
+        }
+    }
+
+    private void startPassengerRouteCreation() {
+        controllerMode = ControllerMode.AddingPassengerFragmentSource;
+        state.setCurrentPassengerRoute(new PassengerRoute());
+        state.setMessage(Strings.SelectPassengerSource);
+    }
+
+    private void addPassengerRouteClick(Coordinate coord) {
+        Network network = state.getNetwork();
+        Node node = network.getNodeOnCoords(coord);
+
+        if (controllerMode == ControllerMode.AddingPassengerFragmentSource) {
+            ArrayList<BusRoute> availableRoutes = network.getBusRoutesWithStation(node);
+            if (availableRoutes.size() > 0) {
+                state.setSelectedElement(node);
+                state.setAvailableBusRoutes(availableRoutes);
+                state.setMessage(Strings.SelectBusRoute);
+                controllerMode = ControllerMode.SelectPassengerFragmentBusRoute;
+            } else {
+                state.setMessage(Strings.SelectPassengerSource);
+            }
+        } else if (controllerMode == ControllerMode.AddingPassengerFragmentDestination) {
+            BusRoute busRoute = state.getCurrentBusRoute();
+            Node previousNode = (Node) state.getSelectedElement();
+            if (busRoute.getStationPosition(node) > busRoute.getStationPosition(previousNode)) {
+                PassengerRouteFragment fragment = new PassengerRouteFragment(previousNode, node, busRoute);
+                state.getCurrentPassengerRoute().addFragment(fragment);
+
+                state.setSelectedElement(node);
+                state.setMessage(Strings.SelectPassengerStop);
+                controllerMode = ControllerMode.AddingPassengerFragmentDestination;
             }
         }
     }

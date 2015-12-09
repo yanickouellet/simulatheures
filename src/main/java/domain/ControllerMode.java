@@ -5,4 +5,8 @@ public enum ControllerMode {
     AddingBusRoute,
     AddingBusRouteStation,
     AddingBusRouteSource,
+
+    AddingPassengerFragmentSource,
+    SelectPassengerFragmentBusRoute,
+    AddingPassengerFragmentDestination,
 }

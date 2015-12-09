@@ -3,6 +3,8 @@ package domain;
 import domain.network.*;
 import domain.simulation.Simulation;
 
+import java.util.ArrayList;
+
 public class ApplicationState {
     private Coordinate currentPosition;
     private Coordinate centerCoordinate;
@@ -10,6 +12,9 @@ public class ApplicationState {
     private Network network;
     private NetworkElement selectedElement;
     private BusRoute currentBusRoute;
+    private ArrayList<BusRoute> availableBusRoutes;
+
+    private PassengerRoute currentPassengerRoute;
     private int zoomLevel;
     private String message;
     private Simulation simulation;
@@ -113,6 +118,10 @@ public class ApplicationState {
         return currentBusRoute != null && currentBusRoute.isSegmentOnRoute(segment);
     }
 
+    public boolean isSegmentOnCurrentPassengerRoute(Segment segment) {
+        return currentPassengerRoute != null && currentPassengerRoute.isSegmentOnRoute(segment);
+    }
+
     public Simulation getSimulation() {
         return simulation;
     }
@@ -127,5 +136,25 @@ public class ApplicationState {
 
     public void setCurrentMinute(double currentMinute) {
         this.currentMinute = currentMinute;
+    }
+
+    public PassengerRoute getCurrentPassengerRoute() {
+        return currentPassengerRoute;
+    }
+
+    public void setCurrentPassengerRoute(PassengerRoute currentPassengerRoute) {
+        this.currentPassengerRoute = currentPassengerRoute;
+    }
+
+    public ArrayList<BusRoute> getAvailableBusRoutes() {
+        return availableBusRoutes;
+    }
+
+    public void setAvailableBusRoutes(ArrayList<BusRoute> availableBusRoutes) {
+        this.availableBusRoutes = availableBusRoutes;
+    }
+
+    public ArrayList<BusRoute> getBusRoutesToShowInTree() {
+        return availableBusRoutes != null ? availableBusRoutes : network.getRoutes();
     }
 }

@@ -95,7 +95,9 @@ public class MapDrawer {
                     zoom
             );
 
-            if (state.isSegmentOnCurrentRoute(s) || s == state.getSelectedElement())
+            if ((state.isSegmentOnCurrentRoute(s) && state.getCurrentMode() != EditionMode.AddPassengerRoute)
+                    || s == state.getSelectedElement()
+                    || state.isSegmentOnCurrentPassengerRoute(s))
                 end.add(j);
 
             segmentPoints.add(new int[]{source.x, source.y, destination.x, destination.y});
@@ -104,9 +106,7 @@ public class MapDrawer {
 
         // We must draw arrow after segments
         for (int i = 0; i < segmentPoints.size(); i++) {
-            if (segments[i] == state.getSelectedElement() || state.isSegmentOnCurrentRoute(segments[i]))
-                g.setColor(selectedColor);
-            else if (segments[i].isOnCoordinate(state.getCurrentPosition()))
+            if (segments[i].isOnCoordinate(state.getCurrentPosition()))
                 g.setColor(hoverColor);
             else
                 g.setColor(defaultColor);

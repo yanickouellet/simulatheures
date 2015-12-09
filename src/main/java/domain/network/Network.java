@@ -117,6 +117,17 @@ public class Network {
         }
     }
 
+    public ArrayList<BusRoute> getBusRoutesWithStation(Node node) {
+        ArrayList<BusRoute> list = new ArrayList<>();
+
+        for(BusRoute r : routes) {
+            if (r.isNodeStation(node) && !r.isLastStation(node))
+                list.add(r);
+        }
+
+        return list;
+    }
+
     public ArrayList<BusRoute> getRoutes() {
         return routes;
     }
