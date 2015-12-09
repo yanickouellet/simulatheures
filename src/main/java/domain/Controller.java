@@ -379,7 +379,7 @@ public class Controller {
         } else if (controllerMode == ControllerMode.AddingPassengerFragmentDestination) {
             BusRoute busRoute = state.getCurrentBusRoute();
             Node previousNode = (Node) state.getSelectedElement();
-            if (busRoute.getStationPosition(node) > busRoute.getStationPosition(previousNode)) {
+            if (busRoute.getStationPosition(node) > busRoute.getStationPosition(previousNode) || busRoute.getIsLoop()) {
                 PassengerRouteFragment fragment = new PassengerRouteFragment(previousNode, node, busRoute);
                 state.getCurrentPassengerRoute().addFragment(fragment);
 
@@ -400,7 +400,16 @@ public class Controller {
             Node source = (Node) state.getSelectedElement();
             Pathfinder find = new Pathfinder(network, source, node);
             PassengerRoute r = find.find();
-            network.addPassengerRoute(r);
+            if (r != null) {
+                network.addPassengerRoute(r);
+                state.setSelectedElement(null);
+                setEditionMode(EditionMode.None);
+                state.setOpenedPanel(OpenedPanel.PassengerRoutes);
+                state.setCurrentPassengerRoute(r);
+            } else {
+                state.setMessage(Strings.NoPathFound);
+            }
+
             mainForm.update();
         } else {
             state.setSelectedElement(node);

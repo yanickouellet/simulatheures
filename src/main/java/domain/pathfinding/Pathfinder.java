@@ -15,7 +15,7 @@ public class Pathfinder {
     private ArrayList<GraphNode> nodes;
     private ArrayList<GraphNode> begin;
     private ArrayList<GraphNode> end;
-    private HashSet<Node> marked;
+    private HashSet<NodeRoutePair> marked;
 
     public Pathfinder(Network network, Node source, Node dest) {
         this.network = network;
@@ -87,18 +87,18 @@ public class Pathfinder {
         ArrayList<Node> stations = route.getStations();
         ArrayList<Segment> segments = route.getSegmentsBetweenNodes(node.getNode(), stations.get(stations.size()-1));
         double cost = 0;
-        GraphNode last = null;
 
         for (Segment s : segments) {
             cost += s.getDistribution().getAverageValue();
 
             if (stations.contains(s.getDestination())) {
-                if (marked.contains(s.getDestination()))
-                    continue;
                 ArrayList<BusRoute> routes = network.getBusRoutesWithStation(s.getDestination());
 
-                marked.add(s.getDestination());
                 for (BusRoute r : routes) {
+                    NodeRoutePair pair = new NodeRoutePair(s.getDestination(), r);
+                    if (marked.contains(pair))
+                        continue;
+                    marked.add(pair);
                     GraphNode dest = createNode(s.getDestination(), r);
                     node.getNexts().add(new Path(node, dest, cost));
                 }
@@ -178,6 +178,35 @@ public class Pathfinder {
             if (cost < o.cost)
                 return 1;
             return 0;
+        }
+    }
+
+    private class NodeRoutePair {
+        public Node node;
+        public BusRoute route;
+
+        public NodeRoutePair(Node node, BusRoute route) {
+            this.node = node;
+            this.route = route;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            NodeRoutePair that = (NodeRoutePair) o;
+
+            if (node != null ? !node.equals(that.node) : that.node != null) return false;
+            return !(route != null ? !route.equals(that.route) : that.route != null);
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = node != null ? node.hashCode() : 0;
+            result = 31 * result + (route != null ? route.hashCode() : 0);
+            return result;
         }
     }
 }

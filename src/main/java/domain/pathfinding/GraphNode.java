@@ -27,4 +27,9 @@ public class GraphNode {
     public LinkedList<Path> getNexts() {
         return nexts;
     }
+
+    @Override
+    public String toString() {
+        return "Node : " + node.getName() + ", " + route.getName();
+    }
 }

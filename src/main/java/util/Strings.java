@@ -14,4 +14,5 @@ public class Strings {
     public static final String SelectPassengerSource = "Sélectionnez l'arrêt auquel arriveront les passagers.";
     public static final String SelectBusRoute = "Sélectionnez le circuit à emprunter";
     public static final String SelectPassengerStop= "Sélectionnez l'arrêt auquel arrêter.";
+    public static final String NoPathFound = "Aucun chemin trouvé.";
 }
