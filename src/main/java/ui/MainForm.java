@@ -11,6 +11,7 @@ import domain.network.Segment;
 import domain.network.BusRoute;
 import ui.tree.ColoredMutableTreeNode;
 import ui.tree.ColoredTreeCellRenderer;
+import util.Strings;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -61,7 +62,6 @@ public class MainForm {
     private JLabel lblEnd;
     private JLabel lblSpeed;
     private JLabel lblTime;
-    private JLabel lblTitleSection;
     private JPanel pnlDomainObjects;
     private JToggleButton btnSelection;
     private JLabel lblError;
@@ -239,6 +239,20 @@ public class MainForm {
         distribution.setMinValue((int) spnSourceMinDuration.getValue());
         distribution.setAverageValue((int) spnSourceAvgDuration.getValue());
         distribution.setMaxValue((int) spnSourceMaxDuration.getValue());
+    }
+
+    public void editRoute(PassengerRoute pRoute) {
+        hideEditPanels();
+
+        TriangularDistribution distribution = pRoute.getDistribution();
+        spnRouteMinDuration.setValue((int) Math.round(distribution.getMinValue()));
+        spnRouteAvgDuration.setValue((int) Math.round(distribution.getAverageValue()));
+        spnRouteMaxDuration.setValue((int) Math.round(distribution.getMaxValue()));
+
+        spnTimeBeforeFirstPerson.setValue(pRoute.getTimeBeforeFirst());
+        spnRouteNumberMaxPerson.setValue(pRoute.getMaxPersonNumber());
+
+        pnlEditRoute.setVisible(true);
     }
 
     public void hideEditPanels() {
@@ -428,6 +442,9 @@ public class MainForm {
                     case PassengerRoutes:
                         PassengerRoute pRoute = (PassengerRoute) node.getUserObject();
                         controller.setCurrentPassengerRoute(pRoute);
+                        if (controller.getState().getCurrentMode() == EditionMode.None) {
+                            editRoute(pRoute);
+                        }
                         break;
                 }
             }
@@ -526,6 +543,39 @@ public class MainForm {
                 controller.setEditionMode(EditionMode.Dijkstra);
             }
         });
+        spnRouteMinDuration.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                TriangularDistribution dist = controller.getState().getCurrentPassengerRoute().getDistribution();
+                dist.setMinValue((int)spnRouteMinDuration.getValue());
+            }
+        });
+        spnRouteAvgDuration.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                TriangularDistribution dist = controller.getState().getCurrentPassengerRoute().getDistribution();
+                dist.setAverageValue((int)spnRouteAvgDuration.getValue());
+            }
+        });
+        spnRouteMaxDuration.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                TriangularDistribution dist = controller.getState().getCurrentPassengerRoute().getDistribution();
+                dist.setMaxValue((int)spnRouteMaxDuration.getValue());
+            }
+        });
+        spnTimeBeforeFirstPerson.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                controller.getState().getCurrentPassengerRoute().setTimeBeforeFirst((int)spnTimeBeforeFirstPerson.getValue());
+            }
+        });
+        spnRouteNumberMaxPerson.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                controller.getState().getCurrentPassengerRoute().setMaxPersonNumber((int) spnRouteNumberMaxPerson.getValue());
+            }
+        });
     }
 
     private void createUIComponents() {
@@ -535,7 +585,7 @@ public class MainForm {
 
     private void prepareGUI() {
         mainFrame = new JFrame("MainForm");
-        mainFrame.setTitle("SimulatHeures");
+        mainFrame.setTitle(Strings.DefaultAppTitle);
         mainFrame.setContentPane(contentPane);
         mainFrame.setJMenuBar(menuBar);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -578,6 +628,7 @@ public class MainForm {
         btnZoomIn.addActionListener(e -> btnZoomInActionPerformed(e));
     }
 
+    //region Buttons listeners
     // Menu 2
 
     private void btnFileActionPerformed(ActionEvent evt) {
@@ -589,6 +640,7 @@ public class MainForm {
         if (fc.showOpenDialog(this.mainFrame) == JFileChooser.APPROVE_OPTION) {
             controller.load(fc.getSelectedFile());
             ((MapPanel) mapPane).setDrawer(new MapDrawer(controller.getState()));
+            mainFrame.setTitle(controller.getState().getAppTitle());
             update();
         }
     }
@@ -597,6 +649,7 @@ public class MainForm {
         JFileChooser fc = new JFileChooser();
         if (fc.showSaveDialog(this.mainFrame) == JFileChooser.APPROVE_OPTION) {
             controller.save(fc.getSelectedFile());
+            mainFrame.setTitle(controller.getState().getAppTitle());
         }
     }
 
@@ -635,28 +688,29 @@ public class MainForm {
     }
 
     private void btnCreateRouteActionPerformed(ActionEvent evt) {
+        controller.setOpenedPanel(OpenedPanel.BusRoutes);
         controller.setEditionMode(EditionMode.AddPassengerRoute);
     }
 
     // Display menu
 
     private void btnCircuitsActionPerformed(ActionEvent evt) {
-        if (pnlDomainObjects.isVisible())
+        if(controller.getOpenedPanel() == OpenedPanel.BusRoutes)
             controller.setOpenedPanel(OpenedPanel.None);
         else
             controller.setOpenedPanel(OpenedPanel.BusRoutes);
-        lblTitleSection.setText("Circuits");
         controller.setEditionMode(EditionMode.None);
         btnSelection.setSelected(true);
         update();
     }
 
     private void btnRoutesActionPerformed(ActionEvent evt) {
-        lblTitleSection.setText("Itinéraires");
-        if (pnlDomainObjects.isVisible())
+        if (controller.getOpenedPanel() == OpenedPanel.PassengerRoutes)
             controller.setOpenedPanel(OpenedPanel.None);
         else
             controller.setOpenedPanel(OpenedPanel.PassengerRoutes);
+        controller.setEditionMode(EditionMode.None);
+        btnSelection.setSelected(true);
         update();
     }
 
@@ -699,6 +753,8 @@ public class MainForm {
     private void btnZoomInActionPerformed(ActionEvent evt) {
 
     }
+
+    //endregion
 
     private JMenuBar getMenuBar() {
         JMenuBar bar = new JMenuBar();
@@ -847,9 +903,6 @@ public class MainForm {
         pnlDomainObjects = new JPanel();
         pnlDomainObjects.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel2.add(pnlDomainObjects, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        lblTitleSection = new JLabel();
-        lblTitleSection.setText("(section)");
-        pnlDomainObjects.add(lblTitleSection, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         displayTree = new JTree();
         displayTree.setForeground(new Color(-12828863));
         pnlDomainObjects.add(displayTree, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(120, 50), null, 0, false));

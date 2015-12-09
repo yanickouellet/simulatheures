@@ -118,6 +118,8 @@ public class Controller {
         state.setOpenedPanel(panel);
     }
 
+    public OpenedPanel getOpenedPanel() { return state.getOpenedPanel(); }
+
     public void setEditionMode(EditionMode mode) {
         state.setMessage("");
         state.setCurrentMode(mode);
@@ -236,6 +238,7 @@ public class Controller {
             FileOutputStream stream = new FileOutputStream(file);
             ObjectOutputStream oStream = new ObjectOutputStream(stream);
             oStream.writeObject(state);
+            state.setAppTitle(file.getName());
             oStream.close();
             stream.close();
         } catch (Exception e) {
@@ -251,6 +254,7 @@ public class Controller {
             FileInputStream stream = new FileInputStream(file);
             ObjectInputStream oStream = new ObjectInputStream(stream);
             state = (ApplicationState) oStream.readObject();
+            state.setAppTitle(file.getName());
             oStream.close();
             stream.close();
         } catch (Exception e) {

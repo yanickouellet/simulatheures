@@ -12,6 +12,7 @@ public class PassengerRoute implements Serializable {
     private TriangularDistribution distribution;
     private Color color;
     private String name;
+    private int maxPersonNumber;
 
     private static int i = 0;
 
@@ -71,6 +72,10 @@ public class PassengerRoute implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public int getMaxPersonNumber() { return maxPersonNumber; }
+
+    public void setMaxPersonNumber(int maxNb){ this.maxPersonNumber = maxNb; }
 
     @Override
     public String toString() {

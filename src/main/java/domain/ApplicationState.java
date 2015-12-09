@@ -2,9 +2,11 @@ package domain;
 
 import domain.network.*;
 import domain.simulation.Simulation;
+import util.Strings;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.StringJoiner;
 
 public class ApplicationState implements Serializable {
     private Coordinate currentPosition;
@@ -14,6 +16,7 @@ public class ApplicationState implements Serializable {
     private NetworkElement selectedElement;
     private BusRoute currentBusRoute;
     private ArrayList<BusRoute> availableBusRoutes;
+    private String appTitle = Strings.DefaultAppTitle;
 
     private PassengerRoute currentPassengerRoute;
     private int zoomLevel;
@@ -41,6 +44,10 @@ public class ApplicationState implements Serializable {
         currentBusRoute = null;
         selectedElement = null;
     }
+
+    public void setAppTitle(String title) { appTitle = title + Strings.AppTitle; }
+
+    public String getAppTitle() { return appTitle; }
 
     public Coordinate getCurrentPosition() {
         return currentPosition;
