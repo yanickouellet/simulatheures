@@ -1,13 +1,15 @@
 package domain;
 
 import domain.network.*;
+import domain.pathfinding.Pathfinder;
 import domain.simulation.Simulation;
+import sun.nio.ch.Net;
 import ui.MainForm;
 import util.CoordinateConverter;
 import util.Strings;
 
 import java.awt.*;
-import java.sql.Time;
+import java.io.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -18,7 +20,7 @@ public class Controller {
     private static final Color[] DefaultColors = new Color[] {
             Color.blue,
             Color.cyan,
-            Color.darkGray,
+            Color.white,
             Color.green,
             Color.magenta,
             Color.pink,
@@ -54,6 +56,12 @@ public class Controller {
                 break;
             case AddBusRoute:
                 addBusRouteClick(coord);
+                break;
+            case AddPassengerRoute:
+                addPassengerRouteClick(coord);
+                break;
+            case Dijkstra:
+                dijkstraClick(coord);
                 break;
         }
 
@@ -106,6 +114,12 @@ public class Controller {
         mainForm.update();
     }
 
+    public void setOpenedPanel(OpenedPanel panel) {
+        state.setOpenedPanel(panel);
+    }
+
+    public OpenedPanel getOpenedPanel() { return state.getOpenedPanel(); }
+
     public void setEditionMode(EditionMode mode) {
         state.setMessage("");
         state.setCurrentMode(mode);
@@ -119,9 +133,13 @@ public class Controller {
 
         if (mode == EditionMode.AddBusRoute) {
             startBusRouteCreation();
+        } else if (mode == EditionMode.AddPassengerRoute) {
+            startPassengerRouteCreation();
         } else {
             controllerMode = ControllerMode.Normal;
             state.setCurrentBusRoute(null);
+            state.setAvailableBusRoutes(null);
+            state.setCurrentPassengerRoute(null);
         }
 
         mainForm.update();
@@ -152,6 +170,16 @@ public class Controller {
 
                 }
                 break;
+            case AddPassengerRoute:
+                if (controllerMode == ControllerMode.SelectPassengerFragmentBusRoute
+                        && state.getCurrentPassengerRoute().getFragments().size() > 0) {
+                    PassengerRoute route = state.getCurrentPassengerRoute();
+                    Color color = DefaultColors[state.getNetwork().getPassengerRoutes().size() % DefaultColors.length];
+                    route.setColor(color);
+
+                    state.getNetwork().addPassengerRoute(route);
+                    startPassengerRouteCreation();
+                }
         }
 
         mainForm.update();
@@ -192,7 +220,48 @@ public class Controller {
     public void setCurrentBusRoute(BusRoute route) {
         if (state.getCurrentMode() == EditionMode.None) {
             state.setCurrentBusRoute(route);
+        } else if (state.getCurrentMode() == EditionMode.AddPassengerRoute && controllerMode == ControllerMode.SelectPassengerFragmentBusRoute) {
+            state.setCurrentBusRoute(route);
+            state.setMessage(Strings.SelectPassengerStop);
+            controllerMode = ControllerMode.AddingPassengerFragmentDestination;
         }
+    }
+
+    public void setCurrentPassengerRoute(PassengerRoute route) {
+        if (state.getCurrentMode() == EditionMode.None) {
+            state.setCurrentPassengerRoute(route);
+        }
+    }
+
+    public boolean save(File file) {
+        try {
+            FileOutputStream stream = new FileOutputStream(file);
+            ObjectOutputStream oStream = new ObjectOutputStream(stream);
+            oStream.writeObject(state);
+            state.setAppTitle(file.getName());
+            oStream.close();
+            stream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean load(File file) {
+        try {
+            FileInputStream stream = new FileInputStream(file);
+            ObjectInputStream oStream = new ObjectInputStream(stream);
+            state = (ApplicationState) oStream.readObject();
+            state.setAppTitle(file.getName());
+            oStream.close();
+            stream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public ApplicationState getState() {
@@ -255,7 +324,7 @@ public class Controller {
         if (route == null) {
             Node node = network.getNodeOnCoords(coord);
             if (node != null) {
-                Color color = DefaultColors[network.getRoutes().size() % DefaultColors.length];
+                Color color = DefaultColors[network.getBusRoutes().size() % DefaultColors.length];
                 state.setCurrentBusRoute(new BusRoute(node, color));
                 state.setMessage(Strings.SelectConsecutiveSegments);
             } else {
@@ -282,11 +351,73 @@ public class Controller {
             if (route.isNodeOnRoute(node) &&
                     (route.getSegments().get(route.getSegments().size()-1).getDestination() != node || route.isLoopable())) {
                 route.setBusSource(new Source(node));
-                network.addRoute(route);
+                network.addBusRoute(route);
                 startBusRouteCreation();
             } else {
                 state.setMessage(Strings.IncorrectRouteBusSource);
             }
         }
+    }
+
+    private void startPassengerRouteCreation() {
+        controllerMode = ControllerMode.AddingPassengerFragmentSource;
+        state.setSelectedElement(null);
+        state.setCurrentPassengerRoute(new PassengerRoute());
+        state.setMessage(Strings.SelectPassengerSource);
+    }
+
+    private void addPassengerRouteClick(Coordinate coord) {
+        Network network = state.getNetwork();
+        Node node = network.getNodeOnCoords(coord);
+
+        if (controllerMode == ControllerMode.AddingPassengerFragmentSource) {
+            ArrayList<BusRoute> availableRoutes = network.getBusRoutesWithStation(node);
+            if (availableRoutes.size() > 0) {
+                state.setSelectedElement(node);
+                state.setAvailableBusRoutes(availableRoutes);
+                state.setMessage(Strings.SelectBusRoute);
+                controllerMode = ControllerMode.SelectPassengerFragmentBusRoute;
+            } else {
+                state.setMessage(Strings.SelectPassengerSource);
+            }
+        } else if (controllerMode == ControllerMode.AddingPassengerFragmentDestination) {
+            BusRoute busRoute = state.getCurrentBusRoute();
+            Node previousNode = (Node) state.getSelectedElement();
+            if (busRoute.getStationPosition(node) > busRoute.getStationPosition(previousNode) || busRoute.getIsLoop()) {
+                PassengerRouteFragment fragment = new PassengerRouteFragment(previousNode, node, busRoute);
+                state.getCurrentPassengerRoute().addFragment(fragment);
+
+                state.setAvailableBusRoutes(network.getBusRoutesWithStation(node));
+                state.setSelectedElement(node);
+                state.setCurrentBusRoute(null);
+                state.setMessage(Strings.SelectBusRoute);
+                controllerMode = ControllerMode.SelectPassengerFragmentBusRoute;
+            }
+        }
+    }
+
+    private void dijkstraClick(Coordinate coord) {
+        Network network = state.getNetwork();
+        Node node = network.getNodeOnCoords(coord);
+
+        if (state.getSelectedElement() instanceof Node) {
+            Node source = (Node) state.getSelectedElement();
+            Pathfinder find = new Pathfinder(network, source, node);
+            PassengerRoute r = find.find();
+            if (r != null) {
+                network.addPassengerRoute(r);
+                state.setSelectedElement(null);
+                setEditionMode(EditionMode.None);
+                state.setOpenedPanel(OpenedPanel.PassengerRoutes);
+                state.setCurrentPassengerRoute(r);
+            } else {
+                state.setMessage(Strings.NoPathFound);
+            }
+
+            mainForm.update();
+        } else {
+            state.setSelectedElement(node);
+        }
+
     }
 }

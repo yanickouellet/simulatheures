@@ -2,6 +2,8 @@ package domain.network;
 
 import domain.Coordinate;
 
-public abstract class NetworkElement {
+import java.io.Serializable;
+
+public abstract class NetworkElement implements Serializable {
     public abstract boolean isOnCoordinate(Coordinate coords);
 }

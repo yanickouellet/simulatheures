@@ -4,9 +4,10 @@ import domain.IDistributableElement;
 import domain.TriangularDistribution;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BusRoute implements IDistributableElement {
+public class BusRoute implements IDistributableElement, Serializable{
     private Node routeSource;
     private String name;
     private boolean isLoop;
@@ -47,6 +48,7 @@ public class BusRoute implements IDistributableElement {
         } else {
             stations.add(node);
         }
+        sortStations();
     }
 
     public boolean isConsecutive(Segment segment) {
@@ -132,6 +134,32 @@ public class BusRoute implements IDistributableElement {
         return routeSource;
     }
 
+    public int getStationPosition(Node node) {
+        return stations.indexOf(node);
+    }
+
+    public boolean isLastStation(Node node) {
+        if (isLoop)
+            return false;
+        return stations.indexOf(node) == stations.size() - 1;
+    }
+
+    public ArrayList<Segment> getSegmentsBetweenNodes(Node first, Node last) {
+        ArrayList<Segment> list = new ArrayList<>();
+        boolean begin = false;
+
+        for (Segment s : segments) {
+            if (s.getSource().equals(first))
+                begin = true;
+            if (begin)
+                list.add(s);
+            if (s.getDestination().equals(last))
+                break;
+        }
+
+        return list;
+    }
+
     @Override
     public double generate() {
         return busSource.getDistribution().generate();
@@ -165,5 +193,26 @@ public class BusRoute implements IDistributableElement {
         result = 31 * result + (stations != null ? stations.hashCode() : 0);
         result = 31 * result + (distribution != null ? distribution.hashCode() : 0);
         return result;
+    }
+
+    private void sortStations() {
+        if (segments.size() <= 1) return;
+
+        int i = 0;
+        int j = stations.indexOf(segments.get(0).getSource());
+        if (j != -1)
+            swapStations(i++, j);
+
+        for(Segment s : segments) {
+            j = stations.indexOf(s.getDestination());
+            if (j != -1 && j < stations.size() - 1)
+                swapStations(i++, j);
+        }
+    }
+
+    private void swapStations(int i, int j) {
+        Node tmp = stations.get(i);
+        stations.set(i, stations.get(j));
+        stations.set(j, tmp);
     }
 }

@@ -1,8 +1,9 @@
 package domain;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
-public class Coordinate {
+public class Coordinate implements Serializable {
     private double x;
     private double y;
 

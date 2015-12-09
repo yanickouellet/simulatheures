@@ -2,22 +2,34 @@ package domain;
 
 import domain.network.*;
 import domain.simulation.Simulation;
+import util.Strings;
 
-public class ApplicationState {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.StringJoiner;
+
+public class ApplicationState implements Serializable {
     private Coordinate currentPosition;
     private Coordinate centerCoordinate;
     private EditionMode currentMode;
     private Network network;
     private NetworkElement selectedElement;
     private BusRoute currentBusRoute;
+    private ArrayList<BusRoute> availableBusRoutes;
+    private String appTitle = Strings.DefaultAppTitle;
+
+    private PassengerRoute currentPassengerRoute;
     private int zoomLevel;
     private String message;
     private Simulation simulation;
     private double currentMinute;
 
+    private OpenedPanel openedPanel;
+
     public ApplicationState() {
         currentPosition = new Coordinate();
         currentMode  = EditionMode.None;
+        openedPanel = OpenedPanel.None;
         network = new Network();
         zoomLevel = 150;
         centerCoordinate = new Coordinate();
@@ -32,6 +44,10 @@ public class ApplicationState {
         currentBusRoute = null;
         selectedElement = null;
     }
+
+    public void setAppTitle(String title) { appTitle = title + Strings.AppTitle; }
+
+    public String getAppTitle() { return appTitle; }
 
     public Coordinate getCurrentPosition() {
         return currentPosition;
@@ -113,6 +129,10 @@ public class ApplicationState {
         return currentBusRoute != null && currentBusRoute.isSegmentOnRoute(segment);
     }
 
+    public boolean isSegmentOnCurrentPassengerRoute(Segment segment) {
+        return currentPassengerRoute != null && currentPassengerRoute.isSegmentOnRoute(segment);
+    }
+
     public Simulation getSimulation() {
         return simulation;
     }
@@ -127,5 +147,33 @@ public class ApplicationState {
 
     public void setCurrentMinute(double currentMinute) {
         this.currentMinute = currentMinute;
+    }
+
+    public PassengerRoute getCurrentPassengerRoute() {
+        return currentPassengerRoute;
+    }
+
+    public void setCurrentPassengerRoute(PassengerRoute currentPassengerRoute) {
+        this.currentPassengerRoute = currentPassengerRoute;
+    }
+
+    public ArrayList<BusRoute> getAvailableBusRoutes() {
+        return availableBusRoutes;
+    }
+
+    public void setAvailableBusRoutes(ArrayList<BusRoute> availableBusRoutes) {
+        this.availableBusRoutes = availableBusRoutes;
+    }
+
+    public ArrayList<BusRoute> getBusRoutesToShowInTree() {
+        return availableBusRoutes != null ? availableBusRoutes : network.getBusRoutes();
+    }
+
+    public OpenedPanel getOpenedPanel() {
+        return openedPanel;
+    }
+
+    public void setOpenedPanel(OpenedPanel openedPanel) {
+        this.openedPanel = openedPanel;
     }
 }

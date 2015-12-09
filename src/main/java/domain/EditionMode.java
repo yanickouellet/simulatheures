@@ -5,5 +5,7 @@ public enum EditionMode {
     AddNode,
     AddSegment,
     AddBusRoute,
-    Simulation
+    Simulation,
+    AddPassengerRoute,
+    Dijkstra,
 }

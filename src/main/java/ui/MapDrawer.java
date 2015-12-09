@@ -1,7 +1,9 @@
 package ui;
 
 import domain.*;
+import domain.network.BusRoute;
 import domain.network.Node;
+import domain.network.PassengerRoute;
 import domain.network.Segment;
 import domain.simulation.Simulation;
 import domain.simulation.Vehicle;
@@ -72,6 +74,8 @@ public class MapDrawer {
 
     private void drawSegments(Graphics2D g) {
         ArrayList<Integer> end = new ArrayList<>();
+        ArrayList<Tuple<Integer, Color>> colored = new ArrayList<>();
+
         Segment[] segments = state.getNetwork().getSegments().values().toArray(new Segment[0]);
         ArrayList<int[]> segmentPoints = new ArrayList<>();
 
@@ -95,8 +99,16 @@ public class MapDrawer {
                     zoom
             );
 
-            if (state.isSegmentOnCurrentRoute(s) || s == state.getSelectedElement())
+            if ((state.isSegmentOnCurrentRoute(s) && state.getCurrentMode() != EditionMode.AddPassengerRoute)
+                    || s == state.getSelectedElement()
+                    || state.isSegmentOnCurrentPassengerRoute(s))
                 end.add(j);
+
+            PassengerRoute pRoute = state.getCurrentPassengerRoute();
+            if (pRoute != null && pRoute.isSegmentOnRoute(s)) {
+                BusRoute busRoute = pRoute.getBusRouteForSegment(s);
+                colored.add(new Tuple<>(j, busRoute.getColor()));
+            }
 
             segmentPoints.add(new int[]{source.x, source.y, destination.x, destination.y});
             j++;
@@ -104,9 +116,7 @@ public class MapDrawer {
 
         // We must draw arrow after segments
         for (int i = 0; i < segmentPoints.size(); i++) {
-            if (segments[i] == state.getSelectedElement() || state.isSegmentOnCurrentRoute(segments[i]))
-                g.setColor(selectedColor);
-            else if (segments[i].isOnCoordinate(state.getCurrentPosition()))
+            if (segments[i].isOnCoordinate(state.getCurrentPosition()))
                 g.setColor(hoverColor);
             else
                 g.setColor(defaultColor);
@@ -116,14 +126,21 @@ public class MapDrawer {
         }
 
         for (int [] s : segmentPoints) {
-            drawArrow(g, s[0], s[1], s[2], s[3], baseStroke, false);
+            drawArrow(g, s[0], s[1], s[2], s[3], baseStroke, arrowColor);
         }
 
         g.setColor(selectedColor);
         for (Integer i : end) {
             int[] s = segmentPoints.get(i);
             g.drawLine(s[0], s[1], s[2], s[3]);
-            drawArrow(g, s[0], s[1], s[2], s[3], baseStroke, true);
+            drawArrow(g, s[0], s[1], s[2], s[3], baseStroke, selectedColor);
+        }
+
+        for (Tuple<Integer, Color> t : colored) {
+            g.setColor(t.second);
+            int[] s = segmentPoints.get(t.first);
+            g.drawLine(s[0], s[1], s[2], s[3]);
+            drawArrow(g, s[0], s[1], s[2], s[3], baseStroke, t.second);
         }
 
     }
@@ -195,9 +212,9 @@ public class MapDrawer {
     }
 
     // Inspired by http://stackoverflow.com/a/4112875/3757513
-    private void drawArrow(Graphics2D g1, int x1, int y1, int x2, int y2, int width, boolean selected) {
+    private void drawArrow(Graphics2D g1, int x1, int y1, int x2, int y2, int width, Color color) {
         Graphics2D g = (Graphics2D) g1.create();
-        g.setColor(selected ? selectedColor : arrowColor);
+        g.setColor(color);
 
         double dx = x2 - x1, dy = y2 - y1;
         double angle = Math.atan2(dy, dx);
@@ -215,5 +232,15 @@ public class MapDrawer {
                 new int[] {0, -width, width, 0}, 4);
 
         g.dispose();
+    }
+
+    private class Tuple<T1, T2> {
+        public T1 first;
+        public T2 second;
+
+        public Tuple(T1 first, T2 second) {
+            this.first = first;
+            this.second = second;
+        }
     }
 }

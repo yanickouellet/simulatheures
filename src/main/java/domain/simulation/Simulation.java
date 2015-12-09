@@ -6,7 +6,6 @@ import domain.network.Network;
 import domain.network.Segment;
 import domain.network.Source;
 
-import java.sql.Time;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class Simulation {
             segments.put(s, s.generate());
         }
 
-        for (BusRoute r : network.getRoutes()) {
+        for (BusRoute r : network.getBusRoutes()) {
             double value = r.generate();
             routes.put(r, value);
 
