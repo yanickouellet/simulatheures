@@ -845,19 +845,23 @@
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
-        <properties/>
+        <properties>
+          <preferredSize width="75" height="300"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="6b49a" class="javax.swing.JToggleButton" binding="btnCreateSegment">
             <constraints>
               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
-                <minimum-size width="100" height="-1"/>
-                <preferred-size width="105" height="-1"/>
-                <maximum-size width="100" height="-1"/>
+                <minimum-size width="50" height="50"/>
+                <preferred-size width="50" height="50"/>
+                <maximum-size width="50" height="50"/>
               </grid>
             </constraints>
             <properties>
-              <text value="Segment"/>
+              <icon value="tool_icons/edge.png"/>
+              <text value=""/>
+              <toolTipText value="Segment"/>
             </properties>
           </component>
           <component id="7ae0d" class="javax.swing.JLabel" binding="lblTools">
@@ -872,50 +876,58 @@
           <component id="167f2" class="javax.swing.JToggleButton" binding="btnCreateRoute">
             <constraints>
               <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <minimum-size width="100" height="-1"/>
-                <preferred-size width="105" height="31"/>
-                <maximum-size width="100" height="-1"/>
+                <minimum-size width="50" height="50"/>
+                <preferred-size width="50" height="50"/>
+                <maximum-size width="50" height="50"/>
               </grid>
             </constraints>
             <properties>
-              <text value="Itinéraire"/>
+              <icon value="tool_icons/itinerary.png"/>
+              <text value=""/>
+              <toolTipText value="Itinéraire"/>
             </properties>
           </component>
           <component id="50020" class="javax.swing.JToggleButton" binding="btnCreateCircuit">
             <constraints>
               <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <minimum-size width="100" height="-1"/>
-                <preferred-size width="105" height="-1"/>
-                <maximum-size width="100" height="-1"/>
+                <minimum-size width="50" height="50"/>
+                <preferred-size width="50" height="50"/>
+                <maximum-size width="50" height="50"/>
               </grid>
             </constraints>
             <properties>
-              <text value="Circuit"/>
+              <icon value="tool_icons/circuit.png"/>
+              <text value=""/>
+              <toolTipText value="Circuit"/>
             </properties>
           </component>
           <component id="9172a" class="javax.swing.JToggleButton" binding="btnCreateNode">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
-                <minimum-size width="100" height="-1"/>
-                <preferred-size width="105" height="-1"/>
-                <maximum-size width="100" height="-1"/>
+                <minimum-size width="50" height="50"/>
+                <preferred-size width="50" height="50"/>
+                <maximum-size width="50" height="50"/>
               </grid>
             </constraints>
             <properties>
-              <text value="Noeud"/>
+              <icon value="tool_icons/node.png"/>
+              <text value=""/>
+              <toolTipText value="Noeud"/>
             </properties>
           </component>
           <component id="d2613" class="javax.swing.JToggleButton" binding="btnSelection">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <minimum-size width="100" height="-1"/>
-                <preferred-size width="105" height="-1"/>
-                <maximum-size width="100" height="-1"/>
+                <minimum-size width="50" height="50"/>
+                <preferred-size width="50" height="50"/>
+                <maximum-size width="50" height="50"/>
               </grid>
             </constraints>
             <properties>
+              <icon value="tool_icons/selection.png"/>
               <selected value="false"/>
-              <text value="Sélection"/>
+              <text value=""/>
+              <toolTipText value="Sélection"/>
             </properties>
           </component>
         </children>
