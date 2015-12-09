@@ -90,6 +90,7 @@ public class MainForm {
     private JSpinner spnRouteMinDuration;
     private JSpinner spnRouteAvgDuration;
     private JSpinner spnRouteMaxDuration;
+    private JButton btnDijkstra;
     private JPanel pnlBottomBar;
     private Timer timer;
 
@@ -517,6 +518,12 @@ public class MainForm {
                 if (reply == JOptionPane.YES_OPTION) {
                     System.exit(0);
                 }
+            }
+        });
+        btnDijkstra.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.setEditionMode(EditionMode.Dijkstra);
             }
         });
     }
@@ -1086,7 +1093,7 @@ public class MainForm {
         final Spacer spacer8 = new Spacer();
         panel6.add(spacer8, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JPanel panel7 = new JPanel();
-        panel7.setLayout(new GridLayoutManager(6, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel7.setLayout(new GridLayoutManager(7, 1, new Insets(0, 0, 0, 0), -1, -1));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -1111,13 +1118,9 @@ public class MainForm {
         btnSelection.setSelected(false);
         btnSelection.setText("Sélection");
         panel7.add(btnSelection, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, -1), new Dimension(105, -1), new Dimension(100, -1), 0, false));
-        final JPanel spacer9 = new JPanel();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridheight = 2;
-        gbc.fill = GridBagConstraints.VERTICAL;
-        contentPane.add(spacer9, gbc);
+        btnDijkstra = new JButton();
+        btnDijkstra.setText("Dikstra");
+        panel7.add(btnDijkstra, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         ButtonGroup buttonGroup;
         buttonGroup = new ButtonGroup();
         buttonGroup.add(btnCreateSegment);

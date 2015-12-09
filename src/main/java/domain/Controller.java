@@ -1,7 +1,9 @@
 package domain;
 
 import domain.network.*;
+import domain.pathfinding.Pathfinder;
 import domain.simulation.Simulation;
+import sun.nio.ch.Net;
 import ui.MainForm;
 import util.CoordinateConverter;
 import util.Strings;
@@ -57,6 +59,9 @@ public class Controller {
                 break;
             case AddPassengerRoute:
                 addPassengerRouteClick(coord);
+                break;
+            case Dijkstra:
+                dijkstraClick(coord);
                 break;
         }
 
@@ -385,5 +390,19 @@ public class Controller {
                 controllerMode = ControllerMode.SelectPassengerFragmentBusRoute;
             }
         }
+    }
+
+    private void dijkstraClick(Coordinate coord) {
+        Network network = state.getNetwork();
+        Node node = network.getNodeOnCoords(coord);
+
+        if (state.getSelectedElement() instanceof Node) {
+            Node source = (Node) state.getSelectedElement();
+            Pathfinder find = new Pathfinder(network, source, node);
+            int i = 0;
+        } else {
+            state.setSelectedElement(node);
+        }
+
     }
 }
