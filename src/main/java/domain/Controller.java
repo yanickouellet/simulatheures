@@ -108,6 +108,10 @@ public class Controller {
         mainForm.update();
     }
 
+    public void setOpenedPanel(OpenedPanel panel) {
+        state.setOpenedPanel(panel);
+    }
+
     public void setEditionMode(EditionMode mode) {
         state.setMessage("");
         state.setCurrentMode(mode);
@@ -158,6 +162,16 @@ public class Controller {
 
                 }
                 break;
+            case AddPassengerRoute:
+                if (controllerMode == ControllerMode.SelectPassengerFragmentBusRoute
+                        && state.getCurrentPassengerRoute().getFragments().size() > 0) {
+                    PassengerRoute route = state.getCurrentPassengerRoute();
+                    Color color = DefaultColors[state.getNetwork().getPassengerRoutes().size() % DefaultColors.length];
+                    route.setColor(color);
+
+                    state.getNetwork().addPassengerRoute(route);
+                    startPassengerRouteCreation();
+                }
         }
 
         mainForm.update();
@@ -202,6 +216,12 @@ public class Controller {
             state.setCurrentBusRoute(route);
             state.setMessage(Strings.SelectPassengerStop);
             controllerMode = ControllerMode.AddingPassengerFragmentDestination;
+        }
+    }
+
+    public void setCurrentPassengerRoute(PassengerRoute route) {
+        if (state.getCurrentMode() == EditionMode.None) {
+            state.setCurrentPassengerRoute(route);
         }
     }
 
@@ -265,7 +285,7 @@ public class Controller {
         if (route == null) {
             Node node = network.getNodeOnCoords(coord);
             if (node != null) {
-                Color color = DefaultColors[network.getRoutes().size() % DefaultColors.length];
+                Color color = DefaultColors[network.getBusRoutes().size() % DefaultColors.length];
                 state.setCurrentBusRoute(new BusRoute(node, color));
                 state.setMessage(Strings.SelectConsecutiveSegments);
             } else {
@@ -292,7 +312,7 @@ public class Controller {
             if (route.isNodeOnRoute(node) &&
                     (route.getSegments().get(route.getSegments().size()-1).getDestination() != node || route.isLoopable())) {
                 route.setBusSource(new Source(node));
-                network.addRoute(route);
+                network.addBusRoute(route);
                 startBusRouteCreation();
             } else {
                 state.setMessage(Strings.IncorrectRouteBusSource);
@@ -302,6 +322,7 @@ public class Controller {
 
     private void startPassengerRouteCreation() {
         controllerMode = ControllerMode.AddingPassengerFragmentSource;
+        state.setSelectedElement(null);
         state.setCurrentPassengerRoute(new PassengerRoute());
         state.setMessage(Strings.SelectPassengerSource);
     }
@@ -327,9 +348,11 @@ public class Controller {
                 PassengerRouteFragment fragment = new PassengerRouteFragment(previousNode, node, busRoute);
                 state.getCurrentPassengerRoute().addFragment(fragment);
 
+                state.setAvailableBusRoutes(network.getBusRoutesWithStation(node));
                 state.setSelectedElement(node);
-                state.setMessage(Strings.SelectPassengerStop);
-                controllerMode = ControllerMode.AddingPassengerFragmentDestination;
+                state.setCurrentBusRoute(null);
+                state.setMessage(Strings.SelectBusRoute);
+                controllerMode = ControllerMode.SelectPassengerFragmentBusRoute;
             }
         }
     }

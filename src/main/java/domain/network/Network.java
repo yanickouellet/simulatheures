@@ -10,13 +10,15 @@ import java.util.Map;
 
 public class Network {
     private ArrayList<Node> nodes;
-    private ArrayList<BusRoute> routes;
+    private ArrayList<BusRoute> busRoutes;
+    private ArrayList<PassengerRoute> passengerRoutes;
     private HashMap<NodeVector, Segment> segments;
 
     public Network() {
         nodes = new ArrayList<>();
         segments = new HashMap<>();
-        routes = new ArrayList<>();
+        busRoutes = new ArrayList<>();
+        passengerRoutes = new ArrayList<>();
     }
 
     public boolean addNode(Coordinate coords) {
@@ -37,8 +39,13 @@ public class Network {
         return true;
     }
 
-    public boolean addRoute(BusRoute route) {
-        routes.add(route);
+    public boolean addBusRoute(BusRoute route) {
+        busRoutes.add(route);
+        return true;
+    }
+
+    public boolean addPassengerRoute(PassengerRoute route) {
+        passengerRoutes.add(route);
         return true;
     }
 
@@ -108,7 +115,7 @@ public class Network {
     }
 
     private void deleteRoutesForSegments(Segment segment) {
-        Iterator i = routes.iterator();
+        Iterator i = busRoutes.iterator();
 
         while (i.hasNext()) {
             BusRoute r = (BusRoute)i.next();
@@ -120,7 +127,7 @@ public class Network {
     public ArrayList<BusRoute> getBusRoutesWithStation(Node node) {
         ArrayList<BusRoute> list = new ArrayList<>();
 
-        for(BusRoute r : routes) {
+        for(BusRoute r : busRoutes) {
             if (r.isNodeStation(node) && !r.isLastStation(node))
                 list.add(r);
         }
@@ -128,7 +135,11 @@ public class Network {
         return list;
     }
 
-    public ArrayList<BusRoute> getRoutes() {
-        return routes;
+    public ArrayList<BusRoute> getBusRoutes() {
+        return busRoutes;
+    }
+
+    public ArrayList<PassengerRoute> getPassengerRoutes() {
+        return passengerRoutes;
     }
 }

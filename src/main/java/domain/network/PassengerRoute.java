@@ -2,14 +2,20 @@ package domain.network;
 
 import domain.TriangularDistribution;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class PassengerRoute {
     private int timeBeforeFirst;
     private ArrayList<PassengerRouteFragment> fragments;
     private TriangularDistribution distribution;
+    private Color color;
+    private String name;
+
+    private static int i = 0;
 
     public PassengerRoute() {
+        name = "Itinéraire " + i++;
         fragments = new ArrayList<>();
     }
 
@@ -43,5 +49,26 @@ public class PassengerRoute {
                 return true;
         }
         return false;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

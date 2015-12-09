@@ -20,9 +20,12 @@ public class ApplicationState {
     private Simulation simulation;
     private double currentMinute;
 
+    private OpenedPanel openedPanel;
+
     public ApplicationState() {
         currentPosition = new Coordinate();
         currentMode  = EditionMode.None;
+        openedPanel = OpenedPanel.None;
         network = new Network();
         zoomLevel = 150;
         centerCoordinate = new Coordinate();
@@ -155,6 +158,14 @@ public class ApplicationState {
     }
 
     public ArrayList<BusRoute> getBusRoutesToShowInTree() {
-        return availableBusRoutes != null ? availableBusRoutes : network.getRoutes();
+        return availableBusRoutes != null ? availableBusRoutes : network.getBusRoutes();
+    }
+
+    public OpenedPanel getOpenedPanel() {
+        return openedPanel;
+    }
+
+    public void setOpenedPanel(OpenedPanel openedPanel) {
+        this.openedPanel = openedPanel;
     }
 }

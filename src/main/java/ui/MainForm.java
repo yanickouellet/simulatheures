@@ -3,10 +3,7 @@ package ui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import domain.ApplicationState;
-import domain.Controller;
-import domain.EditionMode;
-import domain.TriangularDistribution;
+import domain.*;
 import domain.network.*;
 import domain.network.NetworkElement;
 import domain.network.Node;
@@ -110,6 +107,28 @@ public class MainForm {
 
     }
 
+    private void addBusRoutesToTree() {
+        ApplicationState state = controller.getState();
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Circuits");
+        for (BusRoute r : state.getBusRoutesToShowInTree()) {
+            ColoredMutableTreeNode node = new ColoredMutableTreeNode(r, r.getColor());
+            root.add(node);
+        }
+        DefaultTreeModel model = (DefaultTreeModel) displayTree.getModel();
+        model.setRoot(root);
+    }
+
+    private void addPassengerRoutesToTree() {
+        ApplicationState state = controller.getState();
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Itinéraires");
+        for (PassengerRoute r : state.getNetwork().getPassengerRoutes()) {
+            ColoredMutableTreeNode node = new ColoredMutableTreeNode(r, r.getColor());
+            root.add(node);
+        }
+        DefaultTreeModel model = (DefaultTreeModel) displayTree.getModel();
+        model.setRoot(root);
+    }
+
     public void update() {
         ApplicationState state = controller.getState();
 
@@ -119,14 +138,15 @@ public class MainForm {
         ImageIcon img = timer != null && timer.isRunning() ? imgPause : imgStart;
         btnPlay.setIcon(img);
 
-        //Bus routes
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Circuits");
-        for (BusRoute r : state.getBusRoutesToShowInTree()) {
-            ColoredMutableTreeNode node = new ColoredMutableTreeNode(r, r.getColor());
-            root.add(node);
+        pnlDomainObjects.setVisible(state.getOpenedPanel() != OpenedPanel.None);
+        switch (state.getOpenedPanel()) {
+            case BusRoutes:
+                addBusRoutesToTree();
+                break;
+            case PassengerRoutes:
+                addPassengerRoutesToTree();
+                break;
         }
-        DefaultTreeModel model = (DefaultTreeModel) displayTree.getModel();
-        model.setRoot(root);
 
         if (state.getCurrentMode() != EditionMode.None) {
             hideEditPanels();
@@ -396,11 +416,18 @@ public class MainForm {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) displayTree.getLastSelectedPathComponent();
                 if (node == null || model.getRoot() == node) return;
 
-                BusRoute route = (BusRoute) node.getUserObject();
-                controller.setCurrentBusRoute(route);
-
-                if (controller.getState().getCurrentMode() == EditionMode.None) {
-                    editBusRoute(route);
+                switch (controller.getState().getOpenedPanel()) {
+                    case BusRoutes:
+                        BusRoute route = (BusRoute) node.getUserObject();
+                        controller.setCurrentBusRoute(route);
+                        if (controller.getState().getCurrentMode() == EditionMode.None) {
+                            editBusRoute(route);
+                        }
+                        break;
+                    case PassengerRoutes:
+                        PassengerRoute pRoute = (PassengerRoute) node.getUserObject();
+                        controller.setCurrentPassengerRoute(pRoute);
+                        break;
                 }
             }
         });
@@ -599,14 +626,23 @@ public class MainForm {
     // Display menu
 
     private void btnCircuitsActionPerformed(ActionEvent evt) {
-        pnlDomainObjects.setVisible(!pnlDomainObjects.isVisible());
+        if (pnlDomainObjects.isVisible())
+            controller.setOpenedPanel(OpenedPanel.None);
+        else
+            controller.setOpenedPanel(OpenedPanel.BusRoutes);
         lblTitleSection.setText("Circuits");
         controller.setEditionMode(EditionMode.None);
         btnSelection.setSelected(true);
+        update();
     }
 
     private void btnRoutesActionPerformed(ActionEvent evt) {
-
+        lblTitleSection.setText("Itinéraires");
+        if (pnlDomainObjects.isVisible())
+            controller.setOpenedPanel(OpenedPanel.None);
+        else
+            controller.setOpenedPanel(OpenedPanel.PassengerRoutes);
+        update();
     }
 
     private void btnStatisticsActionPerformed(ActionEvent evt) {
