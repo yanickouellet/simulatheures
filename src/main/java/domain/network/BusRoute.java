@@ -139,6 +139,8 @@ public class BusRoute implements IDistributableElement, Serializable{
     }
 
     public boolean isLastStation(Node node) {
+        if (isLoop)
+            return false;
         return stations.indexOf(node) == stations.size() - 1;
     }
 
@@ -194,7 +196,7 @@ public class BusRoute implements IDistributableElement, Serializable{
     }
 
     private void sortStations() {
-        if (segments.isEmpty()) return;
+        if (segments.size() <= 1) return;
 
         int i = 0;
         int j = stations.indexOf(segments.get(0).getSource());
@@ -203,7 +205,7 @@ public class BusRoute implements IDistributableElement, Serializable{
 
         for(Segment s : segments) {
             j = stations.indexOf(s.getDestination());
-            if (j != -1)
+            if (j != -1 && j < stations.size() - 1)
                 swapStations(i++, j);
         }
     }

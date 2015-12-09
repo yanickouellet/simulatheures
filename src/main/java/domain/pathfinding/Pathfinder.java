@@ -1,9 +1,9 @@
 package domain.pathfinding;
 
-import com.sun.corba.se.impl.orbutil.graph.Graph;
 import domain.network.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Stack;
 
@@ -15,6 +15,7 @@ public class Pathfinder {
     private ArrayList<GraphNode> nodes;
     private ArrayList<GraphNode> begin;
     private ArrayList<GraphNode> end;
+    private HashSet<Node> marked;
 
     public Pathfinder(Network network, Node source, Node dest) {
         this.network = network;
@@ -23,6 +24,7 @@ public class Pathfinder {
         nodes = new ArrayList<>();
         begin = new ArrayList<>();
         end = new ArrayList<>();
+        marked = new HashSet<>();
 
         createNode(source);
     }
@@ -91,7 +93,11 @@ public class Pathfinder {
             cost += s.getDistribution().getAverageValue();
 
             if (stations.contains(s.getDestination())) {
+                if (marked.contains(s.getDestination()))
+                    continue;
                 ArrayList<BusRoute> routes = network.getBusRoutesWithStation(s.getDestination());
+
+                marked.add(s.getDestination());
                 for (BusRoute r : routes) {
                     GraphNode dest = createNode(s.getDestination(), r);
                     node.getNexts().add(new Path(node, dest, cost));
