@@ -758,16 +758,33 @@ public class MainForm {
     private JMenuBar getMenuBar() {
         JMenuBar bar = new JMenuBar();
 
-        JMenu menu1 = new JMenu("Fichier");
-        JMenu menu2 = new JMenu("Edition");
+        JMenu menuFile = new JMenu("Fichier");
+        JMenu menuEdit = new JMenu("Edition");
         JMenu menu3 = new JMenu("Affichage");
-        JMenu menu4 = new JMenu("Outils");
+        JMenu menuTools = new JMenu("Outils");
         JMenu menu5 = new JMenu("?");
 
-        bar.add(menu1);
-        bar.add(menu2);
+        menuFile.add(new JMenuItem("Nouveau"));
+        menuFile.add(new JMenuItem("Ouvrir..."));
+        menuFile.add(new JMenuItem("Fermer"));
+        menuFile.addSeparator();
+        menuFile.add(new JMenuItem("Enregistrer"));
+        menuFile.add(new JMenuItem("Enregistrer sous..."));
+
+        menuEdit.add(new JMenuItem("Annuler"));
+        menuEdit.add(new JMenuItem("Restaurer"));
+
+        menuTools.add(new JMenuItem("Sélection"));
+        menuTools.add(new JMenuItem("Noeud"));
+        menuTools.add(new JMenuItem("Segment"));
+        menuTools.add(new JMenuItem("Circuit"));
+        menuTools.add(new JMenuItem("Itinéraire"));
+        menuTools.add(new JMenuItem("Dijkstra"));
+
+        bar.add(menuFile);
+        bar.add(menuEdit);
         bar.add(menu3);
-        bar.add(menu4);
+        bar.add(menuTools);
         bar.add(menu5);
 
         return bar;
