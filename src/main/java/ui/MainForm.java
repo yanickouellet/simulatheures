@@ -243,7 +243,7 @@ public class MainForm {
 
     public void editRoute(PassengerRoute pRoute) {
         hideEditPanels();
-
+        pnlEditRoute.setVisible(true);
         TriangularDistribution distribution = pRoute.getDistribution();
         spnRouteMinDuration.setValue((int) Math.round(distribution.getMinValue()));
         spnRouteAvgDuration.setValue((int) Math.round(distribution.getAverageValue()));
@@ -251,8 +251,6 @@ public class MainForm {
 
         spnTimeBeforeFirstPerson.setValue(pRoute.getTimeBeforeFirst());
         spnRouteNumberMaxPerson.setValue(pRoute.getMaxPersonNumber());
-
-        pnlEditRoute.setVisible(true);
     }
 
     public void hideEditPanels() {
@@ -694,6 +692,7 @@ public class MainForm {
     // Display menu
 
     private void btnCircuitsActionPerformed(ActionEvent evt) {
+        hideEditPanels();
         if (controller.getOpenedPanel() == OpenedPanel.BusRoutes)
             controller.setOpenedPanel(OpenedPanel.None);
         else
@@ -704,6 +703,7 @@ public class MainForm {
     }
 
     private void btnRoutesActionPerformed(ActionEvent evt) {
+        hideEditPanels();
         if (controller.getOpenedPanel() == OpenedPanel.PassengerRoutes)
             controller.setOpenedPanel(OpenedPanel.None);
         else
