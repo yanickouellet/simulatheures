@@ -21,6 +21,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -91,6 +92,7 @@ public class MainForm {
     private JSpinner spnRouteAvgDuration;
     private JSpinner spnRouteMaxDuration;
     private JButton btnDijkstra;
+    private JButton btnImage;
     private JPanel pnlBottomBar;
     private Timer timer;
 
@@ -603,6 +605,7 @@ public class MainForm {
         btnConfiguation.addActionListener(e -> btnConfiguationActionPerformed(e));
         btnUndo.addActionListener(e -> btnUndoActionPerformed(e));
         btnRedo.addActionListener(e -> btnRedoActionPerformed(e));
+        btnImage.addActionListener(e -> btnImageActionPerformed(e));
         // Tools
         btnSelection.addActionListener(e -> btnSelectionActionPerformed(e));
         btnCreateNode.addActionListener(e -> btnCreateNodePerformed(e));
@@ -664,6 +667,14 @@ public class MainForm {
 
     private void btnRedoActionPerformed(ActionEvent evt) {
 
+    }
+
+    private void btnImageActionPerformed(ActionEvent evt) {
+        JFileChooser fc = new JFileChooser();
+        if (fc.showOpenDialog(this.mainFrame) == JFileChooser.APPROVE_OPTION) {
+            controller.loadBackgroundImage(fc.getSelectedFile());
+            update();
+        }
     }
 
     // Tools

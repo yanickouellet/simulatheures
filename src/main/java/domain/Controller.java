@@ -8,7 +8,9 @@ import ui.MainForm;
 import util.CoordinateConverter;
 import util.Strings;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -258,6 +260,16 @@ public class Controller {
             oStream.close();
             stream.close();
         } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean loadBackgroundImage(File file) {
+        try {
+            state.setBackgroundImage(ImageIO.read(file));
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }

@@ -80,6 +80,14 @@
               <toolTipText value="Restaurer"/>
             </properties>
           </component>
+          <component id="7d62a" class="javax.swing.JButton" binding="btnImage">
+            <constraints/>
+            <properties>
+              <icon value="new/image-48x48.png"/>
+              <text value=""/>
+              <toolTipText value="Image"/>
+            </properties>
+          </component>
           <component id="4269f" class="javax.swing.JLabel" binding="lblError">
             <constraints/>
             <properties>
