@@ -53,6 +53,8 @@ public class MapDrawer {
         baseStroke = Math.max(2, baseStroke);
         halfStroke = baseStroke / 2;
 
+        drawBackgroundImage(g);
+
         if (state.getCurrentMode() == EditionMode.AddNode)
             drawCurrentNode(g);
         drawSegments(g);
@@ -60,6 +62,14 @@ public class MapDrawer {
 
         if (state.getCurrentMode() == EditionMode.Simulation)
             drawVehicles(g);
+    }
+
+    private void drawBackgroundImage(Graphics2D g) {
+        BufferedImage image = state.getBackgroundImage();
+        if (image != null) {
+            int imageHeight = (int)((float)maxWidth / image.getWidth() * image.getHeight());
+            g.drawImage(image, 0, 0, maxWidth, imageHeight, null);
+        }
     }
 
     private void drawCurrentNode(Graphics2D g) {

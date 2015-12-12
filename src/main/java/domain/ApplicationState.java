@@ -4,6 +4,7 @@ import domain.network.*;
 import domain.simulation.Simulation;
 import util.Strings;
 
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.StringJoiner;
@@ -17,6 +18,7 @@ public class ApplicationState implements Serializable {
     private BusRoute currentBusRoute;
     private ArrayList<BusRoute> availableBusRoutes;
     private String appTitle = Strings.DefaultAppTitle;
+    private BufferedImage backgroundImage;
 
     private PassengerRoute currentPassengerRoute;
     private int zoomLevel;
@@ -175,5 +177,13 @@ public class ApplicationState implements Serializable {
 
     public void setOpenedPanel(OpenedPanel openedPanel) {
         this.openedPanel = openedPanel;
+    }
+
+    public BufferedImage getBackgroundImage() {
+        return backgroundImage;
+    }
+
+    public void setBackgroundImage(BufferedImage backgroundImage) {
+        this.backgroundImage = backgroundImage;
     }
 }
