@@ -10,6 +10,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Simulation {
     private LocalTime startAt;
@@ -41,7 +42,9 @@ public class Simulation {
             int maxVehicles = r.getBusSource().getNumberMaxVehicule();
             long busStartAt =  r.getBusSource().getTimeBeforeFirstVehicule();
             while(busStartAt < endsAtMinute() && (i < maxVehicles || maxVehicles <= 0)) {
-                vehicles.add(new Vehicle(r, busStartAt));
+                Vehicle v = new Vehicle(r, busStartAt);
+                initializeVehicle(v);
+                vehicles.add(v);
                 busStartAt += value;
                 i++;
             }
@@ -49,39 +52,27 @@ public class Simulation {
     }
 
     public Coordinate computePosition(Vehicle vehicle, double minutesSinceStart) {
-        double minutesOnCircuit = minutesSinceStart - vehicle.getArrivalTime();
-        if (minutesOnCircuit < 0)
+        Map.Entry<Double, Segment> entry = vehicle.getSegmentAtTime(minutesSinceStart);
+        if (entry == null)
             return null;
 
-        ArrayList<Segment> path = vehicle.getRoute().getSegments();
-        Source source = vehicle.getRoute().getBusSource();
-        boolean isLoop = vehicle.getRoute().getIsLoop();
-        double time = 0;
-        int i = 0;
+        Segment segment = entry.getValue();
 
-        while (source.getNode() != path.get(i++).getSource());
+        double startTime = entry.getKey();
+        double timeToTravel = segments.get(segment);
+        double endTime = startTime + timeToTravel;
+        double timeOnSegment = minutesSinceStart - startTime;
 
-        Segment lastSegment = path.get(--i);
-        i++;
-        double timeToTravel = segments.get(lastSegment);
+        if (minutesSinceStart >= endTime)
+            return null;
 
-        while (time + timeToTravel < minutesOnCircuit && i < path.size()) {
-            time += timeToTravel;
-            lastSegment = path.get(i);
-            timeToTravel = segments.get(lastSegment);
-            i++;
-
-            if (isLoop && i == path.size())
-                i = 0;
+        if (timeOnSegment == 0) {
+            return segment.getVector().getSource().getCoordinate();
         }
 
-        if (time + timeToTravel < minutesOnCircuit)
-            return null;
-
-        double timeOnSegment = minutesOnCircuit - time;
         double rate = timeOnSegment / timeToTravel;
 
-        return lastSegment.getVector().computeNewCoordinate(rate);
+        return segment.getVector().computeNewCoordinate(rate);
     }
 
     public long endsAtMinute() {
@@ -103,5 +94,33 @@ public class Simulation {
 
     public LocalTime getEndsAt() {
         return endsAt;
+    }
+
+    public void initializeVehicle(Vehicle v) {
+        ArrayList<Segment> path = v.getRoute().getSegments();
+        Source source = v.getRoute().getBusSource();
+        boolean isLoop = v.getRoute().getIsLoop();
+        double time = v.getArrivalTime();
+        int i = 0;
+
+        while (source.getNode() != path.get(i++).getSource());
+
+        Segment lastSegment = path.get(--i);
+        double timeToTravel = segments.get(lastSegment);
+        double endsAtMinute = endsAtMinute();
+
+        while (time + timeToTravel < endsAtMinute && i < path.size()) {
+            v.addSegment(time, lastSegment);
+
+            time += timeToTravel;
+            ++i;
+            if (isLoop && i == path.size())
+                i = 0;
+
+            if (i < path.size()) {
+                lastSegment = path.get(i);
+                timeToTravel = segments.get(lastSegment);
+            }
+        }
     }
 }
