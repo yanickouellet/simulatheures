@@ -212,6 +212,11 @@ public class MapDrawer {
                     zoom);
 
             g.drawImage(getImage(v.getRoute().getColor()), p.x - baseStroke, p.y - baseStroke, null);
+
+            Integer passengerCount = v.getPassengersMap().getPassengerCountAt(minute);
+            g.setColor(Color.black);
+            g.setFont(defaultFont);
+            g.drawString(passengerCount.toString(), p.x, p.y);
         }
     }
 

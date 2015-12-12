@@ -3,11 +3,10 @@ package domain.simulation;
 import domain.Coordinate;
 import domain.network.*;
 
+import java.lang.reflect.Array;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Simulation {
     private LocalTime startAt;
@@ -19,6 +18,7 @@ public class Simulation {
     private HashMap<PassengerRoute, Double> passengerRoutes;
     private HashMap<Node, Station> stations;
     private ArrayList<Vehicle> vehicles;
+    private LinkedList<Passenger> arrivedPassengers;
 
     public Simulation(LocalTime startAt, LocalTime endsAt, Network network) {
         this.startAt = startAt;
@@ -30,6 +30,7 @@ public class Simulation {
         passengerRoutes = new HashMap<>();
         stations = new HashMap<>();
         vehicles = new ArrayList<>();
+        arrivedPassengers = new LinkedList<>();
 
         for (Segment s : network.getSegments().values()) {
             segments.put(s, s.generate());
@@ -71,8 +72,40 @@ public class Simulation {
             Node source = firstFragment.getSource();
             Station sourceStation = getStationForNode(source);
 
-            for (double time = 0; time < endsAtMinute; time += value) {
-                sourceStation.addPassengersAt(time, new Passenger(r));
+            for (double time = r.getTimeBeforeFirst(); time < endsAtMinute; time += value) {
+                sourceStation.getPassengerMap().addPassengersAt(time, new Passenger(r, time));
+            }
+        }
+
+        for (Vehicle v : vehicles) {
+            Segment prevSegment = null;
+            double time = 0;
+
+            for (Map.Entry<Double, Segment> entry : v.getSegmentsMap().entrySet()) {
+                time = entry.getKey();
+                Segment segment = entry.getValue();
+                Node source = segment.getSource();
+                if (stations.containsKey(source)) {
+                    Station station = getStationForNode(source);
+                    LinkedList<Passenger> passengers = station.getPassengerMap().getPassengersAt(time);
+                    Iterator<Passenger> itr = passengers.descendingIterator();
+                    while (itr.hasNext()) {
+                        Passenger passenger = itr.next();
+                        PassengerRoute passengerRoute = passenger.getPassengerRoute();
+                        BusRoute busRoute = passengerRoute.getBusRouteForSegment(segment);
+                        if (busRoute != null && busRoute.equals(v.getRoute())) {
+                            station.getPassengerMap().removePassengerAt(time, passenger);
+                            v.getPassengersMap().addPassengersAt(time, passenger);
+                        }
+                    }
+                }
+
+                removePassengersForSegment(v, time, prevSegment);
+                prevSegment = segment;
+            }
+            if (prevSegment != null) {
+                time += segments.get(prevSegment);
+                removePassengersForSegment(v, time, prevSegment);
             }
         }
     }
@@ -104,7 +137,7 @@ public class Simulation {
     public int computePassengerCountAtStation(Node node, double time) {
         if (!stations.containsKey(node))
             return -1;
-        return stations.get(node).getPassengerCountAt(time);
+        return stations.get(node).getPassengerMap().getPassengerCountAt(time);
     }
 
     public long endsAtMinute() {
@@ -160,5 +193,30 @@ public class Simulation {
         if (!stations.containsKey(node))
             throw new IllegalArgumentException("node is not a station");
         return stations.get(node);
+    }
+
+    private void removePassengersForSegment(Vehicle v, double time, Segment segment) {
+        if (segment == null)
+            return;
+
+        Node dest = segment.getDestination();
+        if (stations.containsKey(dest)) {
+            Station station = stations.get(dest);
+            LinkedList<Passenger> passengers = v.getPassengersMap().getPassengersAt(time);
+            Iterator<Passenger> itr = passengers.iterator();
+            while (itr.hasNext()) {
+                Passenger passenger = itr.next();
+                PassengerRoute route = passenger.getPassengerRoute();
+
+                if (route.isLastSegmentOfRoute(segment)) {
+                    v.getPassengersMap().removePassengerAt(time, passenger);
+                    passenger.setArrivalTime(time);
+                    arrivedPassengers.add(passenger);
+                } else if (route.isLastSegmentOfFragment(segment)){
+                    v.getPassengersMap().removePassengerAt(time, passenger);
+                    station.getPassengerMap().addPassengersAt(time, passenger);
+                }
+            }
+        }
     }
 }

@@ -11,11 +11,13 @@ public class Vehicle {
     private BusRoute route;
     private long arrivalTime;
     private TreeMap<Double, Segment> segmentsMap;
+    private PassengersMap passengersMap;
 
     public Vehicle(BusRoute route, long arrivalTime) {
         this.route = route;
         this.arrivalTime = arrivalTime;
         segmentsMap = new TreeMap<>();
+        passengersMap = new PassengersMap();
     }
 
     public BusRoute getRoute() {
@@ -32,5 +34,13 @@ public class Vehicle {
 
     public Map.Entry<Double, Segment> getSegmentAtTime(double time) {
         return segmentsMap.floorEntry(time);
+    }
+
+    public TreeMap<Double, Segment> getSegmentsMap() {
+        return segmentsMap;
+    }
+
+    public PassengersMap getPassengersMap() {
+        return passengersMap;
     }
 }

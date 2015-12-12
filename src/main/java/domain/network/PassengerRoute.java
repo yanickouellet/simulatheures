@@ -59,6 +59,17 @@ public class PassengerRoute implements Serializable, IDistributableElement {
         return null;
     }
 
+    public boolean isLastSegmentOfRoute(Segment s) {
+        int position = getFragmentPositionForSegment(s);
+        return position == fragments.size() - 1 && isLastSegmentOfFragment(s);
+    }
+
+    public boolean isLastSegmentOfFragment(Segment s) {
+        int position = getFragmentPositionForSegment(s);
+        PassengerRouteFragment fragment = fragments.get(position);
+        return fragment.getDestination().equals(s.getDestination());
+    }
+
     public Color getColor() {
         return color;
     }
@@ -87,5 +98,15 @@ public class PassengerRoute implements Serializable, IDistributableElement {
     @Override
     public double generate() {
         return distribution.generate();
+    }
+
+    private int getFragmentPositionForSegment(Segment s) {
+        int i = 0;
+        for(PassengerRouteFragment f : fragments) {
+            if (f.getBusRoute().getSegmentsBetweenNodes(f.getSource(), f.getDestination()).contains(s))
+                return i;
+            i++;
+        }
+        return -1;
     }
 }

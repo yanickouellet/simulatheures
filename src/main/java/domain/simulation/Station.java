@@ -8,34 +8,20 @@ import java.util.*;
 public class Station {
     private Node node;
     private ArrayList<BusRoute> busRoutes;
-    private TreeMap<Double, LinkedList<Passenger>> passengerMap;
+    private PassengersMap passengerMap;
 
     public Station(Node node) {
         this.node = node;
         busRoutes = new ArrayList<>();
-        passengerMap = new TreeMap<>();
+        passengerMap = new PassengersMap();
     }
 
-    public void addPassengersAt(double time, Passenger passenger) {
-        LinkedList<Passenger> basePassengers = getPassengersAt(time);
-        LinkedList<Passenger> newPassengers = (LinkedList<Passenger>) basePassengers.clone();
-        newPassengers.add(passenger);
-        passengerMap.put(time, newPassengers);
+    public PassengersMap getPassengerMap() {
+        return passengerMap;
     }
 
-    public LinkedList<Passenger> getPassengersAt(double time) {
-        Map.Entry<Double, LinkedList<Passenger>> entry = passengerMap.floorEntry(time);
-        if (entry == null)
-            return new LinkedList<>();
-        return entry.getValue();
-    }
-
-    public int getPassengerCountAt(double time) {
-        return getPassengersAt(time).size();
-    }
-
-    public void addBusRoute(BusRoute route) {
-        busRoutes.add(route);
+    public void addBusRoute(BusRoute r) {
+        busRoutes.add(r);
     }
 
     public Node getNode() {
