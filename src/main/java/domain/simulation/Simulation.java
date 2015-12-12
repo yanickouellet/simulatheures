@@ -63,6 +63,8 @@ public class Simulation {
             }
         }
 
+        vehicles.sort(Comparator.comparingLong(Vehicle::getArrivalTime));
+
         double endsAtMinute = endsAtMinute();
         for (PassengerRoute r : network.getPassengerRoutes()) {
             double value = r.generate();
