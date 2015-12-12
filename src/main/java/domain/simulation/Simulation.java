@@ -1,10 +1,7 @@
 package domain.simulation;
 
 import domain.Coordinate;
-import domain.network.BusRoute;
-import domain.network.Network;
-import domain.network.Segment;
-import domain.network.Source;
+import domain.network.*;
 
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -19,6 +16,8 @@ public class Simulation {
 
     private HashMap<Segment, Double> segments;
     private HashMap<BusRoute, Double> routes;
+    private HashMap<PassengerRoute, Double> passengerRoutes;
+    private HashMap<Node, Station> stations;
     private ArrayList<Vehicle> vehicles;
 
     public Simulation(LocalTime startAt, LocalTime endsAt, Network network) {
@@ -28,6 +27,8 @@ public class Simulation {
 
         segments = new HashMap<>();
         routes = new HashMap<>();
+        passengerRoutes = new HashMap<>();
+        stations = new HashMap<>();
         vehicles = new ArrayList<>();
 
         for (Segment s : network.getSegments().values()) {
@@ -47,6 +48,31 @@ public class Simulation {
                 vehicles.add(v);
                 busStartAt += value;
                 i++;
+            }
+
+            for (Node stationNode : r.getStations()) {
+                Station station;
+                if (!stations.containsKey(stationNode)) {
+                    station = new Station(stationNode);
+                    stations.put(stationNode, station);
+                } else {
+                    station = stations.get(stationNode);
+                }
+                station.addBusRoute(r);
+            }
+        }
+
+        double endsAtMinute = endsAtMinute();
+        for (PassengerRoute r : network.getPassengerRoutes()) {
+            double value = r.generate();
+            passengerRoutes.put(r, value);
+
+            PassengerRouteFragment firstFragment = r.getFragments().get(0);
+            Node source = firstFragment.getSource();
+            Station sourceStation = getStationForNode(source);
+
+            for (double time = 0; time < endsAtMinute; time += value) {
+                sourceStation.addPassengersAt(time, new Passenger(r));
             }
         }
     }
@@ -73,6 +99,12 @@ public class Simulation {
         double rate = timeOnSegment / timeToTravel;
 
         return segment.getVector().computeNewCoordinate(rate);
+    }
+
+    public int computePassengerCountAtStation(Node node, double time) {
+        if (!stations.containsKey(node))
+            return -1;
+        return stations.get(node).getPassengerCountAt(time);
     }
 
     public long endsAtMinute() {
@@ -122,5 +154,11 @@ public class Simulation {
                 timeToTravel = segments.get(lastSegment);
             }
         }
+    }
+
+    private Station getStationForNode(Node node) {
+        if (!stations.containsKey(node))
+            throw new IllegalArgumentException("node is not a station");
+        return stations.get(node);
     }
 }

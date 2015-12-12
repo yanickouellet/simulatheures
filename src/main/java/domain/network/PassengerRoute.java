@@ -1,12 +1,13 @@
 package domain.network;
 
+import domain.IDistributableElement;
 import domain.TriangularDistribution;
 
 import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PassengerRoute implements Serializable {
+public class PassengerRoute implements Serializable, IDistributableElement {
     private int timeBeforeFirst;
     private ArrayList<PassengerRouteFragment> fragments;
     private TriangularDistribution distribution;
@@ -19,6 +20,7 @@ public class PassengerRoute implements Serializable {
     public PassengerRoute() {
         name = "Itinéraire " + i++;
         fragments = new ArrayList<>();
+        distribution = new TriangularDistribution(15, 15, 15);
     }
 
     public void addFragment(PassengerRouteFragment fragment) {
@@ -80,5 +82,10 @@ public class PassengerRoute implements Serializable {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public double generate() {
+        return distribution.generate();
     }
 }

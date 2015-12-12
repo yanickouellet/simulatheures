@@ -10,6 +10,7 @@ import domain.simulation.Vehicle;
 import util.CoordinateConverter;
 
 import javax.imageio.ImageIO;
+import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
@@ -33,6 +34,8 @@ public class MapDrawer {
     private Color sourceColor;
     private Color stationColor;
 
+    private Font defaultFont;
+
     public MapDrawer(ApplicationState state) {
         this.state = state;
 
@@ -42,6 +45,7 @@ public class MapDrawer {
         selectedColor = new Color(255, 254, 21);
         sourceColor = new Color(254, 255, 164);
         stationColor = new Color(255, 255, 50);
+        defaultFont = new Font("Comic Sans MS", Font.BOLD, 12);
     }
 
     public void draw(Graphics2D g, int maxWidth, int maxHeight) {
@@ -175,7 +179,19 @@ public class MapDrawer {
             else if (n.isOnCoordinate(state.getCurrentPosition()))
                 g.setColor(hoverColor);
 
-            g.fill(new Ellipse2D.Double(p.x - halfStroke, p.y - halfStroke, baseStroke, baseStroke));
+            int nodeStroke = (int)(baseStroke * 1.5);
+            int halfNodeStroke = nodeStroke / 2;
+            g.fill(new Ellipse2D.Double(p.x - halfNodeStroke, p.y - halfNodeStroke, nodeStroke, nodeStroke));
+
+            Simulation sim = state.getSimulation();
+            if (sim != null) {
+                g.setFont(defaultFont);
+                g.setColor(Color.white);
+                Integer passengerCount = sim.computePassengerCountAtStation(n, state.getCurrentMinute());
+                if (passengerCount >= 0) {
+                    g.drawString(passengerCount.toString(), p.x, p.y);
+                }
+            }
         }
     }
 
