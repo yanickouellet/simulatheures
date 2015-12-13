@@ -93,6 +93,9 @@ public class MainForm {
     private JSpinner spnRouteMaxDuration;
     private JButton btnDijkstra;
     private JButton btnImage;
+    private JTextField txtRouteName;
+    private JPanel pnlStatistics;
+    private JTable tblStatistics;
     private JPanel pnlBottomBar;
     private Timer timer;
 
@@ -251,6 +254,7 @@ public class MainForm {
         spnRouteAvgDuration.setValue((int) Math.round(distribution.getAverageValue()));
         spnRouteMaxDuration.setValue((int) Math.round(distribution.getMaxValue()));
 
+        txtRouteName.setText(pRoute.getName());
         spnTimeBeforeFirstPerson.setValue(pRoute.getTimeBeforeFirst());
         spnRouteNumberMaxPerson.setValue(pRoute.getMaxPersonNumber());
     }
@@ -499,6 +503,18 @@ public class MainForm {
                 controller.getState().getCurrentBusRoute().setName(txtCircuitName.getText());
             }
         });
+        spnTimeBeforeFirstVehicule.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                Source src = controller.getState().getCurrentBusRoute().getBusSource();
+                src.setTimeBeforeFirstVehicule((int) spnTimeBeforeFirstVehicule.getValue());
+            }
+        });
+        spnSourceNumberMaxVehicule.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                Source src = controller.getState().getCurrentBusRoute().getBusSource();
+                src.setNumberMaxVehicule((int) spnSourceNumberMaxVehicule.getValue());
+            }
+        });
         spnSourceMinDuration.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 TriangularDistribution distribution = controller.getState().getCurrentBusRoute().getBusSource().getDistribution();
@@ -554,6 +570,22 @@ public class MainForm {
             public void stateChanged(ChangeEvent e) {
                 TriangularDistribution dist = controller.getState().getCurrentPassengerRoute().getDistribution();
                 dist.setAverageValue((int) spnRouteAvgDuration.getValue());
+            }
+        });
+        txtRouteName.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                controller.getState().getCurrentPassengerRoute().setName(txtRouteName.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                controller.getState().getCurrentPassengerRoute().setName(txtRouteName.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                controller.getState().getCurrentPassengerRoute().setName(txtRouteName.getText());
             }
         });
         spnRouteMaxDuration.addChangeListener(new ChangeListener() {
