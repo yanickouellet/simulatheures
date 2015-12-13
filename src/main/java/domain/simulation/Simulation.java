@@ -19,6 +19,7 @@ public class Simulation {
     private HashMap<Node, Station> stations;
     private ArrayList<Vehicle> vehicles;
     private LinkedList<Passenger> arrivedPassengers;
+    private HashMap<PassengerRoute, StatEntry>  stats;
 
     public Simulation(LocalTime startAt, LocalTime endsAt, Network network) {
         this.startAt = startAt;
@@ -31,6 +32,7 @@ public class Simulation {
         stations = new HashMap<>();
         vehicles = new ArrayList<>();
         arrivedPassengers = new LinkedList<>();
+        stats = new HashMap<>();
 
         for (Segment s : network.getSegments().values()) {
             segments.put(s, s.generate());
@@ -56,10 +58,7 @@ public class Simulation {
                 if (!stations.containsKey(stationNode)) {
                     station = new Station(stationNode);
                     stations.put(stationNode, station);
-                } else {
-                    station = stations.get(stationNode);
                 }
-                station.addBusRoute(r);
             }
         }
 
@@ -69,6 +68,8 @@ public class Simulation {
         for (PassengerRoute r : network.getPassengerRoutes()) {
             double value = r.generate();
             passengerRoutes.put(r, value);
+            stats.put(r, new StatEntry(r));
+
 
             PassengerRouteFragment firstFragment = r.getFragments().get(0);
             Node source = firstFragment.getSource();
@@ -191,6 +192,10 @@ public class Simulation {
         }
     }
 
+    public HashMap<PassengerRoute, StatEntry> getStats() {
+        return stats;
+    }
+
     private Station getStationForNode(Node node) {
         if (!stations.containsKey(node))
             throw new IllegalArgumentException("node is not a station");
@@ -212,13 +217,18 @@ public class Simulation {
 
                 if (route.isLastSegmentOfRoute(segment)) {
                     v.getPassengersMap().removePassengerAt(time, passenger);
-                    passenger.setArrivalTime(time);
-                    arrivedPassengers.add(passenger);
+                    setArrivalTimeForPassenger(time, passenger);
                 } else if (route.isLastSegmentOfFragment(segment)){
                     v.getPassengersMap().removePassengerAt(time, passenger);
                     station.getPassengerMap().addPassengersAt(time, passenger);
                 }
             }
         }
+    }
+
+    private void setArrivalTimeForPassenger(double time, Passenger passenger) {
+        passenger.setArrivalTime(time);
+        arrivedPassengers.add(passenger);
+        stats.get(passenger.getPassengerRoute()).addPassengerTime(passenger.getTravelTime());
     }
 }
