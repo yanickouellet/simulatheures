@@ -20,7 +20,7 @@ public class PassengerRoute implements Serializable, IDistributableElement {
     public PassengerRoute() {
         name = "Itinéraire " + i++;
         fragments = new ArrayList<>();
-        distribution = new TriangularDistribution(15, 15, 15);
+        distribution = new TriangularDistribution(0, 1, 5);
     }
 
     public void addFragment(PassengerRouteFragment fragment) {

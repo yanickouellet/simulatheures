@@ -37,7 +37,6 @@ public class MainForm {
     private JButton btnOpen;
     private JButton btnSave;
     private JButton btnClose;
-    private JButton btnConfiguation;
     private JButton btnUndo;
     private JButton btnStatistics;
     private JButton btnRoutes;
@@ -164,7 +163,7 @@ public class MainForm {
                 PassengerRoute route = routes.get(i);
                 StatEntry entry = s.getStats().get(route);
 
-                model.addRow(new Object[]{route.getName(), entry.getMin(), entry.getAverage(), entry.getMax()});
+                model.addRow(new Object[]{route.getName(), Math.round(entry.getMin()), Math.round(entry.getAverage()), Math.round(entry.getMax())});
 
                 if (entry.getMax() > max.get(i))
                     max.set(i, entry.getMax());
@@ -177,11 +176,20 @@ public class MainForm {
         if (j > 0) {
             model.addRow(new Object[]{"Total"});
             for (int i = 0; i < max.size(); i++) {
-                model.addRow(new Object[]{routes.get(i).getName(), min.get(i), avg.get(i) / j, max.get(i)});
+                model.addRow(new Object[]{routes.get(i).getName(), Math.round(min.get(i)), Math.round(avg.get(i) / j), Math.round(max.get(i))});
             }
         }
 
         tblStatistics.setModel(model);
+    }
+
+    public void panelStats(){
+        if(!pnlStatistics.isVisible()){
+            pnlStatistics.setVisible(true);
+            showStats();
+        } else {
+            pnlStatistics.setVisible(false);
+        }
     }
 
     public void update() {
@@ -192,14 +200,21 @@ public class MainForm {
 
         ImageIcon img = timer != null && timer.isRunning() ? imgPause : imgStart;
         btnPlay.setIcon(img);
+        if(timer == null || !timer.isRunning())
+            enableAllTools();
 
         pnlDomainObjects.setVisible(state.getOpenedPanel() != OpenedPanel.None);
         switch (state.getOpenedPanel()) {
             case BusRoutes:
                 addBusRoutesToTree();
+                pnlStatistics.setVisible(false);
                 break;
             case PassengerRoutes:
                 addPassengerRoutesToTree();
+                pnlStatistics.setVisible(false);
+                break;
+            case Statistics:
+                pnlDomainObjects.setVisible(false);
                 break;
         }
 
@@ -230,8 +245,6 @@ public class MainForm {
                 timer.start();
             }
         }
-
-        showStats();
     }
 
     public void pauseSimulation() {
@@ -456,6 +469,8 @@ public class MainForm {
                     } else {
                         disableAllTools();
                         timer.start();
+                        pnlStatistics.setVisible(false);
+                        pnlDomainObjects.setVisible(false);
                     }
                 } else {
                     LocalTime startAt = LocalTime.parse(txtStart.getText());
@@ -659,11 +674,16 @@ public class MainForm {
                 controller.getState().getCurrentPassengerRoute().setMaxPersonNumber((int) spnRouteNumberMaxPerson.getValue());
             }
         });
+        btnFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     private void createUIComponents() {
         mapPane = new MapPanel();
-        menuBar = getMenuBar();
     }
 
     private void prepareGUI() {
@@ -678,6 +698,7 @@ public class MainForm {
         new Timer(16, e -> mainFrame.repaint()).start();
 
         initComponents();
+
     }
 
     private void initComponents() {
@@ -686,7 +707,6 @@ public class MainForm {
         btnOpen.addActionListener(e -> btnOpenActionPerformed(e));
         btnSave.addActionListener(e -> btnSaveActionPerformed(e));
         btnClose.addActionListener(e -> btnCloseActionPerformed(e));
-        btnConfiguation.addActionListener(e -> btnConfiguationActionPerformed(e));
         btnUndo.addActionListener(e -> btnUndoActionPerformed(e));
         btnRedo.addActionListener(e -> btnRedoActionPerformed(e));
         btnImage.addActionListener(e -> btnImageActionPerformed(e));
@@ -738,10 +758,6 @@ public class MainForm {
     }
 
     private void btnCloseActionPerformed(ActionEvent evt) {
-
-    }
-
-    private void btnConfiguationActionPerformed(ActionEvent evt) {
 
     }
 
@@ -809,7 +825,14 @@ public class MainForm {
     }
 
     private void btnStatisticsActionPerformed(ActionEvent evt) {
-
+        hideEditPanels();
+        panelStats();
+        if (controller.getOpenedPanel() == OpenedPanel.Statistics){
+            controller.setOpenedPanel(OpenedPanel.None);
+        }
+        else{
+            controller.setOpenedPanel(OpenedPanel.Statistics);
+        }
     }
 
     // Simulation menu
@@ -850,40 +873,6 @@ public class MainForm {
 
     //endregion
 
-    private JMenuBar getMenuBar() {
-        JMenuBar bar = new JMenuBar();
-
-        JMenu menuFile = new JMenu("Fichier");
-        JMenu menuEdit = new JMenu("Edition");
-        JMenu menu3 = new JMenu("Affichage");
-        JMenu menuTools = new JMenu("Outils");
-        JMenu menu5 = new JMenu("?");
-
-        menuFile.add(new JMenuItem("Nouveau"));
-        menuFile.add(new JMenuItem("Ouvrir..."));
-        menuFile.add(new JMenuItem("Fermer"));
-        menuFile.addSeparator();
-        menuFile.add(new JMenuItem("Enregistrer"));
-        menuFile.add(new JMenuItem("Enregistrer sous..."));
-
-        menuEdit.add(new JMenuItem("Annuler"));
-        menuEdit.add(new JMenuItem("Restaurer"));
-
-        menuTools.add(new JMenuItem("Sélection"));
-        menuTools.add(new JMenuItem("Noeud"));
-        menuTools.add(new JMenuItem("Segment"));
-        menuTools.add(new JMenuItem("Circuit"));
-        menuTools.add(new JMenuItem("Itinéraire"));
-        menuTools.add(new JMenuItem("Dijkstra"));
-
-        bar.add(menuFile);
-        bar.add(menuEdit);
-        bar.add(menu3);
-        bar.add(menuTools);
-        bar.add(menu5);
-
-        return bar;
-    }
 
     private void disableAllTools() {
         btnSelection.setEnabled(false);
@@ -957,12 +946,6 @@ public class MainForm {
         btnClose.setText("");
         btnClose.setToolTipText("Fermer");
         toolBar1.add(btnClose);
-        btnConfiguation = new JButton();
-        btnConfiguation.setIcon(new ImageIcon(getClass().getResource("/new/settings-48x48.png")));
-        btnConfiguation.setText("");
-        btnConfiguation.setToolTipText("Préférences");
-        btnConfiguation.setVerifyInputWhenFocusTarget(false);
-        toolBar1.add(btnConfiguation);
         btnUndo = new JButton();
         btnUndo.setIcon(new ImageIcon(getClass().getResource("/new/undo-48x48.png")));
         btnUndo.setText("");
