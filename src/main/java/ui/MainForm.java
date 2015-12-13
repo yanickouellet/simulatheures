@@ -94,6 +94,8 @@ public class MainForm {
     private JButton btnDijkstra;
     private JButton btnImage;
     private JTextField txtRouteName;
+    private JPanel pnlStatistics;
+    private JTable tblStatistics;
     private JPanel pnlBottomBar;
     private Timer timer;
 
