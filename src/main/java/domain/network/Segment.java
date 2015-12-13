@@ -11,7 +11,7 @@ public class Segment extends NetworkElement implements IDistributableElement {
 
     public Segment(NodeVector vector) {
         this.vector = vector;
-        distribution = new TriangularDistribution(5, 5, 5);
+        distribution = new TriangularDistribution(3, 5, 10);
     }
 
     public Node getSource() {

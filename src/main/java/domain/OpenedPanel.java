@@ -4,4 +4,5 @@ public enum OpenedPanel {
     None,
     BusRoutes,
     PassengerRoutes,
+    Statistics,
 }
