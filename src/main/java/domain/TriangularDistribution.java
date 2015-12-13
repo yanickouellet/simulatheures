@@ -21,13 +21,15 @@ public class TriangularDistribution implements Serializable {
             return averageValue;
 
         double u = r.nextDouble();
-        double fc = computeRepartition(maxValue);
+        double lowerRange = averageValue - minValue;
+        double higherRanger = maxValue - averageValue;
+        double totalRange = maxValue - minValue;
 
         double value;
-        if (u < fc) {
-            value = minValue + Math.sqrt(u * (averageValue - minValue) * (maxValue - minValue));
+        if (u < lowerRange / totalRange) {
+            value = minValue + Math.sqrt(u * lowerRange * totalRange);
         } else {
-            value = maxValue - Math.sqrt((1 - u) * (averageValue - minValue) * (maxValue - minValue));
+            value = maxValue - Math.sqrt((1 - u) * higherRanger * totalRange);
         }
 
         return value;
@@ -55,9 +57,5 @@ public class TriangularDistribution implements Serializable {
 
     public void setMaxValue(double maxValue) {
         this.maxValue = maxValue;
-    }
-
-    private double computeRepartition(double x) {
-        return (x - minValue) / (averageValue - minValue);
     }
 }
