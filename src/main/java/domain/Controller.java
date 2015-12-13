@@ -187,19 +187,28 @@ public class Controller {
         mainForm.update();
     }
 
-    public void startSimulation(LocalTime startAt, LocalTime endsAt) {
+    public void startSimulation(int nbSim, LocalTime startAt, LocalTime endsAt) {
+        nbSim = Math.max(1, nbSim);
+
         Network network = state.getNetwork();
         Simulation simulation = new Simulation(startAt, endsAt, network);
         state.startSimulation(simulation);
+        state.setRemainingSimulations(nbSim - 1);
         mainForm.update();
     }
 
     public void increaseSimulationTime(double speed) {
         double nextMinute = state.getCurrentMinute() + 0.05 * speed;
+        Simulation sim = state.getSimulation();
 
-        if (state.getSimulation() != null && nextMinute > state.getSimulation().endsAtMinute()) {
-            mainForm.pauseSimulation();
-            state.setCurrentMinute(state.getSimulation().endsAtMinute());
+        if (sim != null && nextMinute > sim.endsAtMinute()) {
+            state.setCurrentMinute(sim.endsAtMinute());
+            state.getSimulations().add(sim);
+            if (state.getRemainingSimulations() > 0) {
+                startSimulation(state.getRemainingSimulations(), sim.getStartAt(), sim.getEndsAt());
+            } else {
+                mainForm.pauseSimulation();
+            }
         }
         else
             state.setCurrentMinute(nextMinute);
@@ -209,6 +218,7 @@ public class Controller {
 
     public void stopSimulation() {
         state.setSimulation(null);
+        state.getSimulations().clear();
         state.setCurrentMode(EditionMode.None);
         mainForm.pauseSimulation();
         mainForm.update();

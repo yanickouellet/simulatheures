@@ -3,9 +3,10 @@ package domain.simulation;
 import domain.network.BusRoute;
 import domain.network.Node;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Station {
+public class Station implements Serializable {
     private Node node;
     private ArrayList<BusRoute> busRoutes;
     private PassengersMap passengerMap;

@@ -3,12 +3,12 @@ package domain.simulation;
 import domain.Coordinate;
 import domain.network.*;
 
-import java.lang.reflect.Array;
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-public class Simulation {
+public class Simulation implements Serializable {
     private LocalTime startAt;
     private LocalTime endsAt;
     private Network network;

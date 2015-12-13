@@ -140,21 +140,45 @@ public class MainForm {
 
     private void showStats() {
         ApplicationState state = controller.getState();
-        Simulation sim = state.getSimulation();
         ArrayList<PassengerRoute> routes = state.getNetwork().getPassengerRoutes();
 
         DefaultTableModel model = new DefaultTableModel();
         model.setColumnCount(4);
         model.addRow(new Object[]{"Itinéraire", "Temps min", "Temps moyen", "Temps max"});
 
-        if (sim != null) {
+        int j = 0;
+        ArrayList<Double> max = new ArrayList<>();
+        for (int i = 0; i < routes.size(); i++)
+            max.add(-1d);
+        ArrayList<Double> min = new ArrayList<>();
+        for (int i = 0; i < routes.size(); i++)
+            min.add(Double.MAX_VALUE);
+        ArrayList<Double> avg = new ArrayList<>();
+        for (int i = 0; i < routes.size(); i++)
+            avg.add(0d);
+
+        for (Simulation s : state.getSimulations()) {
+            j++;
+            model.addRow(new Object[]{"Simulation: " + j});
             for (int i = 0; i < routes.size(); i++) {
                 PassengerRoute route = routes.get(i);
-                StatEntry entry = sim.getStats().get(route);
+                StatEntry entry = s.getStats().get(route);
 
                 model.addRow(new Object[]{route.getName(), entry.getMin(), entry.getAverage(), entry.getMax()});
+
+                if (entry.getMax() > max.get(i))
+                    max.set(i, entry.getMax());
+                if (entry.getMin() < min.get(i))
+                    min.set(i, entry.getMin());
+                avg.set(i, avg.get(i) + entry.getAverage());
             }
-        } else {
+        }
+
+        if (j > 0) {
+            model.addRow(new Object[]{"Total"});
+            for (int i = 0; i < max.size(); i++) {
+                model.addRow(new Object[]{routes.get(i).getName(), min.get(i), avg.get(i) / j, max.get(i)});
+            }
         }
 
         tblStatistics.setModel(model);
@@ -436,7 +460,7 @@ public class MainForm {
                 } else {
                     LocalTime startAt = LocalTime.parse(txtStart.getText());
                     LocalTime endsAt = LocalTime.parse(txtEnd.getText());
-                    controller.startSimulation(startAt, endsAt);
+                    controller.startSimulation((int) spnNbSim.getValue(), startAt, endsAt);
                     disableAllTools();
                 }
             }

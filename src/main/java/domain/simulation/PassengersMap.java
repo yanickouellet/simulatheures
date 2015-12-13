@@ -1,8 +1,9 @@
 package domain.simulation;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class PassengersMap {
+public class PassengersMap implements Serializable {
     private TreeMap<Double, LinkedList<Passenger>> passengerMap;
 
     public PassengersMap() {

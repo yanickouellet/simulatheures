@@ -7,6 +7,7 @@ import util.Strings;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.StringJoiner;
 
 public class ApplicationState implements Serializable {
@@ -24,11 +25,14 @@ public class ApplicationState implements Serializable {
     private int zoomLevel;
     private String message;
     private Simulation simulation;
+    private LinkedList<Simulation> simulations;
     private double currentMinute;
+    private int remainingSimulations;
 
     private OpenedPanel openedPanel;
 
     public ApplicationState() {
+        remainingSimulations = 0;
         currentPosition = new Coordinate();
         currentMode  = EditionMode.None;
         openedPanel = OpenedPanel.None;
@@ -37,6 +41,7 @@ public class ApplicationState implements Serializable {
         centerCoordinate = new Coordinate();
         message = "";
         currentMinute = 0;
+        simulations = new LinkedList<>();
     }
 
     public void startSimulation(Simulation simulation) {
@@ -185,5 +190,17 @@ public class ApplicationState implements Serializable {
 
     public void setBackgroundImage(BufferedImage backgroundImage) {
         this.backgroundImage = backgroundImage;
+    }
+
+    public LinkedList<Simulation> getSimulations() {
+        return simulations;
+    }
+
+    public int getRemainingSimulations() {
+        return remainingSimulations;
+    }
+
+    public void setRemainingSimulations(int remainingSimulations) {
+        this.remainingSimulations = remainingSimulations;
     }
 }

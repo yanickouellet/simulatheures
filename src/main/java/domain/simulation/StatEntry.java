@@ -2,7 +2,9 @@ package domain.simulation;
 
 import domain.network.PassengerRoute;
 
-public class StatEntry {
+import java.io.Serializable;
+
+public class StatEntry implements Serializable {
     private int nbPassenger;
     private double totalTime;
     private PassengerRoute route;
