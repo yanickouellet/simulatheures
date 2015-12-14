@@ -92,7 +92,7 @@ public class MainForm {
     private JSpinner spnRouteMinDuration;
     private JSpinner spnRouteAvgDuration;
     private JSpinner spnRouteMaxDuration;
-    private JButton btnDijkstra;
+    private JToggleButton btnDijkstra;
     private JButton btnImage;
     private JTextField txtRouteName;
     private JPanel pnlStatistics;
@@ -1329,7 +1329,7 @@ public class MainForm {
         btnSelection.setText("");
         btnSelection.setToolTipText("Sélection");
         panel7.add(btnSelection, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(50, 50), new Dimension(50, 50), new Dimension(50, 50), 0, false));
-        btnDijkstra = new JButton();
+        btnDijkstra = new JToggleButton();
         btnDijkstra.setAlignmentY(0.0f);
         btnDijkstra.setMargin(new Insets(0, 0, 0, 0));
         btnDijkstra.setText("D");
