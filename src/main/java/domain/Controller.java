@@ -14,6 +14,7 @@ import java.awt.*;
 import java.io.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Stack;
 
 public class Controller {
@@ -368,6 +369,25 @@ public class Controller {
     public void saveState() {
         state.getNextStack().clear();
         state.getPrevStack().push(getStateAsStream());
+    }
+
+    public void endSimulations() {
+        Simulation sim = state.getSimulation();
+        LinkedList<Simulation> simulations = state.getSimulations();
+
+        if (sim != null) {
+            state.setCurrentMinute(sim.endsAtMinute());
+            mainForm.pauseSimulation();
+
+            simulations.add(sim);
+            int count = state.getRemainingSimulations();
+            for (int i = 0; i < count; i++) {
+                simulations.add(new Simulation(sim.getStartAt(), sim.getEndsAt(), state.getNetwork()));
+                state.setRemainingSimulations(count - i - 1);
+            }
+
+            mainForm.update();
+        }
     }
 
     private void loadState(ByteInputStream stream) {

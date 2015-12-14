@@ -702,6 +702,12 @@ public class MainForm {
 
             }
         });
+        btnEnd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.endSimulations();
+            }
+        });
     }
 
     private void createUIComponents() {
