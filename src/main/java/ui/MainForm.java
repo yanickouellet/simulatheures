@@ -899,6 +899,7 @@ public class MainForm {
         btnCreateSegment.setEnabled(false);
         btnCreateCircuit.setEnabled(false);
         btnCreateRoute.setEnabled(false);
+        btnDijkstra.setEnabled(false);
 
         btnCircuits.setEnabled(false);
         btnRoutes.setEnabled(false);
@@ -913,6 +914,7 @@ public class MainForm {
         btnCreateSegment.setEnabled(true);
         btnCreateCircuit.setEnabled(true);
         btnCreateRoute.setEnabled(true);
+        btnDijkstra.setEnabled(true);
 
         btnCircuits.setEnabled(true);
         btnRoutes.setEnabled(true);
