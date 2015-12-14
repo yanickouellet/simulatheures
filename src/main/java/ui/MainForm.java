@@ -757,9 +757,14 @@ public class MainForm {
     // Menu 2
 
     private void btnFileActionPerformed(ActionEvent evt) {
-        controller.newState();
-        ((MapPanel) mapPane).setDrawer(new MapDrawer(controller.getState()));
-        update();
+        String message = "Toutes les modifications non sauvegardées seront perdues. Voulez-vous continuer?";
+        String title = "Nouveau document";
+        int reply = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION) {
+            controller.newState();
+            ((MapPanel) mapPane).setDrawer(new MapDrawer(controller.getState()));
+            update();
+        }
     }
 
     private void btnOpenActionPerformed(ActionEvent evt) {
