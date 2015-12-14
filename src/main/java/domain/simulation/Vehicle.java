@@ -4,10 +4,11 @@ import domain.Coordinate;
 import domain.network.BusRoute;
 import domain.network.Segment;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class Vehicle {
+public class Vehicle implements Serializable {
     private BusRoute route;
     private long arrivalTime;
     private TreeMap<Double, Segment> segmentsMap;
