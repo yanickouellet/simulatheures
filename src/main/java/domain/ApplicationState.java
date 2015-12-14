@@ -4,11 +4,14 @@ import domain.network.*;
 import domain.simulation.Simulation;
 import util.Strings;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.StringJoiner;
 
 public class ApplicationState implements Serializable {
     private Coordinate currentPosition;
@@ -19,7 +22,7 @@ public class ApplicationState implements Serializable {
     private BusRoute currentBusRoute;
     private ArrayList<BusRoute> availableBusRoutes;
     private String appTitle = Strings.DefaultAppTitle;
-    private BufferedImage backgroundImage;
+    private transient BufferedImage backgroundImage;
 
     private PassengerRoute currentPassengerRoute;
     private int zoomLevel;
@@ -202,5 +205,18 @@ public class ApplicationState implements Serializable {
 
     public void setRemainingSimulations(int remainingSimulations) {
         this.remainingSimulations = remainingSimulations;
+    }
+
+    private void writeObject(ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
+        stream.writeBoolean(backgroundImage != null);
+        ImageIO.write(backgroundImage, "png", stream);
+    }
+
+    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        if (stream.readBoolean()) {
+            backgroundImage = ImageIO.read(stream);
+        }
     }
 }
