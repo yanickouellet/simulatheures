@@ -152,7 +152,7 @@ public class MainForm {
         ApplicationState state = controller.getState();
         ArrayList<PassengerRoute> routes = state.getNetwork().getPassengerRoutes();
 
-        String column_names[]= {"Itinéraire", "Temps min", "Temps moyen", "Temps max"};
+        String column_names[] = {"Itinéraire", "Temps min", "Temps moyen", "Temps max"};
 
         DefaultTableModel model = new DefaultTableModel(column_names, 4);
 
@@ -496,6 +496,7 @@ public class MainForm {
                     controller.startSimulation((int) spnNbSim.getValue(), startAt, endsAt);
                     disableAllTools();
                 }
+                update();
             }
         });
         btnStop.addActionListener(new ActionListener() {
@@ -1331,8 +1332,10 @@ public class MainForm {
         panel7.add(btnSelection, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(50, 50), new Dimension(50, 50), new Dimension(50, 50), 0, false));
         btnDijkstra = new JToggleButton();
         btnDijkstra.setAlignmentY(0.0f);
+        btnDijkstra.setIcon(new ImageIcon(getClass().getResource("/tool_icons/itineraire-auto-45x45.png")));
+        btnDijkstra.setLabel("");
         btnDijkstra.setMargin(new Insets(0, 0, 0, 0));
-        btnDijkstra.setText("D");
+        btnDijkstra.setText("");
         btnDijkstra.setToolTipText("Dijkstra");
         panel7.add(btnDijkstra, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(50, 50), new Dimension(50, 50), new Dimension(50, 50), 0, false));
         pnlStatistics = new JPanel();
@@ -1357,6 +1360,12 @@ public class MainForm {
         buttonGroup.add(btnCreateSegment);
         buttonGroup.add(btnCreateRoute);
         buttonGroup.add(btnCreateCircuit);
+        buttonGroup.add(btnCreateNode);
+        buttonGroup.add(btnSelection);
+        buttonGroup.add(btnCreateSegment);
+        buttonGroup.add(btnCreateRoute);
+        buttonGroup.add(btnCreateCircuit);
+        buttonGroup.add(btnDijkstra);
         buttonGroup.add(btnCreateNode);
         buttonGroup.add(btnSelection);
     }
