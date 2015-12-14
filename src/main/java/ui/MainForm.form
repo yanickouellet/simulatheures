@@ -973,7 +973,7 @@
               <toolTipText value="Sélection"/>
             </properties>
           </component>
-          <component id="d4294" class="javax.swing.JButton" binding="btnDijkstra">
+          <component id="82ddc" class="javax.swing.JToggleButton" binding="btnDijkstra">
             <constraints>
               <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <minimum-size width="50" height="50"/>
@@ -983,8 +983,10 @@
             </constraints>
             <properties>
               <alignmentY value="0.0"/>
+              <icon value="tool_icons/itineraire-auto-45x45.png"/>
+              <label value=""/>
               <margin top="0" left="0" bottom="0" right="0"/>
-              <text value="D"/>
+              <text value=""/>
               <toolTipText value="Dijkstra"/>
             </properties>
           </component>
@@ -1028,6 +1030,12 @@
       <member id="6b49a"/>
       <member id="167f2"/>
       <member id="50020"/>
+      <member id="9172a"/>
+      <member id="d2613"/>
+      <member id="6b49a"/>
+      <member id="167f2"/>
+      <member id="50020"/>
+      <member id="82ddc"/>
       <member id="9172a"/>
       <member id="d2613"/>
     </group>
