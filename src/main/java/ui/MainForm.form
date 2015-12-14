@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ui.MainForm">
   <grid id="27dc6" binding="contentPane" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="40" y="18" width="900" height="1086"/>
+      <xy x="40" y="18" width="900" height="500"/>
     </constraints>
     <properties>
       <minimumSize width="900" height="500"/>
@@ -26,6 +26,7 @@
           <component id="b62ae" class="javax.swing.JButton" binding="btnFile">
             <constraints/>
             <properties>
+              <focusPainted value="false"/>
               <icon value="new/new-48x48.png"/>
               <text value=""/>
               <toolTipText value="Nouveau"/>
@@ -34,6 +35,7 @@
           <component id="c7550" class="javax.swing.JButton" binding="btnOpen">
             <constraints/>
             <properties>
+              <focusPainted value="false"/>
               <icon value="new/open-48x48.png"/>
               <text value=""/>
               <toolTipText value="Ouvrir"/>
@@ -42,6 +44,7 @@
           <component id="ffd17" class="javax.swing.JButton" binding="btnSave">
             <constraints/>
             <properties>
+              <focusPainted value="false"/>
               <icon value="new/save-48x48.png"/>
               <text value=""/>
               <toolTipText value="Sauvegarder"/>
@@ -50,6 +53,7 @@
           <component id="51c64" class="javax.swing.JButton" binding="btnClose">
             <constraints/>
             <properties>
+              <focusPainted value="false"/>
               <icon value="new/close-48x48.png"/>
               <text value=""/>
               <toolTipText value="Fermer"/>
@@ -58,6 +62,7 @@
           <component id="8b04e" class="javax.swing.JButton" binding="btnUndo">
             <constraints/>
             <properties>
+              <focusPainted value="false"/>
               <icon value="new/undo-48x48.png"/>
               <text value=""/>
               <toolTipText value="Annuler"/>
@@ -66,6 +71,7 @@
           <component id="521d1" class="javax.swing.JButton" binding="btnRedo">
             <constraints/>
             <properties>
+              <focusPainted value="false"/>
               <icon value="new/redo-48x48.png"/>
               <text value=""/>
               <toolTipText value="Restaurer"/>
@@ -74,6 +80,7 @@
           <component id="7d62a" class="javax.swing.JButton" binding="btnImage">
             <constraints/>
             <properties>
+              <focusPainted value="false"/>
               <icon value="new/image-48x48.png"/>
               <text value=""/>
               <toolTipText value="Image"/>
@@ -99,6 +106,7 @@
             <constraints/>
             <properties>
               <enabled value="false"/>
+              <focusPainted value="false"/>
               <icon value="new/check-48x48.png"/>
               <text value=""/>
               <toolTipText value="Confirmer"/>
@@ -200,37 +208,6 @@
               <grid row="1" column="1" row-span="2" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
-          <component id="f72de" class="javax.swing.JLabel" binding="lblPosition">
-            <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <foreground color="-15779397"/>
-              <text value="[0.0, 0.0]"/>
-            </properties>
-          </component>
-          <component id="d888" class="javax.swing.JButton" binding="btnZoomIn">
-            <constraints>
-              <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <maximum-size width="30" height="30"/>
-              </grid>
-            </constraints>
-            <properties>
-              <icon value="plus-20x20.png"/>
-              <text value=""/>
-            </properties>
-          </component>
-          <component id="a86f0" class="javax.swing.JButton" binding="btnZoomOut">
-            <constraints>
-              <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <maximum-size width="30" height="30"/>
-              </grid>
-            </constraints>
-            <properties>
-              <icon value="minus-20x20.png"/>
-              <text value=""/>
-            </properties>
-          </component>
           <hspacer id="6bc1b">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="3" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -246,6 +223,50 @@
               <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
+          <toolbar id="f924">
+            <constraints>
+              <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="1" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="-1" height="20"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-4934476"/>
+              <borderPainted value="false"/>
+              <enabled value="false"/>
+              <floatable value="false"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="a86f0" class="javax.swing.JButton" binding="btnZoomOut">
+                <constraints/>
+                <properties>
+                  <borderPainted value="true"/>
+                  <contentAreaFilled value="true"/>
+                  <focusPainted value="false"/>
+                  <icon value="minus-20x20.png"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="d888" class="javax.swing.JButton" binding="btnZoomIn">
+                <constraints/>
+                <properties>
+                  <borderPainted value="true"/>
+                  <focusPainted value="false"/>
+                  <icon value="plus-20x20.png"/>
+                  <text value=""/>
+                </properties>
+              </component>
+            </children>
+          </toolbar>
+          <component id="f72de" class="javax.swing.JLabel" binding="lblPosition">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <foreground color="-15779397"/>
+              <text value="[0.0, 0.0]"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <toolbar id="fd40a">
@@ -320,6 +341,7 @@
             </constraints>
             <properties>
               <enabled value="true"/>
+              <focusPainted value="false"/>
               <icon value="bottom_bar_icons/restart-25x25.png"/>
               <text value=""/>
               <toolTipText value="Retour au début"/>
@@ -330,6 +352,7 @@
               <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <focusPainted value="false"/>
               <icon value="bottom_bar_icons/play-25x25.png"/>
               <text value=""/>
               <toolTipText value="Jouer"/>
@@ -340,6 +363,7 @@
               <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <focusPainted value="false"/>
               <icon value="bottom_bar_icons/stop-25x25.png"/>
               <text value=""/>
               <toolTipText value="Arrêter"/>
@@ -834,6 +858,7 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <focusPainted value="false"/>
                   <text value="Circuits"/>
                 </properties>
               </component>
@@ -846,6 +871,7 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <focusPainted value="false"/>
                   <text value="Itinéraires"/>
                 </properties>
               </component>
@@ -858,6 +884,7 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <focusPainted value="false"/>
                   <text value="Simulations"/>
                 </properties>
               </component>
