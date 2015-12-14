@@ -365,7 +365,7 @@ public class Controller {
         mainForm.update();
     }
 
-    private void saveState() {
+    public void saveState() {
         state.getNextStack().clear();
         state.getPrevStack().push(getStateAsStream());
     }
