@@ -183,8 +183,8 @@ public class MainForm {
         tblStatistics.setModel(model);
     }
 
-    public void panelStats(){
-        if(!pnlStatistics.isVisible()){
+    public void panelStats() {
+        if (!pnlStatistics.isVisible()) {
             pnlStatistics.setVisible(true);
             showStats();
         } else {
@@ -200,7 +200,7 @@ public class MainForm {
 
         ImageIcon img = timer != null && timer.isRunning() ? imgPause : imgStart;
         btnPlay.setIcon(img);
-        if(timer == null || !timer.isRunning())
+        if (timer == null || !timer.isRunning())
             enableAllTools();
 
         pnlDomainObjects.setVisible(state.getOpenedPanel() != OpenedPanel.None);
@@ -827,10 +827,9 @@ public class MainForm {
     private void btnStatisticsActionPerformed(ActionEvent evt) {
         hideEditPanels();
         panelStats();
-        if (controller.getOpenedPanel() == OpenedPanel.Statistics){
+        if (controller.getOpenedPanel() == OpenedPanel.Statistics) {
             controller.setOpenedPanel(OpenedPanel.None);
-        }
-        else{
+        } else {
             controller.setOpenedPanel(OpenedPanel.Statistics);
         }
     }
@@ -971,6 +970,7 @@ public class MainForm {
         final Spacer spacer1 = new Spacer();
         toolBar1.add(spacer1);
         btnValidate = new JButton();
+        btnValidate.setEnabled(false);
         btnValidate.setIcon(new ImageIcon(getClass().getResource("/new/check-48x48.png")));
         btnValidate.setText("");
         btnValidate.setToolTipText("Confirmer");
@@ -1318,15 +1318,21 @@ public class MainForm {
         panel7.add(btnDijkstra, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(50, 50), new Dimension(50, 50), new Dimension(50, 50), 0, false));
         pnlStatistics = new JPanel();
         pnlStatistics.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        pnlStatistics.setVisible(true);
+        pnlStatistics.setAutoscrolls(true);
+        pnlStatistics.setMinimumSize(new Dimension(330, 54));
+        pnlStatistics.setOpaque(false);
+        pnlStatistics.setVisible(false);
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
         gbc.gridy = 1;
         gbc.gridheight = 3;
         gbc.fill = GridBagConstraints.BOTH;
         contentPane.add(pnlStatistics, gbc);
+        final JScrollPane scrollPane1 = new JScrollPane();
+        pnlStatistics.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         tblStatistics = new JTable();
-        pnlStatistics.add(tblStatistics, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        tblStatistics.setAutoCreateRowSorter(true);
+        scrollPane1.setViewportView(tblStatistics);
         ButtonGroup buttonGroup;
         buttonGroup = new ButtonGroup();
         buttonGroup.add(btnCreateSegment);
