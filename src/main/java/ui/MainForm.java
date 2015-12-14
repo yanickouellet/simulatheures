@@ -245,6 +245,9 @@ public class MainForm {
                 timer.start();
             }
         }
+
+        btnUndo.setEnabled(!state.getPrevStack().isEmpty());
+        btnRedo.setEnabled(!state.getNextStack().isEmpty());
     }
 
     public void pauseSimulation() {
@@ -762,11 +765,13 @@ public class MainForm {
     }
 
     private void btnUndoActionPerformed(ActionEvent evt) {
-
+        controller.undo();
+        ((MapPanel) mapPane).setDrawer(new MapDrawer(controller.getState()));
     }
 
     private void btnRedoActionPerformed(ActionEvent evt) {
-
+        controller.redo();
+        ((MapPanel) mapPane).setDrawer(new MapDrawer(controller.getState()));
     }
 
     private void btnImageActionPerformed(ActionEvent evt) {

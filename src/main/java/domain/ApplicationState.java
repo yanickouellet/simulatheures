@@ -1,5 +1,6 @@
 package domain;
 
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import domain.network.*;
 import domain.simulation.Simulation;
 import util.Strings;
@@ -12,17 +13,22 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Stack;
 
 public class ApplicationState implements Serializable {
     private Coordinate currentPosition;
     private Coordinate centerCoordinate;
     private EditionMode currentMode;
+    private ControllerMode controllerMode;
     private Network network;
     private NetworkElement selectedElement;
     private BusRoute currentBusRoute;
     private ArrayList<BusRoute> availableBusRoutes;
     private String appTitle = Strings.DefaultAppTitle;
+
     private transient BufferedImage backgroundImage;
+    private transient Stack<ByteInputStream> prevStack;
+    private transient Stack<ByteInputStream> nextStack;
 
     private PassengerRoute currentPassengerRoute;
     private int zoomLevel;
@@ -45,6 +51,9 @@ public class ApplicationState implements Serializable {
         message = "";
         currentMinute = 0;
         simulations = new LinkedList<>();
+        prevStack = new Stack<>();
+        nextStack = new Stack<>();
+        controllerMode = ControllerMode.Normal;
     }
 
     public void startSimulation(Simulation simulation) {
@@ -207,10 +216,40 @@ public class ApplicationState implements Serializable {
         this.remainingSimulations = remainingSimulations;
     }
 
+    public Stack<ByteInputStream> getPrevStack() {
+        return prevStack;
+    }
+
+    public Stack<ByteInputStream> getNextStack() {
+        return nextStack;
+    }
+
+    public void setPrevStack(Stack<ByteInputStream> prevStack) {
+        this.prevStack = prevStack;
+    }
+
+    public void setNextStack(Stack<ByteInputStream> nextStack) {
+        this.nextStack = nextStack;
+    }
+
+    public ControllerMode getControllerMode() {
+        return controllerMode;
+    }
+
+    public void setControllerMode(ControllerMode controllerMode) {
+        this.controllerMode = controllerMode;
+    }
+
+    public void setSimulations(LinkedList<Simulation> simulations) {
+        this.simulations = simulations;
+    }
+
     private void writeObject(ObjectOutputStream stream) throws IOException {
         stream.defaultWriteObject();
         stream.writeBoolean(backgroundImage != null);
-        ImageIO.write(backgroundImage, "png", stream);
+
+        if (backgroundImage != null)
+            ImageIO.write(backgroundImage, "png", stream);
     }
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
@@ -218,5 +257,7 @@ public class ApplicationState implements Serializable {
         if (stream.readBoolean()) {
             backgroundImage = ImageIO.read(stream);
         }
+        nextStack = new Stack<>();
+        prevStack = new Stack<>();
     }
 }

@@ -1,24 +1,25 @@
 package domain;
 
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import domain.network.*;
 import domain.pathfinding.Pathfinder;
 import domain.simulation.Simulation;
-import sun.nio.ch.Net;
 import ui.MainForm;
 import util.CoordinateConverter;
 import util.Strings;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class Controller {
     private MainForm mainForm;
     private ApplicationState state;
-    private ControllerMode controllerMode;
+
     private static final Color[] DefaultColors = new Color[] {
             Color.blue,
             Color.cyan,
@@ -31,10 +32,11 @@ public class Controller {
     public Controller(MainForm mainForm) {
         this.mainForm = mainForm;
         state = new ApplicationState();
-        controllerMode = ControllerMode.Normal;
     }
 
     public void click(Point p, int maxWidth, int maxHeight, boolean leftClick) {
+        saveState();
+
         state.setMessage("");
 
         Coordinate coord = CoordinateConverter.PointToCoordinate(
@@ -81,6 +83,8 @@ public class Controller {
     }
 
     public void dragMap(int dx, int dy, int maxWidth, int maxHeight) {
+        saveState();
+
         Point currentCenter = CoordinateConverter.CoordinateToPoint(
                 state.getCenterCoordinate(),
                 maxWidth,
@@ -102,6 +106,8 @@ public class Controller {
     }
 
     public void adjustZoom(boolean increase) {
+        saveState();
+
         int level = state.getZoomLevel();
         if (increase) {
             level += level >= 5 ? 5 : 1;
@@ -122,6 +128,8 @@ public class Controller {
     public OpenedPanel getOpenedPanel() { return state.getOpenedPanel(); }
 
     public void setEditionMode(EditionMode mode) {
+        saveState();
+
         state.setMessage("");
         state.setCurrentMode(mode);
 
@@ -137,7 +145,7 @@ public class Controller {
         } else if (mode == EditionMode.AddPassengerRoute) {
             startPassengerRouteCreation();
         } else {
-            controllerMode = ControllerMode.Normal;
+            state.setControllerMode(ControllerMode.Normal);
             state.setCurrentBusRoute(null);
             state.setAvailableBusRoutes(null);
             state.setCurrentPassengerRoute(null);
@@ -147,6 +155,8 @@ public class Controller {
     }
 
     public void deleteSelectedElement() {
+        saveState();
+
         NetworkElement elem = state.getSelectedElement();
         if (elem == null)
             state.setMessage(Strings.NoElementSelected);
@@ -157,13 +167,15 @@ public class Controller {
     public void validate() {
         switch (state.getCurrentMode()) {
             case AddBusRoute:
-                if (controllerMode == ControllerMode.AddingBusRoute) {
-                    controllerMode = ControllerMode.AddingBusRouteStation;
+                saveState();
+
+                if (state.getControllerMode() == ControllerMode.AddingBusRoute) {
+                    state.setControllerMode(ControllerMode.AddingBusRouteStation);
                     state.setMessage(Strings.SelectStations);
-                } else if (controllerMode == ControllerMode.AddingBusRouteStation) {
+                } else if (state.getControllerMode() == ControllerMode.AddingBusRouteStation) {
                     BusRoute route = state.getCurrentBusRoute();
                     if (route.getSegments().size() > 0) {
-                        controllerMode = ControllerMode.AddingBusRouteSource;
+                        state.setControllerMode(ControllerMode.AddingBusRouteSource);
                         state.setMessage(Strings.SelectRouteBusSource);
                     } else {
                         state.setMessage(Strings.RouteMustContainsSegment);
@@ -172,7 +184,9 @@ public class Controller {
                 }
                 break;
             case AddPassengerRoute:
-                if (controllerMode == ControllerMode.SelectPassengerFragmentBusRoute
+                saveState();
+
+                if (state.getControllerMode() == ControllerMode.SelectPassengerFragmentBusRoute
                         && state.getCurrentPassengerRoute().getFragments().size() > 0) {
                     PassengerRoute route = state.getCurrentPassengerRoute();
                     Color color = DefaultColors[state.getNetwork().getPassengerRoutes().size() % DefaultColors.length];
@@ -229,16 +243,21 @@ public class Controller {
     }
 
     public void setCurrentBusRoute(BusRoute route) {
+        saveState();
+
         if (state.getCurrentMode() == EditionMode.None) {
             state.setCurrentBusRoute(route);
-        } else if (state.getCurrentMode() == EditionMode.AddPassengerRoute && controllerMode == ControllerMode.SelectPassengerFragmentBusRoute) {
+        } else if (state.getCurrentMode() == EditionMode.AddPassengerRoute &&
+                    state.getControllerMode() == ControllerMode.SelectPassengerFragmentBusRoute) {
             state.setCurrentBusRoute(route);
             state.setMessage(Strings.SelectPassengerStop);
-            controllerMode = ControllerMode.AddingPassengerFragmentDestination;
+            state.setControllerMode(ControllerMode.AddingPassengerFragmentDestination);
         }
     }
 
     public void setCurrentPassengerRoute(PassengerRoute route) {
+        saveState();
+
         if (state.getCurrentMode() == EditionMode.None) {
             state.setCurrentPassengerRoute(route);
         }
@@ -276,6 +295,8 @@ public class Controller {
     }
 
     public boolean loadBackgroundImage(File file) {
+        saveState();
+
         try {
             state.setBackgroundImage(ImageIO.read(file));
         } catch (IOException e) {
@@ -289,8 +310,78 @@ public class Controller {
         return state;
     }
 
+    public void undo() {
+        if (state.getPrevStack().isEmpty())
+            return;
+
+        Stack<ByteInputStream> prev = state.getPrevStack();
+        Stack<ByteInputStream> next = state.getNextStack();
+
+        next.push(getStateAsStream());
+        ByteInputStream stream = prev.pop();
+        loadState(stream);
+
+        state.setNextStack(next);
+        state.setPrevStack(prev);
+
+        mainForm.update();
+    }
+
+    public void redo() {
+        if (state.getNextStack().isEmpty())
+            return;
+
+        Stack<ByteInputStream> prev = state.getPrevStack();
+        Stack<ByteInputStream> next = state.getNextStack();
+
+        prev.push(getStateAsStream());
+        ByteInputStream stream = next.pop();
+        loadState(stream);
+
+        state.setNextStack(next);
+        state.setPrevStack(prev);
+
+        mainForm.update();
+    }
+
+    private void saveState() {
+        state.getNextStack().clear();
+        state.getPrevStack().push(getStateAsStream());
+    }
+
+    private void loadState(ByteInputStream stream) {
+        Coordinate pos = state.getCurrentPosition();
+        try {
+            ObjectInputStream oStream = new ObjectInputStream(stream);
+            state = (ApplicationState) oStream.readObject();
+            state.setCurrentPosition(pos);
+            oStream.close();
+            stream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private ByteInputStream getStateAsStream() {
+        ApplicationState state = getState();
+        try {
+            ByteOutputStream stream = new ByteOutputStream();
+            ObjectOutputStream oStream = new ObjectOutputStream(stream);
+            oStream.writeObject(state);
+            ByteInputStream inputStream = stream.newInputStream();
+            oStream.close();
+            stream.close();
+
+            return inputStream;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private void startBusRouteCreation() {
-        controllerMode = ControllerMode.AddingBusRoute;
+        state.setControllerMode(ControllerMode.AddingBusRoute);
         state.setCurrentBusRoute(null);
         state.setMessage(Strings.SelectRouteSource);
     }
@@ -351,7 +442,7 @@ public class Controller {
             } else {
                 state.setMessage(Strings.SelectRouteSource);
             }
-        } else if (controllerMode == ControllerMode.AddingBusRoute) {
+        } else if (state.getControllerMode() == ControllerMode.AddingBusRoute) {
             ArrayList<Segment> segments = network.getSegmentOnCoords(coord);
 
             for (Segment s : segments) {
@@ -361,13 +452,13 @@ public class Controller {
                 }
             }
             state.setMessage(Strings.SelectConsecutiveSegments);
-        } else if (controllerMode == ControllerMode.AddingBusRouteStation) {
+        } else if (state.getControllerMode() == ControllerMode.AddingBusRouteStation) {
             Node node = network.getNodeOnCoords(coord);
             if (node != null) {
                 route.toggleStation(node);
             }
             state.setMessage(Strings.SelectStations);
-        } else if (controllerMode == ControllerMode.AddingBusRouteSource) {
+        } else if (state.getControllerMode() == ControllerMode.AddingBusRouteSource) {
             Node node = network.getNodeOnCoords(coord);
             if (route.isNodeOnRoute(node) &&
                     (route.getSegments().get(route.getSegments().size()-1).getDestination() != node || route.isLoopable())) {
@@ -381,7 +472,7 @@ public class Controller {
     }
 
     private void startPassengerRouteCreation() {
-        controllerMode = ControllerMode.AddingPassengerFragmentSource;
+        state.setControllerMode(ControllerMode.AddingPassengerFragmentSource);
         state.setSelectedElement(null);
         state.setCurrentPassengerRoute(new PassengerRoute());
         state.setMessage(Strings.SelectPassengerSource);
@@ -391,17 +482,17 @@ public class Controller {
         Network network = state.getNetwork();
         Node node = network.getNodeOnCoords(coord);
 
-        if (controllerMode == ControllerMode.AddingPassengerFragmentSource) {
+        if (state.getControllerMode() == ControllerMode.AddingPassengerFragmentSource) {
             ArrayList<BusRoute> availableRoutes = network.getBusRoutesWithStation(node);
             if (availableRoutes.size() > 0) {
                 state.setSelectedElement(node);
                 state.setAvailableBusRoutes(availableRoutes);
                 state.setMessage(Strings.SelectBusRoute);
-                controllerMode = ControllerMode.SelectPassengerFragmentBusRoute;
+                state.setControllerMode(ControllerMode.SelectPassengerFragmentBusRoute);
             } else {
                 state.setMessage(Strings.SelectPassengerSource);
             }
-        } else if (controllerMode == ControllerMode.AddingPassengerFragmentDestination) {
+        } else if (state.getControllerMode() == ControllerMode.AddingPassengerFragmentDestination) {
             BusRoute busRoute = state.getCurrentBusRoute();
             Node previousNode = (Node) state.getSelectedElement();
             if (busRoute.getStationPosition(node) > busRoute.getStationPosition(previousNode) || busRoute.getIsLoop()) {
@@ -412,7 +503,7 @@ public class Controller {
                 state.setSelectedElement(node);
                 state.setCurrentBusRoute(null);
                 state.setMessage(Strings.SelectBusRoute);
-                controllerMode = ControllerMode.SelectPassengerFragmentBusRoute;
+                state.setControllerMode(ControllerMode.SelectPassengerFragmentBusRoute);
             }
         }
     }
