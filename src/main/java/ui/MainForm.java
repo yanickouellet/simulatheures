@@ -152,9 +152,9 @@ public class MainForm {
         ApplicationState state = controller.getState();
         ArrayList<PassengerRoute> routes = state.getNetwork().getPassengerRoutes();
 
-        DefaultTableModel model = new DefaultTableModel();
-        model.setColumnCount(4);
-        model.addRow(new Object[]{"Itinéraire", "Temps min", "Temps moyen", "Temps max"});
+        String column_names[]= {"Itinéraire", "Temps min", "Temps moyen", "Temps max"};
+
+        DefaultTableModel model = new DefaultTableModel(column_names, 4);
 
         int j = 0;
         ArrayList<Double> max = new ArrayList<>();
@@ -844,6 +844,7 @@ public class MainForm {
 
     private void btnStatisticsActionPerformed(ActionEvent evt) {
         hideEditPanels();
+        pnlDomainObjects.setVisible(false);
         panelStats();
         if (controller.getOpenedPanel() == OpenedPanel.Statistics) {
             controller.setOpenedPanel(OpenedPanel.None);
