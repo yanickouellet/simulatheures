@@ -2,6 +2,7 @@ package domain.network;
 
 import domain.IDistributableElement;
 import domain.TriangularDistribution;
+import domain.simulation.Station;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -27,7 +28,6 @@ public class BusRoute implements IDistributableElement, Serializable{
         this.color = color;
         segments = new ArrayList<>();
         stations = new ArrayList<>();
-
         distribution = new TriangularDistribution(5, 10, 15);
     }
 
@@ -127,7 +127,6 @@ public class BusRoute implements IDistributableElement, Serializable{
         if (this.busSource != null)
             throw new IllegalArgumentException();
         this.busSource = busSource;
-        this.stations.add(busSource.getNode());
     }
 
     public Node getRouteSource() {
@@ -196,18 +195,17 @@ public class BusRoute implements IDistributableElement, Serializable{
     }
 
     private void sortStations() {
-        if (segments.size() <= 1) return;
-
-        int i = 0;
-        int j = stations.indexOf(segments.get(0).getSource());
-        if (j != -1)
-            swapStations(i++, j);
+        if (segments.size() < 1) return;
+        ArrayList<Node> temp = new ArrayList<>();
 
         for(Segment s : segments) {
-            j = stations.indexOf(s.getDestination());
-            if (j != -1 && j < stations.size() - 1)
-                swapStations(i++, j);
+            if (stations.contains(s.getSource()) && !temp.contains(s.getSource()))
+                temp.add(s.getSource());
+            if (stations.contains(s.getDestination()) && !temp.contains(s.getDestination()))
+                temp.add(s.getDestination());
         }
+
+        stations = temp;
     }
 
     private void swapStations(int i, int j) {
