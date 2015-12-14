@@ -53,6 +53,8 @@ public class Pathfinder {
         for (int i = 0; i < bestPath.size() - 1; i++) {
             GraphNode node = bestPath.get(i);
             GraphNode next = bestPath.get(i + 1);
+            if (node.getRoute().equals(next.getNode()))
+                continue;
             route.addFragment(new PassengerRouteFragment(node.getNode(), next.getNode(), node.getRoute()));
         }
 
@@ -64,13 +66,18 @@ public class Pathfinder {
             throw new IllegalArgumentException("Must be a valid station");
 
         for (BusRoute r : network.getBusRoutesWithStation(node)) {
-            GraphNode gNode = createNode(node, r);
+            GraphNode gNode = createNode(node, r, null);
         }
     }
 
-    private GraphNode createNode(Node node, BusRoute route) {
+    private GraphNode createNode(Node node, BusRoute route, ArrayList<BusRoute> routesToRemove) {
+        return createNode(node, route, routesToRemove, true);
+    }
+
+    private GraphNode createNode(Node node, BusRoute route, ArrayList<BusRoute> routesToRemove, boolean findDest) {
         GraphNode gNode = new GraphNode(node, route);
-        findDest(gNode);
+        if (findDest)
+            findDest(gNode, routesToRemove);
         nodes.add(gNode);
 
 
@@ -82,8 +89,13 @@ public class Pathfinder {
         return gNode;
     }
 
-    private void findDest(GraphNode node) {
+    private void findDest(GraphNode node, ArrayList<BusRoute> routesToRemove) {
+        if (routesToRemove == null)
+            routesToRemove = new ArrayList<>();
+
         BusRoute route = node.getRoute();
+        routesToRemove.add(route);
+
         ArrayList<Node> stations = route.getStations();
         ArrayList<Segment> segments = route.getSegmentsBetweenNodes(node.getNode(), stations.get(stations.size()-1));
         double cost = 0;
@@ -93,14 +105,13 @@ public class Pathfinder {
 
             if (stations.contains(s.getDestination())) {
                 ArrayList<BusRoute> routes = network.getBusRoutesWithStation(s.getDestination());
+                routes.removeAll(routesToRemove);
 
+                GraphNode dest = createNode(s.getDestination(), route, routesToRemove, false);
+                node.getNexts().add(new Path(node, dest, 0));
                 for (BusRoute r : routes) {
-                    NodeRoutePair pair = new NodeRoutePair(s.getDestination(), r);
-                    if (marked.contains(pair))
-                        continue;
-                    marked.add(pair);
-                    GraphNode dest = createNode(s.getDestination(), r);
-                    node.getNexts().add(new Path(node, dest, cost));
+                    GraphNode next = createNode(s.getDestination(), r, routesToRemove);
+                    dest.getNexts().add(new Path(dest, next, cost));
                 }
             }
         }

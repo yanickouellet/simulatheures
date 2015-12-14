@@ -66,6 +66,9 @@ public class PassengerRoute implements Serializable, IDistributableElement {
 
     public boolean isLastSegmentOfFragment(Segment s) {
         int position = getFragmentPositionForSegment(s);
+        if (position == -1)
+            return false;
+
         PassengerRouteFragment fragment = fragments.get(position);
         return fragment.getDestination().equals(s.getDestination());
     }
