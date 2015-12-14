@@ -724,7 +724,6 @@ public class MainForm {
 
             }
         });
-<<<<<<< HEAD
         spnNbSim.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -734,17 +733,17 @@ public class MainForm {
             }
         });
         spnSpeed.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int i = isValid((int) spnSpeed.getValue()) ? (int) spnSpeed.getValue() : 0;
-                spnSpeed.setValue(i);
-                controller.saveState();
-=======
+           @Override
+           public void stateChanged(ChangeEvent e) {
+               int i = isValid((int) spnSpeed.getValue()) ? (int) spnSpeed.getValue() : 0;
+               spnSpeed.setValue(i);
+               controller.saveState();
+           }
+       });
         btnEnd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.endSimulations();
->>>>>>> 4167ec413e0b048b35719d5b4348a00174ed5e3a
             }
         });
     }
