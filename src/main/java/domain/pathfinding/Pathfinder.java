@@ -108,10 +108,10 @@ public class Pathfinder {
                 routes.removeAll(routesToRemove);
 
                 GraphNode dest = createNode(s.getDestination(), route, routesToRemove, false);
-                node.getNexts().add(new Path(node, dest, 0));
+                node.getNexts().add(new Path(node, dest, cost));
                 for (BusRoute r : routes) {
                     GraphNode next = createNode(s.getDestination(), r, routesToRemove);
-                    dest.getNexts().add(new Path(dest, next, cost));
+                    dest.getNexts().add(new Path(dest, next, 0));
                 }
             }
         }

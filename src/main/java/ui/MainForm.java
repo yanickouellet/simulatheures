@@ -98,6 +98,7 @@ public class MainForm {
     private JPanel pnlStatistics;
     private JTable tblStatistics;
     private JSpinner spnNbSim;
+    private JButton btnEnd;
     private JPanel pnlBottomBar;
     private Timer timer;
 
@@ -723,6 +724,7 @@ public class MainForm {
 
             }
         });
+<<<<<<< HEAD
         spnNbSim.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -737,6 +739,12 @@ public class MainForm {
                 int i = isValid((int) spnSpeed.getValue()) ? (int) spnSpeed.getValue() : 0;
                 spnSpeed.setValue(i);
                 controller.saveState();
+=======
+        btnEnd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.endSimulations();
+>>>>>>> 4167ec413e0b048b35719d5b4348a00174ed5e3a
             }
         });
     }
@@ -1014,36 +1022,43 @@ public class MainForm {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         contentPane.add(toolBar1, gbc);
         btnFile = new JButton();
+        btnFile.setFocusPainted(false);
         btnFile.setIcon(new ImageIcon(getClass().getResource("/new/new-48x48.png")));
         btnFile.setText("");
         btnFile.setToolTipText("Nouveau");
         toolBar1.add(btnFile);
         btnOpen = new JButton();
+        btnOpen.setFocusPainted(false);
         btnOpen.setIcon(new ImageIcon(getClass().getResource("/new/open-48x48.png")));
         btnOpen.setText("");
         btnOpen.setToolTipText("Ouvrir");
         toolBar1.add(btnOpen);
         btnSave = new JButton();
+        btnSave.setFocusPainted(false);
         btnSave.setIcon(new ImageIcon(getClass().getResource("/new/save-48x48.png")));
         btnSave.setText("");
         btnSave.setToolTipText("Sauvegarder");
         toolBar1.add(btnSave);
         btnClose = new JButton();
+        btnClose.setFocusPainted(false);
         btnClose.setIcon(new ImageIcon(getClass().getResource("/new/close-48x48.png")));
         btnClose.setText("");
         btnClose.setToolTipText("Fermer");
         toolBar1.add(btnClose);
         btnUndo = new JButton();
+        btnUndo.setFocusPainted(false);
         btnUndo.setIcon(new ImageIcon(getClass().getResource("/new/undo-48x48.png")));
         btnUndo.setText("");
         btnUndo.setToolTipText("Annuler");
         toolBar1.add(btnUndo);
         btnRedo = new JButton();
+        btnRedo.setFocusPainted(false);
         btnRedo.setIcon(new ImageIcon(getClass().getResource("/new/redo-48x48.png")));
         btnRedo.setText("");
         btnRedo.setToolTipText("Restaurer");
         toolBar1.add(btnRedo);
         btnImage = new JButton();
+        btnImage.setFocusPainted(false);
         btnImage.setIcon(new ImageIcon(getClass().getResource("/new/image-48x48.png")));
         btnImage.setText("");
         btnImage.setToolTipText("Image");
@@ -1059,6 +1074,7 @@ public class MainForm {
         toolBar1.add(spacer1);
         btnValidate = new JButton();
         btnValidate.setEnabled(false);
+        btnValidate.setFocusPainted(false);
         btnValidate.setIcon(new ImageIcon(getClass().getResource("/new/check-48x48.png")));
         btnValidate.setText("");
         btnValidate.setToolTipText("Confirmer");
@@ -1100,18 +1116,6 @@ public class MainForm {
         pnlDomainObjects.add(displayTree, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(120, 50), null, 0, false));
         final Spacer spacer2 = new Spacer();
         mapPane.add(spacer2, new GridConstraints(1, 1, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        lblPosition = new JLabel();
-        lblPosition.setForeground(new Color(-15779397));
-        lblPosition.setText("[0.0, 0.0]");
-        mapPane.add(lblPosition, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        btnZoomIn = new JButton();
-        btnZoomIn.setIcon(new ImageIcon(getClass().getResource("/plus-20x20.png")));
-        btnZoomIn.setText("");
-        mapPane.add(btnZoomIn, new GridConstraints(2, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, new Dimension(30, 30), 0, false));
-        btnZoomOut = new JButton();
-        btnZoomOut.setIcon(new ImageIcon(getClass().getResource("/minus-20x20.png")));
-        btnZoomOut.setText("");
-        mapPane.add(btnZoomOut, new GridConstraints(2, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, new Dimension(30, 30), 0, false));
         final Spacer spacer3 = new Spacer();
         mapPane.add(spacer3, new GridConstraints(0, 2, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final Spacer spacer4 = new Spacer();
@@ -1119,17 +1123,40 @@ public class MainForm {
         final Spacer spacer5 = new Spacer();
         mapPane.add(spacer5, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JToolBar toolBar3 = new JToolBar();
+        toolBar3.setBackground(new Color(-4934476));
+        toolBar3.setBorderPainted(false);
+        toolBar3.setEnabled(false);
         toolBar3.setFloatable(false);
-        toolBar3.setOrientation(1);
+        mapPane.add(toolBar3, new GridConstraints(2, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, 1, 1, null, new Dimension(-1, 20), null, 0, false));
+        btnZoomOut = new JButton();
+        btnZoomOut.setBorderPainted(true);
+        btnZoomOut.setContentAreaFilled(true);
+        btnZoomOut.setFocusPainted(false);
+        btnZoomOut.setIcon(new ImageIcon(getClass().getResource("/minus-20x20.png")));
+        btnZoomOut.setText("");
+        toolBar3.add(btnZoomOut);
+        btnZoomIn = new JButton();
+        btnZoomIn.setBorderPainted(true);
+        btnZoomIn.setFocusPainted(false);
+        btnZoomIn.setIcon(new ImageIcon(getClass().getResource("/plus-20x20.png")));
+        btnZoomIn.setText("");
+        toolBar3.add(btnZoomIn);
+        lblPosition = new JLabel();
+        lblPosition.setForeground(new Color(-15779397));
+        lblPosition.setText("[0.0, 0.0]");
+        mapPane.add(lblPosition, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
+        final JToolBar toolBar4 = new JToolBar();
+        toolBar4.setFloatable(false);
+        toolBar4.setOrientation(1);
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
         gbc.gridy = 2;
         gbc.gridheight = 2;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.VERTICAL;
-        contentPane.add(toolBar3, gbc);
+        contentPane.add(toolBar4, gbc);
         final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(1, 12, new Insets(0, 0, 0, 0), -1, -1));
+        panel3.setLayout(new GridLayoutManager(1, 13, new Insets(0, 0, 0, 0), -1, -1));
         panel3.setToolTipText("");
         panel3.setVisible(true);
         gbc = new GridBagConstraints();
@@ -1153,23 +1180,14 @@ public class MainForm {
         panel3.add(txtEnd, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(50, -1), new Dimension(50, -1), 0, false));
         btnStart = new JButton();
         btnStart.setEnabled(true);
+        btnStart.setFocusPainted(false);
         btnStart.setIcon(new ImageIcon(getClass().getResource("/bottom_bar_icons/restart-25x25.png")));
         btnStart.setText("");
-        btnStart.setToolTipText("Retour au début");
+        btnStart.setToolTipText("Début");
         panel3.add(btnStart, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        btnPlay = new JButton();
-        btnPlay.setIcon(new ImageIcon(getClass().getResource("/bottom_bar_icons/play-25x25.png")));
-        btnPlay.setText("");
-        btnPlay.setToolTipText("Jouer");
-        panel3.add(btnPlay, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        btnStop = new JButton();
-        btnStop.setIcon(new ImageIcon(getClass().getResource("/bottom_bar_icons/stop-25x25.png")));
-        btnStop.setText("");
-        btnStop.setToolTipText("Arrêter");
-        panel3.add(btnStop, new GridConstraints(0, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
-        panel3.add(panel4, new GridConstraints(0, 7, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel3.add(panel4, new GridConstraints(0, 8, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         lblSpeed = new JLabel();
         lblSpeed.setText("Vitesse exec.:");
         panel4.add(lblSpeed, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -1180,16 +1198,35 @@ public class MainForm {
         panel4.add(spnSpeed, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(70, -1), new Dimension(70, -1), new Dimension(70, -1), 1, false));
         lblTime = new JLabel();
         lblTime.setText("0:00");
-        panel3.add(lblTime, new GridConstraints(0, 9, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel3.add(lblTime, new GridConstraints(0, 10, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
         label1.setIcon(new ImageIcon(getClass().getResource("/bottom_bar_icons/clock-25x25.png")));
         label1.setText("");
-        panel3.add(label1, new GridConstraints(0, 8, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel3.add(label1, new GridConstraints(0, 9, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         spnNbSim = new JSpinner();
-        panel3.add(spnNbSim, new GridConstraints(0, 11, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(70, -1), new Dimension(70, -1), new Dimension(70, -1), 1, false));
+        panel3.add(spnNbSim, new GridConstraints(0, 12, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(70, -1), new Dimension(70, -1), new Dimension(70, -1), 1, false));
         final JLabel label2 = new JLabel();
         label2.setText("Nb. Simulations");
-        panel3.add(label2, new GridConstraints(0, 10, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel3.add(label2, new GridConstraints(0, 11, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnEnd = new JButton();
+        btnEnd.setEnabled(true);
+        btnEnd.setFocusPainted(false);
+        btnEnd.setIcon(new ImageIcon(getClass().getResource("/bottom_bar_icons/end-25x25.png")));
+        btnEnd.setText("");
+        btnEnd.setToolTipText("Fin");
+        panel3.add(btnEnd, new GridConstraints(0, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnPlay = new JButton();
+        btnPlay.setFocusPainted(false);
+        btnPlay.setIcon(new ImageIcon(getClass().getResource("/bottom_bar_icons/play-25x25.png")));
+        btnPlay.setText("");
+        btnPlay.setToolTipText("Jouer");
+        panel3.add(btnPlay, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnStop = new JButton();
+        btnStop.setFocusPainted(false);
+        btnStop.setIcon(new ImageIcon(getClass().getResource("/bottom_bar_icons/stop-25x25.png")));
+        btnStop.setText("");
+        btnStop.setToolTipText("Arrêter");
+        panel3.add(btnStop, new GridConstraints(0, 7, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JSplitPane splitPane1 = new JSplitPane();
         splitPane1.setEnabled(false);
         splitPane1.setOrientation(0);
@@ -1339,12 +1376,15 @@ public class MainForm {
         panel6.setLayout(new GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
         splitPane1.setLeftComponent(panel6);
         btnCircuits = new JButton();
+        btnCircuits.setFocusPainted(false);
         btnCircuits.setText("Circuits");
         panel6.add(btnCircuits, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(160, -1), new Dimension(160, -1), new Dimension(160, -1), 0, false));
         btnRoutes = new JButton();
+        btnRoutes.setFocusPainted(false);
         btnRoutes.setText("Itinéraires");
         panel6.add(btnRoutes, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(160, -1), new Dimension(160, -1), new Dimension(160, -1), 0, false));
         btnStatistics = new JButton();
+        btnStatistics.setFocusPainted(false);
         btnStatistics.setText("Simulations");
         panel6.add(btnStatistics, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(160, -1), new Dimension(160, -1), new Dimension(160, -1), 0, false));
         final Spacer spacer8 = new Spacer();
