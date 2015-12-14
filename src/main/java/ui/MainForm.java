@@ -209,6 +209,8 @@ public class MainForm {
         lblPosition.setText(state.getCurrentPosition().toString() + " Zoom: " + state.getZoomLevel() + " %");
         lblMessage.setText(state.getMessage());
         setSelectedButton();
+        if (!state.isDeleteVisible())
+            hideEditPanels();
 
         btnDeleteSelected.setVisible(state.isDeleteVisible());
 
