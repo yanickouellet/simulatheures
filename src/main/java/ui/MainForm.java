@@ -98,6 +98,7 @@ public class MainForm {
     private JPanel pnlStatistics;
     private JTable tblStatistics;
     private JSpinner spnNbSim;
+    private JButton btnEnd;
     private JPanel pnlBottomBar;
     private Timer timer;
 
