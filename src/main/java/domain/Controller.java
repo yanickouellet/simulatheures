@@ -256,24 +256,25 @@ public class Controller {
     }
 
     public void setCurrentBusRoute(BusRoute route) {
-        saveState();
-
         if (state.getCurrentMode() == EditionMode.None) {
+            saveState();
             state.setCurrentBusRoute(route);
         } else if (state.getCurrentMode() == EditionMode.AddPassengerRoute &&
                     state.getControllerMode() == ControllerMode.SelectPassengerFragmentBusRoute) {
+            saveState();
             state.setCurrentBusRoute(route);
             state.setMessage(Strings.SelectPassengerStop);
             state.setControllerMode(ControllerMode.AddingPassengerFragmentDestination);
         }
+        mainForm.update();
     }
 
     public void setCurrentPassengerRoute(PassengerRoute route) {
-        saveState();
-
         if (state.getCurrentMode() == EditionMode.None) {
+            saveState();
             state.setCurrentPassengerRoute(route);
         }
+        mainForm.update();
     }
 
     public boolean save(File file) {

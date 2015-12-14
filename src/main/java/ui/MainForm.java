@@ -115,6 +115,17 @@ public class MainForm {
 
     }
 
+    private void setSelectedButton() {
+        EditionMode mode = controller.getState().getCurrentMode();
+
+        btnSelection.setSelected(mode == EditionMode.None);
+        btnCreateNode.setSelected(mode == EditionMode.AddNode);
+        btnCreateSegment.setSelected(mode == EditionMode.AddSegment);
+        btnCreateCircuit.setSelected(mode == EditionMode.AddBusRoute);
+        btnCreateRoute.setSelected(mode == EditionMode.AddPassengerRoute);
+        btnDijkstra.setSelected(mode == EditionMode.Dijkstra);
+    }
+
     private void addBusRoutesToTree() {
         ApplicationState state = controller.getState();
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Circuits");
@@ -197,6 +208,7 @@ public class MainForm {
 
         lblPosition.setText(state.getCurrentPosition().toString() + " Zoom: " + state.getZoomLevel() + " %");
         lblMessage.setText(state.getMessage());
+        setSelectedButton();
 
         btnDeleteSelected.setVisible(state.isDeleteVisible());
 
@@ -814,7 +826,6 @@ public class MainForm {
         else
             controller.setOpenedPanel(OpenedPanel.BusRoutes);
         controller.setEditionMode(EditionMode.None);
-        btnSelection.setSelected(true);
         update();
     }
 
@@ -825,7 +836,6 @@ public class MainForm {
         else
             controller.setOpenedPanel(OpenedPanel.PassengerRoutes);
         controller.setEditionMode(EditionMode.None);
-        btnSelection.setSelected(true);
         update();
     }
 
