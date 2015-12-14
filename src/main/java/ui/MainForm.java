@@ -154,7 +154,7 @@ public class MainForm {
 
         String column_names[]= {"Itinéraire", "Temps min", "Temps moyen", "Temps max"};
 
-        DefaultTableModel model = new DefaultTableModel(column_names, 4);
+        DefaultTableModel model = new DefaultTableModel(column_names, 0);
 
         int j = 0;
         ArrayList<Double> max = new ArrayList<>();
@@ -182,6 +182,7 @@ public class MainForm {
                     min.set(i, entry.getMin());
                 avg.set(i, avg.get(i) + entry.getAverage());
             }
+            model.addRow(new Object[]{""});
         }
 
         if (j > 0) {
@@ -248,6 +249,7 @@ public class MainForm {
             if (timer != null)
                 timer.stop();
             timer = null;
+            enableAllTools();
         }
 
         mainFrame.repaint();
@@ -898,6 +900,7 @@ public class MainForm {
         btnCreateSegment.setEnabled(false);
         btnCreateCircuit.setEnabled(false);
         btnCreateRoute.setEnabled(false);
+        btnDijkstra.setEnabled(false);
 
         btnCircuits.setEnabled(false);
         btnRoutes.setEnabled(false);
@@ -912,6 +915,7 @@ public class MainForm {
         btnCreateSegment.setEnabled(true);
         btnCreateCircuit.setEnabled(true);
         btnCreateRoute.setEnabled(true);
+        btnDijkstra.setEnabled(true);
 
         btnCircuits.setEnabled(true);
         btnRoutes.setEnabled(true);
