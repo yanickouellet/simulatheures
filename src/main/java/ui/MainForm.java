@@ -198,6 +198,8 @@ public class MainForm {
         lblPosition.setText(state.getCurrentPosition().toString() + " Zoom: " + state.getZoomLevel() + " %");
         lblMessage.setText(state.getMessage());
 
+        btnDeleteSelected.setVisible(state.isDeleteVisible());
+
         ImageIcon img = timer != null && timer.isRunning() ? imgPause : imgStart;
         btnPlay.setIcon(img);
         if (timer == null || !timer.isRunning())
@@ -257,7 +259,6 @@ public class MainForm {
 
     public void editElement(NetworkElement elem) {
         hideEditPanels();
-        btnDeleteSelected.setVisible(elem != null);
 
         if (elem instanceof Segment) {
             Segment segment = (Segment) elem;
@@ -327,7 +328,6 @@ public class MainForm {
     }
 
     public void hideEditPanels() {
-        btnDeleteSelected.setVisible(false);
         pnlEditNode.setVisible(false);
         pnlEditSegment.setVisible(false);
         pnlEditSource.setVisible(false);

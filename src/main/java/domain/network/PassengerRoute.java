@@ -90,6 +90,15 @@ public class PassengerRoute implements Serializable, IDistributableElement {
 
     public void setMaxPersonNumber(int maxNb){ this.maxPersonNumber = maxNb; }
 
+    public boolean isOnBusRoute(BusRoute route) {
+        for (PassengerRouteFragment f : fragments) {
+            if (f.getBusRoute().equals(route)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         return name;

@@ -244,6 +244,12 @@ public class ApplicationState implements Serializable {
         this.simulations = simulations;
     }
 
+    public boolean isDeleteVisible() {
+        return currentMode == EditionMode.None && (
+                selectedElement != null || currentBusRoute != null || currentPassengerRoute != null
+                );
+    }
+
     private void writeObject(ObjectOutputStream stream) throws IOException {
         stream.defaultWriteObject();
         stream.writeBoolean(backgroundImage != null);

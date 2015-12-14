@@ -155,13 +155,26 @@ public class Controller {
     }
 
     public void deleteSelectedElement() {
-        saveState();
-
         NetworkElement elem = state.getSelectedElement();
-        if (elem == null)
-            state.setMessage(Strings.NoElementSelected);
-        else
+
+        if (state.getCurrentPassengerRoute() != null && state.getCurrentMode() == EditionMode.None)  {
+            saveState();
+            state.getNetwork().getPassengerRoutes().remove(state.getCurrentPassengerRoute());
+            state.setCurrentPassengerRoute(null);
+        } else if (state.getCurrentBusRoute() != null && state.getCurrentMode() == EditionMode.None) {
+            saveState();
+            state.getNetwork().deletePassengerRouteForBusRoute(state.getCurrentBusRoute());
+            state.getNetwork().getBusRoutes().remove(state.getCurrentBusRoute());
+            state.setCurrentBusRoute(null);
+        } else if (elem != null) {
+            saveState();
             state.getNetwork().deleteElement(elem);
+
+        } else {
+            state.setMessage(Strings.NoElementSelected);
+        }
+
+        mainForm.update();
     }
 
     public void validate() {

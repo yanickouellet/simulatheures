@@ -122,6 +122,17 @@ public class Network implements Serializable {
             BusRoute r = (BusRoute)i.next();
             if (r.getSegments().contains(segment))
                 i.remove();
+                deletePassengerRouteForBusRoute(r);
+        }
+    }
+
+    public void deletePassengerRouteForBusRoute(BusRoute route) {
+        Iterator<PassengerRoute> i = passengerRoutes.iterator();
+
+        while (i.hasNext()) {
+            PassengerRoute r = i.next();
+            if (r.isOnBusRoute(route))
+                i.remove();
         }
     }
 
