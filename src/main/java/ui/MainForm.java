@@ -208,6 +208,7 @@ public class MainForm {
 
         lblPosition.setText(state.getCurrentPosition().toString() + " Zoom: " + state.getZoomLevel() + " %");
         lblMessage.setText(state.getMessage());
+        mainFrame.setTitle(state.getAppTitle());
         setSelectedButton();
         if (!state.isDeleteVisible())
             hideEditPanels();
@@ -753,7 +754,9 @@ public class MainForm {
     // Menu 2
 
     private void btnFileActionPerformed(ActionEvent evt) {
-
+        controller.newState();
+        ((MapPanel) mapPane).setDrawer(new MapDrawer(controller.getState()));
+        update();
     }
 
     private void btnOpenActionPerformed(ActionEvent evt) {
@@ -761,7 +764,6 @@ public class MainForm {
         if (fc.showOpenDialog(this.mainFrame) == JFileChooser.APPROVE_OPTION) {
             controller.load(fc.getSelectedFile());
             ((MapPanel) mapPane).setDrawer(new MapDrawer(controller.getState()));
-            mainFrame.setTitle(controller.getState().getAppTitle());
             update();
         }
     }
@@ -770,7 +772,6 @@ public class MainForm {
         JFileChooser fc = new JFileChooser();
         if (fc.showSaveDialog(this.mainFrame) == JFileChooser.APPROVE_OPTION) {
             controller.save(fc.getSelectedFile());
-            mainFrame.setTitle(controller.getState().getAppTitle());
         }
     }
 

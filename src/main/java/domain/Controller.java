@@ -293,6 +293,13 @@ public class Controller {
         return true;
     }
 
+    public void newState() {
+        saveState();
+        Stack<ByteInputStream> prev = state.getPrevStack();
+        state = new ApplicationState();
+        state.setPrevStack(prev);
+    }
+
     public boolean load(File file) {
         try {
             FileInputStream stream = new FileInputStream(file);
