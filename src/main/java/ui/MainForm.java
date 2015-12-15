@@ -544,35 +544,38 @@ public class MainForm {
         spnSegmentMinDuration.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 TriangularDistribution distribution = ((Segment) controller.getState().getSelectedElement()).getDistribution();
-                distribution.setMinValue((int) spnSegmentMinDuration.getValue());
+                saveDistributionValue(spnSegmentMinDuration,(int) spnSegmentMinDuration.getValue(), distribution,"min");
             }
         });
         spnSegmentAvgDuration.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 TriangularDistribution distribution = ((Segment) controller.getState().getSelectedElement()).getDistribution();
-                distribution.setAverageValue((int) spnSegmentAvgDuration.getValue());
+                saveDistributionValue(spnSegmentAvgDuration,(int) spnSegmentAvgDuration.getValue(), distribution,"avg");
             }
         });
         spnSegmentMaxDuration.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 TriangularDistribution distribution = ((Segment) controller.getState().getSelectedElement()).getDistribution();
-                distribution.setMaxValue((int) spnSegmentMaxDuration.getValue());
+                saveDistributionValue(spnSegmentMaxDuration,(int) spnSegmentMaxDuration.getValue(), distribution,"max");
             }
         });
         txtNodeName.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 ((Node) controller.getState().getSelectedElement()).setName(txtNodeName.getText());
+                controller.saveState();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 ((Node) controller.getState().getSelectedElement()).setName(txtNodeName.getText());
+                controller.saveState();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
                 ((Node) controller.getState().getSelectedElement()).setName(txtNodeName.getText());
+                controller.saveState();
             }
         });
 
@@ -580,46 +583,55 @@ public class MainForm {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 controller.getState().getCurrentBusRoute().setName(txtCircuitName.getText());
+                controller.saveState();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 controller.getState().getCurrentBusRoute().setName(txtCircuitName.getText());
+                controller.saveState();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
                 controller.getState().getCurrentBusRoute().setName(txtCircuitName.getText());
+                controller.saveState();
             }
         });
         spnTimeBeforeFirstVehicule.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
+                int i = isValid((int) spnTimeBeforeFirstVehicule.getValue()) ? (int) spnTimeBeforeFirstVehicule.getValue() : 0;
                 Source src = controller.getState().getCurrentBusRoute().getBusSource();
-                src.setTimeBeforeFirstVehicule((int) spnTimeBeforeFirstVehicule.getValue());
+                src.setTimeBeforeFirstVehicule(i);
+                spnTimeBeforeFirstVehicule.setValue(i);
+                controller.saveState();
             }
         });
         spnSourceNumberMaxVehicule.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
+                int i = isValid((int) spnSourceNumberMaxVehicule.getValue()) ? (int) spnSourceNumberMaxVehicule.getValue() : 0;
                 Source src = controller.getState().getCurrentBusRoute().getBusSource();
-                src.setNumberMaxVehicule((int) spnSourceNumberMaxVehicule.getValue());
+                src.setNumberMaxVehicule(i);
+                spnSourceNumberMaxVehicule.setValue(i);
+                controller.saveState();
             }
         });
         spnSourceMinDuration.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 TriangularDistribution distribution = controller.getState().getCurrentBusRoute().getBusSource().getDistribution();
-                distribution.setMinValue((int) spnSourceMinDuration.getValue());
+                saveDistributionValue(spnSourceMinDuration,(int) spnSourceMinDuration.getValue(), distribution,"min");
             }
         });
         spnSourceAvgDuration.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 TriangularDistribution distribution = controller.getState().getCurrentBusRoute().getBusSource().getDistribution();
-                distribution.setAverageValue((int) spnSourceAvgDuration.getValue());
+                saveDistributionValue(spnSourceAvgDuration,(int) spnSourceAvgDuration.getValue(), distribution,"avg");
             }
         });
         spnSourceMaxDuration.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 TriangularDistribution distribution = controller.getState().getCurrentBusRoute().getBusSource().getDistribution();
-                distribution.setMaxValue((int) spnSourceMaxDuration.getValue());
+                saveDistributionValue(spnSourceMaxDuration,(int) spnSourceMaxDuration.getValue(), distribution,"max");
             }
         });
 
@@ -627,6 +639,7 @@ public class MainForm {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 controller.getState().getCurrentBusRoute().setIsLoop(ckbCircuitIsLoop.isSelected());
+                controller.saveState();
             }
         });
         btnClose.addActionListener(new ActionListener() {
@@ -650,50 +663,59 @@ public class MainForm {
         spnRouteMinDuration.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                TriangularDistribution dist = controller.getState().getCurrentPassengerRoute().getDistribution();
-                dist.setMinValue((int) spnRouteMinDuration.getValue());
+                TriangularDistribution distribution = controller.getState().getCurrentPassengerRoute().getDistribution();
+                saveDistributionValue(spnRouteMinDuration,(int) spnRouteMinDuration.getValue(), distribution,"min");
             }
         });
         spnRouteAvgDuration.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                TriangularDistribution dist = controller.getState().getCurrentPassengerRoute().getDistribution();
-                dist.setAverageValue((int) spnRouteAvgDuration.getValue());
+                TriangularDistribution distribution = controller.getState().getCurrentPassengerRoute().getDistribution();
+                saveDistributionValue(spnRouteAvgDuration,(int) spnRouteAvgDuration.getValue(), distribution,"avg");
             }
         });
         txtRouteName.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 controller.getState().getCurrentPassengerRoute().setName(txtRouteName.getText());
+                controller.saveState();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 controller.getState().getCurrentPassengerRoute().setName(txtRouteName.getText());
+                controller.saveState();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
                 controller.getState().getCurrentPassengerRoute().setName(txtRouteName.getText());
+                controller.saveState();
             }
         });
         spnRouteMaxDuration.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                TriangularDistribution dist = controller.getState().getCurrentPassengerRoute().getDistribution();
-                dist.setMaxValue((int) spnRouteMaxDuration.getValue());
+                TriangularDistribution distribution = controller.getState().getCurrentPassengerRoute().getDistribution();
+                saveDistributionValue(spnRouteMaxDuration,(int) spnRouteMaxDuration.getValue(), distribution,"max");
             }
         });
         spnTimeBeforeFirstPerson.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                controller.getState().getCurrentPassengerRoute().setTimeBeforeFirst((int) spnTimeBeforeFirstPerson.getValue());
+                int i = isValid((int) spnTimeBeforeFirstPerson.getValue()) ? (int) spnTimeBeforeFirstPerson.getValue() : 0;
+                controller.getState().getCurrentPassengerRoute().setTimeBeforeFirst(i);
+                spnTimeBeforeFirstPerson.setValue(i);
+                controller.saveState();
             }
         });
         spnRouteNumberMaxPerson.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                controller.getState().getCurrentPassengerRoute().setMaxPersonNumber((int) spnRouteNumberMaxPerson.getValue());
+                int i = isValid((int) spnRouteNumberMaxPerson.getValue()) ? (int) spnRouteNumberMaxPerson.getValue() : 0;
+                controller.getState().getCurrentPassengerRoute().setMaxPersonNumber(i);
+                spnRouteNumberMaxPerson.setValue(i);
+                controller.saveState();
             }
         });
         btnFile.addActionListener(new ActionListener() {
@@ -702,6 +724,22 @@ public class MainForm {
 
             }
         });
+        spnNbSim.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int i = isValid((int) spnNbSim.getValue()) ? (int) spnNbSim.getValue() : 0;
+                spnNbSim.setValue(i);
+                controller.saveState();
+            }
+        });
+        spnSpeed.addChangeListener(new ChangeListener() {
+           @Override
+           public void stateChanged(ChangeEvent e) {
+               int i = isValid((int) spnSpeed.getValue()) ? (int) spnSpeed.getValue() : 0;
+               spnSpeed.setValue(i);
+               controller.saveState();
+           }
+       });
         btnEnd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -937,6 +975,27 @@ public class MainForm {
         btnValidate.setEnabled(true);
     }
 
+    private boolean isValid(int i){
+        return i > -1;
+    }
+
+    private void saveDistributionValue(JSpinner spn, int value, TriangularDistribution distribution, String type){
+        int valueToSave= isValid(value) ? value : 0;
+        switch (type){
+            case "min":
+                distribution.setMinValue(valueToSave);
+                break;
+            case "avg":
+                distribution.setAverageValue(valueToSave);
+                break;
+            case "max":
+                distribution.setMaxValue(valueToSave);
+                break;
+        }
+        spn.setValue(valueToSave);
+        controller.saveState();
+
+    }
     /**
      * Method generated by IntelliJ IDEA GUI Designer
      * >>> IMPORTANT!! <<<
